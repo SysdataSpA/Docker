@@ -1,0 +1,6 @@
+framework module Docker {
+  umbrella header "Docker-umbrella.h"
+
+  export *
+  module * { export * }
+}

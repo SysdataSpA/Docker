@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="WDz-0E-QAR">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="ZiH-sU-dSJ">
+            <objects>
+                <navigationController id="WDz-0E-QAR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sgo-WL-eS4">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="whP-gf-Uak" kind="relationship" relationship="rootViewController" id="ZNb-KU-Dx0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Spy-Z7-5ZU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-964" y="432"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="wQg-tq-qST">
+            <objects>
+                <viewController id="whP-gf-Uak" customClass="SDViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uEw-UM-LJ8"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mvr-aV-6Um"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TpU-gO-2f1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7I-ke-MzV">
+                                <rect key="frame" x="118" y="154" width="138" height="30"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <state key="normal" title="Donwload Manager"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wSd-1c-WDg">
+                                <rect key="frame" x="118" y="209" width="138" height="30"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <state key="normal" title="Donwload ImgaView"/>
+                                <connections>
+                                    <segue destination="8Ji-QJ-tda" kind="show" id="kvM-yz-Ned"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="wSd-1c-WDg" firstAttribute="leading" secondItem="W7I-ke-MzV" secondAttribute="leading" id="LLw-Id-6zv"/>
+                            <constraint firstItem="W7I-ke-MzV" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="90" id="ZUe-tu-6dN"/>
+                            <constraint firstItem="W7I-ke-MzV" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="ikw-tI-HaA"/>
+                            <constraint firstItem="wSd-1c-WDg" firstAttribute="top" secondItem="W7I-ke-MzV" secondAttribute="bottom" constant="25" id="myZ-W4-uyL"/>
+                            <constraint firstItem="wSd-1c-WDg" firstAttribute="trailing" secondItem="W7I-ke-MzV" secondAttribute="trailing" id="wdQ-WM-I13"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="cNY-tI-28T"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="305" y="433"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="avG-5V-3CB">
+            <objects>
+                <viewController id="8Ji-QJ-tda" customClass="SDImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MDp-JP-laM"/>
+                        <viewControllerLayoutGuide type="bottom" id="9Qr-Pl-ufG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GIT-kb-NY9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KU3-Lp-xzC">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Z9I-7N-h1h" customClass="SDTableViewCell">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="65"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z9I-7N-h1h" id="sCn-uS-kN4">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMl-Vf-qx0" customClass="SDDownloadImageView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64.5"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="tMl-Vf-qx0" secondAttribute="trailing" id="1eN-DY-ltV"/>
+                                                <constraint firstItem="tMl-Vf-qx0" firstAttribute="top" secondItem="sCn-uS-kN4" secondAttribute="top" id="7gG-NA-58c"/>
+                                                <constraint firstItem="tMl-Vf-qx0" firstAttribute="leading" secondItem="sCn-uS-kN4" secondAttribute="leading" id="K6Q-Hh-oEs"/>
+                                                <constraint firstAttribute="bottom" secondItem="tMl-Vf-qx0" secondAttribute="bottom" id="lYY-SM-6LG"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="downloadImageView" destination="tMl-Vf-qx0" id="OuS-iy-T3y"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9Qr-Pl-ufG" firstAttribute="top" secondItem="KU3-Lp-xzC" secondAttribute="bottom" id="EDR-DL-wiu"/>
+                            <constraint firstItem="KU3-Lp-xzC" firstAttribute="top" secondItem="MDp-JP-laM" secondAttribute="bottom" id="dfX-GX-zxc"/>
+                            <constraint firstAttribute="trailing" secondItem="KU3-Lp-xzC" secondAttribute="trailing" id="hiq-lc-5e8"/>
+                            <constraint firstItem="KU3-Lp-xzC" firstAttribute="leading" secondItem="GIT-kb-NY9" secondAttribute="leading" id="o2d-7B-OL9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="KU3-Lp-xzC" id="FdN-n5-6Hy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MPq-z6-vzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1409" y="715"/>
+        </scene>
+    </scenes>
+</document>

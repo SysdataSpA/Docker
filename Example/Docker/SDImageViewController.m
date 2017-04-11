@@ -56,7 +56,6 @@
     NSString* urlString = [self.imageUrls objectAtIndex:indexPath.row];
     
     cell.downloadImageView.showActivityIndicatorWhileLoading = YES;
-    cell.downloadImageView.transitionType = SDDownloadImageTransitionCoolPulse;
     cell.downloadImageView.showLocalImageBeforeCheckingValidity = YES;
     cell.downloadImageView.placeHolderImage = nil;
     //    cell.downloadImageView.downloadOptions = DownloadOperationOptionForceDownload;

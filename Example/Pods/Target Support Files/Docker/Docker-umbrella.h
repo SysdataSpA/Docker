@@ -12,13 +12,19 @@
 
 #import "NSObject+DownloadManager.h"
 #import "NSString+Hashing.h"
-#import "SDDownload.h"
 #import "SDDownloadImageView.h"
 #import "SDDownloadManager.h"
 #import "SDDownloadManagerUtils.h"
 #import "SDFileManager.h"
 #import "UIImage+SDExtension.h"
 #import "UIImageViewAligned.h"
+#import "SDDocker.h"
+#import "SDDockerLogger.h"
+#import "NSDictionary+Utils.h"
+#import "SDServiceGeneric.h"
+#import "SDServiceManager.h"
+#import "SDServiceMantle.h"
+#import "SOCKit.h"
 
 FOUNDATION_EXPORT double DockerVersionNumber;
 FOUNDATION_EXPORT const unsigned char DockerVersionString[];

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Docker/SDDownload.h>
+#import <Docker/SDDocker.h>
 
 @interface SDTableViewCell : UITableViewCell
 

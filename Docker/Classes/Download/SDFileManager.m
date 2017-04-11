@@ -7,7 +7,7 @@
 //
 
 #import "SDFileManager.h"
-#import "SDDownload.h"
+#import "SDDockerLogger.h"
 
 
 @implementation SDFileInfo

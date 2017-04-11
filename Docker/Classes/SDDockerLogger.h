@@ -18,7 +18,3 @@
 #define SDLogModuleVerbose(mdl, frmt, ...) NSLog(frmt, ##__VA_ARGS__)
 #endif
 
-#import "SDDownloadManager.h"
-#import "SDDownloadImageView.h"
-
-

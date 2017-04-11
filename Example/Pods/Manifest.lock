@@ -22,6 +22,10 @@ PODS:
     - AFNetworking/NSURLSession
   - Docker (0.1.0):
     - AFNetworking (~> 2.6.0)
+    - Mantle
+  - Mantle (2.1.0):
+    - Mantle/extobjc (= 2.1.0)
+  - Mantle/extobjc (2.1.0)
 
 DEPENDENCIES:
   - Docker (from `../`)
@@ -32,7 +36,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
-  Docker: f14859e63fa4969bcdc639149e192ac92e2dc35f
+  Docker: 67851d60d22817d6266b934d38e9167795f659d7
+  Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
 
 PODFILE CHECKSUM: e768f6768651d6c7835d496e80b889efbf84cb2a
 

@@ -8,7 +8,7 @@
 
 #import "SDDownloadManager.h"
 #import "SDFileManager.h"
-#import "SDDownload.h"
+#import "SDDockerLogger.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
 

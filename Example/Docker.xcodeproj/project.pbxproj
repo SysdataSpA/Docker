@@ -11,6 +11,9 @@
 		347DD18D1E9BD02D000064DC /* SDDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD18C1E9BD02D000064DC /* SDDownloadViewController.m */; };
 		347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD18F1E9BD113000064DC /* SDImageViewController.m */; };
 		347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD1921E9BD193000064DC /* SDTableViewCell.m */; };
+		34DF146B1E9CCE4C00C7558C /* SDServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */; };
+		34DF146E1E9CD0A000C7558C /* SDServiceExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF146D1E9CD0A000C7558C /* SDServiceExample.m */; };
+		34DF14711E9CD5EA00C7558C /* MyServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF14701E9CD5EA00C7558C /* MyServiceManager.m */; };
 		50A7D0FC078F0E7AE6D3AC7C /* Pods_Docker_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE7C0E6AC4F9A6860BAE124 /* Pods_Docker_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -46,6 +49,12 @@
 		347DD18F1E9BD113000064DC /* SDImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageViewController.m; sourceTree = "<group>"; };
 		347DD1911E9BD193000064DC /* SDTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDTableViewCell.h; sourceTree = "<group>"; };
 		347DD1921E9BD193000064DC /* SDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDTableViewCell.m; sourceTree = "<group>"; };
+		34DF14691E9CCE4C00C7558C /* SDServiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDServiceViewController.h; sourceTree = "<group>"; };
+		34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDServiceViewController.m; sourceTree = "<group>"; };
+		34DF146C1E9CD0A000C7558C /* SDServiceExample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDServiceExample.h; sourceTree = "<group>"; };
+		34DF146D1E9CD0A000C7558C /* SDServiceExample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDServiceExample.m; sourceTree = "<group>"; };
+		34DF146F1E9CD5EA00C7558C /* MyServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyServiceManager.h; sourceTree = "<group>"; };
+		34DF14701E9CD5EA00C7558C /* MyServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyServiceManager.m; sourceTree = "<group>"; };
 		593DDACA50BB2B0BF7C1ACEE /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* Docker_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Docker_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -104,6 +113,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34DF14671E9CCD7B00C7558C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				34DF14691E9CCE4C00C7558C /* SDServiceViewController.h */,
+				34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */,
+				34DF146F1E9CD5EA00C7558C /* MyServiceManager.h */,
+				34DF14701E9CD5EA00C7558C /* MyServiceManager.m */,
+				34DF146C1E9CD0A000C7558C /* SDServiceExample.h */,
+				34DF146D1E9CD0A000C7558C /* SDServiceExample.m */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
+		34DF14681E9CCD8C00C7558C /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				347DD18B1E9BD02C000064DC /* SDDownloadViewController.h */,
+				347DD18C1E9BD02D000064DC /* SDDownloadViewController.m */,
+				347DD18E1E9BD113000064DC /* SDImageViewController.h */,
+				347DD18F1E9BD113000064DC /* SDImageViewController.m */,
+			);
+			name = Download;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -146,10 +179,8 @@
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* SDViewController.h */,
 				6003F5A6195388D20070C39A /* SDViewController.m */,
-				347DD18B1E9BD02C000064DC /* SDDownloadViewController.h */,
-				347DD18C1E9BD02D000064DC /* SDDownloadViewController.m */,
-				347DD18E1E9BD113000064DC /* SDImageViewController.h */,
-				347DD18F1E9BD113000064DC /* SDImageViewController.m */,
+				34DF14671E9CCD7B00C7558C /* Service */,
+				34DF14681E9CCD8C00C7558C /* Download */,
 				347DD1911E9BD193000064DC /* SDTableViewCell.h */,
 				347DD1921E9BD193000064DC /* SDTableViewCell.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
@@ -409,10 +440,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34DF146B1E9CCE4C00C7558C /* SDServiceViewController.m in Sources */,
+				34DF146E1E9CD0A000C7558C /* SDServiceExample.m in Sources */,
 				347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */,
 				6003F59E195388D20070C39A /* SDAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* SDViewController.m in Sources */,
 				347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */,
+				34DF14711E9CD5EA00C7558C /* MyServiceManager.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				347DD18D1E9BD02D000064DC /* SDDownloadViewController.m in Sources */,
 			);

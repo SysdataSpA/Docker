@@ -8,7 +8,7 @@
 
 #import "SDDownloadImageView.h"
 #import "UIImage+SDExtension.h"
-#import "SDDownload.h"
+#import "SDDockerLogger.h"
 
 #define kAIVTag                     8000
 #define DIV_BASE_ANIMATION_DURATION 0.3

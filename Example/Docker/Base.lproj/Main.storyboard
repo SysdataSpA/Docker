@@ -50,13 +50,24 @@
                                     <segue destination="8Ji-QJ-tda" kind="show" id="kvM-yz-Ned"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64E-C1-fgB">
+                                <rect key="frame" x="118" y="264" width="138" height="30"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <state key="normal" title="Service Manager"/>
+                                <connections>
+                                    <segue destination="0HL-wc-Xyf" kind="show" id="7wa-AI-R4x"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="leading" secondItem="W7I-ke-MzV" secondAttribute="leading" id="LLw-Id-6zv"/>
+                            <constraint firstItem="64E-C1-fgB" firstAttribute="top" secondItem="wSd-1c-WDg" secondAttribute="bottom" constant="25" id="O0W-Sw-Z5C"/>
                             <constraint firstItem="W7I-ke-MzV" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="90" id="ZUe-tu-6dN"/>
+                            <constraint firstItem="64E-C1-fgB" firstAttribute="leading" secondItem="wSd-1c-WDg" secondAttribute="leading" id="b23-o0-1hv"/>
                             <constraint firstItem="W7I-ke-MzV" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="ikw-tI-HaA"/>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="top" secondItem="W7I-ke-MzV" secondAttribute="bottom" constant="25" id="myZ-W4-uyL"/>
+                            <constraint firstItem="64E-C1-fgB" firstAttribute="trailing" secondItem="wSd-1c-WDg" secondAttribute="trailing" id="oIU-Qn-1ZE"/>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="trailing" secondItem="W7I-ke-MzV" secondAttribute="trailing" id="wdQ-WM-I13"/>
                         </constraints>
                     </view>
@@ -86,7 +97,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z9I-7N-h1h" id="sCn-uS-kN4">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMl-Vf-qx0" customClass="SDDownloadImageView">
@@ -122,6 +133,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MPq-z6-vzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1409" y="715"/>
+        </scene>
+        <!--Service View Controller-->
+        <scene sceneID="2e0-Hd-zyg">
+            <objects>
+                <viewController id="0HL-wc-Xyf" customClass="SDServiceViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9h6-c7-ESV"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ikh-jf-Bba"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="U4B-Uy-gw1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LPf-iV-7Lk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1774" y="-72"/>
         </scene>
     </scenes>
 </document>

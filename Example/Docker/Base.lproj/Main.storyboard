@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,9 +14,10 @@
         <scene sceneID="ZiH-sU-dSJ">
             <objects>
                 <navigationController id="WDz-0E-QAR" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sgo-WL-eS4">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sgo-WL-eS4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.43529411759999997" green="0.76470588240000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="whP-gf-Uak" kind="relationship" relationship="rootViewController" id="ZNb-KU-Dx0"/>
@@ -38,20 +40,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7I-ke-MzV">
-                                <rect key="frame" x="118" y="154" width="138" height="30"/>
+                                <rect key="frame" x="113.5" y="154" width="147" height="30"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <state key="normal" title="Donwload Manager"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wSd-1c-WDg">
-                                <rect key="frame" x="118" y="209" width="138" height="30"/>
+                                <rect key="frame" x="113.5" y="209" width="147" height="30"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <state key="normal" title="Donwload ImgaView"/>
+                                <state key="normal" title="Donwload ImageView"/>
                                 <connections>
                                     <segue destination="8Ji-QJ-tda" kind="show" id="kvM-yz-Ned"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64E-C1-fgB">
-                                <rect key="frame" x="118" y="264" width="138" height="30"/>
+                                <rect key="frame" x="113.5" y="264" width="147" height="30"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <state key="normal" title="Service Manager"/>
                                 <connections>
@@ -89,15 +91,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KU3-Lp-xzC">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="KU3-Lp-xzC">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="Z9I-7N-h1h" customClass="SDTableViewCell">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="65"/>
+                                        <rect key="frame" x="0.0" y="1" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z9I-7N-h1h" id="sCn-uS-kN4">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMl-Vf-qx0" customClass="SDDownloadImageView">
@@ -132,7 +134,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MPq-z6-vzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1409" y="715"/>
+            <point key="canvasLocation" x="1774" y="759"/>
         </scene>
         <!--Service View Controller-->
         <scene sceneID="2e0-Hd-zyg">
@@ -145,8 +147,60 @@
                     <view key="view" contentMode="scaleToFill" id="U4B-Uy-gw1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="E3D-hO-Bou">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="afV-3t-x7K" customClass="SDServiceViewCell">
+                                        <rect key="frame" x="0.0" y="1" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="afV-3t-x7K" id="Fjp-bV-nUb">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gyh-yX-6ft" customClass="SDDownloadImageView">
+                                                    <rect key="frame" x="15" y="5" width="49.5" height="49.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="Gyh-yX-6ft" secondAttribute="height" multiplier="1:1" id="jLH-20-PWo"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pC8-Xc-99w">
+                                                    <rect key="frame" x="72.5" y="5" width="287.5" height="49.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="pC8-Xc-99w" firstAttribute="top" secondItem="Fjp-bV-nUb" secondAttribute="top" constant="5" id="B9t-D4-deZ"/>
+                                                <constraint firstAttribute="bottom" secondItem="Gyh-yX-6ft" secondAttribute="bottom" constant="5" id="M6R-wk-UmG"/>
+                                                <constraint firstAttribute="bottom" secondItem="pC8-Xc-99w" secondAttribute="bottom" constant="5" id="Myu-7z-Nba"/>
+                                                <constraint firstItem="pC8-Xc-99w" firstAttribute="leading" secondItem="Gyh-yX-6ft" secondAttribute="trailing" constant="8" id="edq-s9-xST"/>
+                                                <constraint firstItem="Gyh-yX-6ft" firstAttribute="top" secondItem="Fjp-bV-nUb" secondAttribute="top" constant="5" id="j4e-S9-BEB"/>
+                                                <constraint firstItem="Gyh-yX-6ft" firstAttribute="leading" secondItem="Fjp-bV-nUb" secondAttribute="leading" constant="15" id="vbH-up-773"/>
+                                                <constraint firstAttribute="trailing" secondItem="pC8-Xc-99w" secondAttribute="trailing" constant="15" id="zrv-kW-y37"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="downloadImageView" destination="Gyh-yX-6ft" id="kda-cG-Nzl"/>
+                                            <outlet property="label" destination="pC8-Xc-99w" id="W9B-MY-jHT"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="E3D-hO-Bou" secondAttribute="trailing" id="1dv-bt-KGW"/>
+                            <constraint firstItem="E3D-hO-Bou" firstAttribute="leading" secondItem="U4B-Uy-gw1" secondAttribute="leading" id="4HH-I6-Z94"/>
+                            <constraint firstItem="Ikh-jf-Bba" firstAttribute="top" secondItem="E3D-hO-Bou" secondAttribute="bottom" id="BXw-tS-CaB"/>
+                            <constraint firstItem="E3D-hO-Bou" firstAttribute="top" secondItem="9h6-c7-ESV" secondAttribute="bottom" id="eW4-Fy-QP9"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="E3D-hO-Bou" id="vsR-8s-moL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPf-iV-7Lk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

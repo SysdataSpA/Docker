@@ -23,6 +23,8 @@
 {
     [super viewDidLoad];
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     self.imageUrls = @[
                        @"http://images.freeimages.com/images/previews/aaa/spanish-village-street-1445758.jpg",
                        @"http://media.istockphoto.com/photos/castillala-manchaspain-picture-id535260987",

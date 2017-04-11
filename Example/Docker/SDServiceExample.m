@@ -41,12 +41,9 @@
 
 + (NSDictionary*) JSONKeyPathsByPropertyKey
 {
-    NSMutableDictionary* dict = [[super JSONKeyPathsByPropertyKey] mutableCopy];
-    
-    [dict addEntriesFromDictionary:@{
-                                     @"numUsers":@"results"
-                                     }];
-    return dict;
+    return @{
+            @"numUsers":@"results"
+            };
 }
 
 
@@ -55,5 +52,31 @@
 
 
 @implementation SDServiceExampleResponse
+
++ (NSDictionary*) JSONKeyPathsByPropertyKey
+{
+    return @{
+             @"users":@"results"
+            };
+}
+
++ (NSValueTransformer*) usersJSONTransformer
+{
+    return [MTLJSONAdapter arrayTransformerWithModelClass:[MTLUser class]];
+}
+
+@end
+
+@implementation MTLUser
+
++ (NSDictionary*) JSONKeyPathsByPropertyKey
+{
+    return @{
+              @"firstName":@"name.first",
+              @"lastName":@"name.last",
+              @"imageUrl":@"picture.medium"
+            };
+}
+
 
 @end

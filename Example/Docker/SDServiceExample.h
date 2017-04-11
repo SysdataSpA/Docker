@@ -18,6 +18,18 @@
 @end
 
 
+@interface MTLUser : MTLModel <MTLJSONSerializing>
+
+@property (nonatomic, strong) NSString* firstName;
+@property (nonatomic, strong) NSString* lastName;
+
+@property (nonatomic, strong) NSString* imageUrl;
+
+@end
+
+
 @interface SDServiceExampleResponse : SDServiceMantleResponse
+
+@property (nonatomic, strong) NSArray<MTLUser*>* users;
 
 @end

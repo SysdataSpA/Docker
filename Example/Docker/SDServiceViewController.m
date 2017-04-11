@@ -8,8 +8,13 @@
 
 #import "SDServiceViewController.h"
 #import "MyServiceManager.h"
+#import "SDServiceExample.h"
+#import "SDServiceViewCell.h"
 
-@interface SDServiceViewController ()
+@interface SDServiceViewController ()<UITableViewDelegate, UITableViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSArray<MTLUser*>* users;
 
 @end
 
@@ -19,14 +24,37 @@
 {
     [super viewDidLoad];
     
-    [[MyServiceManager sharedServiceManager] callServiceForNumUsers:@25 withCompletion:^(id<SDServiceGenericResponseProtocol> response) {
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    __weak typeof (self) weakSelf = self;
+    [[MyServiceManager sharedServiceManager] callServiceForNumUsers:@25 withCompletion:^(SDServiceExampleResponse* response) {
+        weakSelf.users = response.users;
+        [weakSelf.tableView reloadData];
         
     } failure:^(id<SDServiceGenericErrorProtocol> error) {
         
     }];
 }
 
+#pragma mark UITableView
 
+- (NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.users.count;
+}
+
+- (UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    SDServiceViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    
+    MTLUser* user = [self.users objectAtIndex:indexPath.row];
+    cell.label.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    [cell.downloadImageView setImageWithURLString:user.imageUrl];
+    return cell;
+}
 
 
 @end

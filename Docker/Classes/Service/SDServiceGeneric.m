@@ -60,7 +60,7 @@
 //// ASYNCHRONOUS version of method
 - (void) getResultFromJSONFileWithCompletion:(void (^) (id result))completion
 {
-    // si legge il json da file, chiedendo eventualmente al servizio il nome del file da usare
+    // read json from file asking at service the demo file name
     NSString* jsonFileName = NSStringFromClass([self class]);
     
     if ([self respondsToSelector:@selector(demoModeJsonFileName)])
@@ -68,8 +68,12 @@
         jsonFileName = [self demoModeJsonFileName];
     }
     
-    // se non ci sono problemi, il json viene mappato nella risposta e restituito
     NSString* pathToFile = [[NSBundle mainBundle] pathForResource:jsonFileName ofType:@"json"];
+    [self getResultFromJSONFileAtPath:pathToFile withCompletion:completion];
+}
+
+- (void) getResultFromJSONFileAtPath:(NSString*)pathToFile withCompletion:(void (^) (id result))completion
+{
     if ([[NSFileManager defaultManager] fileExistsAtPath:pathToFile])
     {
         // execution in separate thread
@@ -88,7 +92,7 @@
             NSDictionary* dictionary = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&jsonError];
             if (jsonError)
             {
-                SDLogModuleError(kServiceManagerLogModuleName, @"Il file %@ non contiene un dictionary valido: %@", pathToFile, jsonError.localizedDescription);
+                SDLogModuleError(kServiceManagerLogModuleName, @"Local file %@ doesn't contain a valid dictionary: %@", pathToFile, jsonError.localizedDescription);
                 dictionary = nil;
             }
             
@@ -99,7 +103,7 @@
     }
     else
     {
-        SDLogModuleError(kServiceManagerLogModuleName, @"Il file %@ non esiste", pathToFile);
+        SDLogModuleError(kServiceManagerLogModuleName, @"Local file %@ doesn't exist", pathToFile);
         completion(nil);
     }
 }

@@ -34,12 +34,12 @@
 /**
  *  Coda dei servizi non ancora eseguiti.
  */
-@property (nonatomic, strong, readwrite) NSMutableArray* servicesQueue;
+@property (nonatomic, strong, readwrite) NSMutableArray<SDServiceCallInfo*>* servicesQueue;
 
 /**
  *  Mappa dei servizi pending divisi per delegate. Key: hash del delegate, Value: array di SDServiceGeneric.
  */
-@property (nonatomic, strong, readwrite) NSMutableDictionary* serviceInvocationDictionary;
+@property (nonatomic, strong, readwrite) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* serviceInvocationDictionary;
 
 @end
 
@@ -161,12 +161,6 @@
     AFHTTPRequestOperationManager* requestOperationManager = [serviceInfo.service requestOperationManager];
     AFHTTPRequestSerializer* serializer = requestOperationManager.requestSerializer;
     
-    // setta eventuali headers aggiuntivi alla chiamata HTTP
-    for (NSString* headerKey in [serviceInfo.request additionalRequestHeaders].allKeys)
-    {
-        [serializer setValue:[serviceInfo.request additionalRequestHeaders][headerKey] forHTTPHeaderField:headerKey];
-    }
-    
     // recupera path e parametri
     NSString* path = [serviceInfo.service pathResource];
     NSError* mappingError = nil;
@@ -270,6 +264,23 @@
             break;
         }
     }
+    
+    // setta eventuali headers aggiuntivi alla chiamata HTTP
+    for (NSString* headerKey in [serviceInfo.request additionalRequestHeaders].allKeys)
+    {
+        // try setting custom headers directly on request avoiding problems that headers added on serializer will appear in all next requests (also in request that don't required them)
+        if([operation.request isKindOfClass:[NSMutableURLRequest class]])
+        {
+            NSMutableURLRequest* request = (NSMutableURLRequest*)operation.request;
+            [request setValue:[serviceInfo.request additionalRequestHeaders][headerKey] forHTTPHeaderField:headerKey];
+        }
+        else
+        {
+            // fallback: added on serializer
+            [serializer setValue:[serviceInfo.request additionalRequestHeaders][headerKey] forHTTPHeaderField:headerKey];
+        }
+    }
+    
     
     // set the operation's download progress block if needed
     if (serviceInfo.downloadProgressHandler != nil || [serviceInfo.delegate respondsToSelector:@selector(didDownloadBytes:onTotalExpected:)])
@@ -547,7 +558,7 @@
 
 - (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo
 {
-    return [self shouldCatchFailureForMissingResponseInServiceInfo:serviceInfo error:nil];
+    [self shouldCatchFailureForMissingResponseInServiceInfo:serviceInfo error:nil];
 }
 
 - (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo error:(NSError *)error

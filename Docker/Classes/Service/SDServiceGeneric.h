@@ -10,225 +10,241 @@
 #import <AFNetworking/AFNetworking.h>
 
 /**
- *  Metodi HTTP supportati dal SDServiceManager.
+ *  HTTP methots supported by SDServiceManager.
  */
 typedef NS_ENUM (NSUInteger, SDHTTPMethod)
 {
     /**
-     *  Rappresenta il metodo HTTP GET.
+     *  HTTP GET.
      */
     SDHTTPMethodGET = 0,
     /**
-     *  Rappresenta il metodo HTTP POST.
+     *  HTTP POST.
      */
     SDHTTPMethodPOST,
     /**
-     *  Rappresenta il metodo HTTP PUT.
+     *  HTTP PUT.
      */
     SDHTTPMethodPUT,
     /**
-     *  Rappresenta il metodo HTTP DELETE.
+     *  HTTP DELETE.
      */
     SDHTTPMethodDELETE,
     /**
-     *  Rappresenta il metodo HTTP HEAD.
+     *  HTTP HEAD.
      */
     SDHTTPMethodHEAD,
     /**
-     *  Rappresenta il metodo HTTP PATCH.
+     *  HTTP PATCH.
      */
     SDHTTPMethodPATCH
 };
 
 @interface MultipartBodyInfo : NSObject
 
-@property (nonatomic, strong) NSData* data;
-@property (nonatomic, strong) NSString* name;
-@property (nonatomic, strong) NSString* fileName;
-@property (nonatomic, strong) NSString* mimeType;
+@property (nonatomic, strong) NSData* _Nullable data;
+@property (nonatomic, strong) NSString* _Nullable name;
+@property (nonatomic, strong) NSString* _Nullable fileName;
+@property (nonatomic, strong) NSString* _Nullable mimeType;
 
 @end
 
 
 /**
- *  Protocollo implementato da tutte le requests.
+ *  Protocol implemented by all requests.
  */
 @protocol SDServiceGenericRequestProtocol <NSObject>
 @optional
 /**
- *  Gli headers da aggiungere o da modificare rispetto al default per la singola request.
+ *  Headers to modify or add to the defaults.
  */
-@property (nonatomic, strong) NSDictionary* additionalRequestHeaders;
+@property (nonatomic, strong) NSDictionary* _Nullable additionalRequestHeaders;
 /**
- *  I parametri aggiuntivi da passare rispetto a quelli definiti attraverso il mapping dell'oggetto di request.
+ *  Parameters to send in addition of parameters defined in the request object.
  */
-@property (nonatomic, strong) NSDictionary* additionalRequestParameters;
+@property (nonatomic, strong) NSDictionary* _Nullable additionalRequestParameters;
 
 /**
- *  Impostazione per la rimozione dalla request dei parametri non valorizzati (il cui valore è nil)
+ *  Enable to remove parameters without value from request (otherwise parameters will be passed with 'null' value)
  */
 @property (nonatomic, assign) BOOL removeNilParameters;
 
 
 /**
- *  Informazioni relative agli NSData da inviare in multipart nel servizio
+ *  Infos about NSData to send in multipart calls
  */
-@property (nonatomic, strong) NSArray<MultipartBodyInfo*>* multipartInfos;
+@property (nonatomic, strong) NSArray<MultipartBodyInfo*>* _Nullable multipartInfos;
 
 @end
 
+
+
+
+
+
 /**
- *  Protocollo implementato da tutte le response.
+ *  Protocol implemented by all responses.
  */
 @protocol SDServiceGenericResponseProtocol <NSObject>
 @required
 /**
- *  Lo status code HTTP restituito dal servizio.
+ *  HTTP status code returned by service.
  */
 @property (nonatomic, assign) int httpStatusCode;
 
 /**
- *  Tutti gli header associati alla response
+ *  Headers of the reponse
  */
-@property (nonatomic, strong) NSDictionary* headers;
+@property (nonatomic, strong) NSDictionary* _Nullable headers;
 
 /**
- *  Nome della property in cui mappare il body della response nel caso in cui questo sia un array e non un dictionary.
+ *  Property name mapped in case service starts with an array object instead of dictionary object.
  */
-@property (readonly, nonatomic, strong) NSString* propertyNameForArrayResponse;
+@property (readonly, nonatomic, strong) NSString* _Nullable propertyNameForArrayResponse;
 
 /**
- *  Classe degli oggetti contenuti nel body della response nel caso in cui questo sia un array e non un dictionary.
+ *  Class of objects inside body response in case service starts with an array object instead of dictionary object.
  */
-@property (readonly, nonatomic, assign) Class classOfItemsInArrayResponse;
+@property (readonly, nonatomic, assign) Class _Nullable classOfItemsInArrayResponse;
 @end
 
 
 
+
 /**
- *  Protocollo implementato da tutte gli error dei servizi.
+ *  Protocol implemented by all errors.
  */
 @protocol SDServiceGenericErrorProtocol <NSObject>
 @required
 /**
- *  Lo status code HTTP restituito dal servizio.
+ *  HTTP status code returned by service.
  */
 @property (nonatomic, assign) int httpStatusCode;
 /**
- *  L'oggetto NSError restituito dal SDServiceManager in caso di errore nel servizio.
+ *  Error object returned by SDServiceManager in case of service failure.
  */
-@property (nonatomic, strong) NSError* error;
+@property (nonatomic, strong) NSError* _Nullable error;
 @end
 
+
+
+
+
 /**
- *  Protocollo implementato da tutti i SDServiceGeneric.
+ *  Protocol implemented by all services (SDServiceGeneric).
  */
 @protocol SDServiceGenericProtocol <NSObject>
 @required
 /**
- *  Path del servizio che verrà aggiunto alla base url definita nel SDServiceManager.
+ *  Service path that will be added at SDServiceManager base url.
  *
- *  @return il path del servizio relativo alla base url.
+ *  @return service path relative to base url.
  */
-- (NSString*) pathResource;
+- (NSString* _Nonnull) pathResource;
 
 /**
- *  L'operation manager da utilizzare per il servizio. Di default viene utilizzato l'operation manager instanziato da SDServiceManager.
+ *  Operation manager to use for the service. By default will be used the operation manager instanciated by SDServiceManager.
+ 
+ *  @discussion tipically don't override it to use the default one. Return specific instance of AFHTTPRequestOperationManager to manage services in differents queue.
  *
- *  @discussion Tipicamente si restituisce nil per utilizzare quello di default. Restituire uno specifica istanza di AFHTTPRequestOperationManager per gestire i servizi su code separate.
- *
- *  @return L'operation manager da utilizzare per il servizio. Restituire nil per utilizzare l'operation manager di default.
+ *  @return operation manager to use for the service.
  */
-- (AFHTTPRequestOperationManager*) requestOperationManager;
+- (AFHTTPRequestOperationManager* _Nonnull) requestOperationManager;
 
 /**
- *  Restituisce il metodo HTTP da utilizzare per la chiamata al servizio. Vedi SDHTTPMethod per maggiori dettagli. Di default restituisce SDHTTPMethodGET.
+ *  HTTP method to use in the service call. Look at SDHTTPMethod for details. By default return SDHTTPMethodGET.
  *
- *  @return il metodo HTTP.
+ *  @return HTTP method.
  */
 - (SDHTTPMethod) requestMethodType;
 
 /**
- *  Restituisce il dictionary che rappresenta i parametri da utilizzare in query string o nel body della request (a seconda del metodo HTTP del servizio).
+ *  Return dictionary that rapresents parameters used in query string or in body of request (depending by the HTTP method). Use this method to parse your object. If your service is application/json you can use SDServiceMantle.
  *
- *  @param request La request di cui si vuole il dictionary dei parametri.
- *  @param error      Eventuale errore di mapping passato per riferimento.
+ *  @param request    request.
+ *  @param error      possible error mapping (passed by reference).
  *
- *  @return il dictionary dei parametri. In caso di errore, l'oggetto error viene valorizzato.
+ *  @return dictionary of parameters. In case of failure, error object will be instantiate.
  */
-- (NSDictionary*) parametersForRequest:(id<SDServiceGenericRequestProtocol>)request error:(NSError**)error;
+- (NSDictionary* _Nullable) parametersForRequest:(id<SDServiceGenericRequestProtocol> _Nullable)request error:(NSError*_Nullable* _Nullable)error;
 
 /**
- *  Restituisce la response del servizio a partire dal NSDictionary di risposta o nil se l'oggetto del servizio non può essere mappato.
+ *  Return the service response starting from the response object (NSDictionary or NSArray).
+ Restituisce la response del servizio a partire dal NSDictionary di risposta o nil se l'oggetto del servizio non può essere mappato.
  *
- *  @param object     L'oggetto che arriva dal servizio da mappare nell'oggetto di response.
- *  @param error      Eventuale errore di mapping passato per riferimento.
+ *  @param object     object returned by service that will be mapped in the final response object.
+ *  @param error      possible error mapping (passed by reference).
  *
- *  @return L'oggetto di response o nil in caso di errore. In caso di errore, l'oggetto error viene valorizzato.
+ *  @return final response object or nil in case of failure. In case of failure, error object will be instantiate.
  */
-- (id<SDServiceGenericResponseProtocol>) responseForObject:(id)object error:(NSError**)error;
+- (id<SDServiceGenericResponseProtocol>_Nullable) responseForObject:(id _Nullable)object error:(NSError*_Nullable* _Nullable)error;
 
 /**
- *  Restituisce la response di errore del servizio a partire dal NSDictionary di risposta o nil se l'oggetto del servizio non può essere mappato.
+ *  Return the error response starting from the response object (NSDictionary).
  *
- *  @param object     L'oggetto che arriva dal servizio da mappare nell'oggetto di errore.
- *  @param error      Eventuale errore di mapping passato per riferimento.
+ *  @param object     object returned by service that will be mapped in the final error object.
+ *  @param error      possible error mapping (passed by reference).
  *
- *  @return L'oggetto di errore o nil in caso di errore. In caso di errore, l'oggetto error viene valorizzato.
+ *  @return final error object or nil in case of failure. In case of failure, error object will be instantiate.
  */
-- (id<SDServiceGenericErrorProtocol>) errorForObject:(id)object error:(NSError**)error;
+- (id<SDServiceGenericErrorProtocol> _Nullable) errorForObject:(id _Nullable)object error:(NSError*_Nullable* _Nullable)error;
 
 /**
- *  La classe dell'oggetto che rappresenta la response del servizio.
+ *  Object class for the service response.
  *
- *  @return La classe della response.
+ *  @return class of response.
  */
-- (Class) responseClass;
+- (Class _Nullable) responseClass;
 
 /**
- *  La classe dell'oggetto che rappresenta l'errore del servizio.
+ *  Error class for the service response in case of failure.
  *
- *  @return La classe dell'errore.
+ *  @return class of error.
  */
-- (Class) errorClass;
+- (Class _Nullable) errorClass;
 
 @optional
 /**
- *  Flag che indica se il servizio deve recuperare la risposta da un file in locale.
+ *  Falg to anable service to retreive the response from a local file (set in demoModeJsonFileName)
  *
- *  @return YES se il servizio deve recuperare la response da locale. NO se il servizio deve effettuare la chiamata al server. Di default è NO.
+ *  @return YES if should retreive response from local file. NO if server should call the server. Default is NO.
  */
 - (BOOL) useDemoMode;
 
 /**
- *  Nome del file in locale dal quale recuperare la risposta al servizio quando lo si usa in modalità demo.
+ *  File name of local file that contains the response of service (in the Bundle).
  *
  *  @return Nome del file in locale.
  */
-- (NSString*) demoModeJsonFileName;
+- (NSString* _Nullable) demoModeJsonFileName;
 
 /**
- *  Range entro il quale viene calcolato un valore random che rappresenta il tempo di attesa del servizio in demo mode.
+ *  Range for get a random value inside that will be used as waiting time for the service called in dem mode.
  *
- *  @return rnage per il tempo di attesa
+ *  @return range for the waiting time
  */
 - (NSRange) demoWaitingTimeRange;
 
 @end
 
+
+
+
+
 /**
- *  Classe di base da sottoclassare per definire i servizi specifici. Questa implementazione non fa alcun mapping delle requests e delle responses. Tipicamente si dovrà sottoclassare una implementazione più specifica di SDServiceGeneric, come SDServiceMantle.
+ *  Base class to subclass defining custom services. This base implementation doesn't provide any mapping for request and response. Tipically subclass to define the SDServiceGenericProtocol methods. If your service is an application/json subcalss SDServiceMantle and use Mantle to parse json objects.
  */
 @interface SDServiceGeneric : NSObject <SDServiceGenericProtocol>
 /**
- *  Flag che specifica se il servizio può essere ripetuto in caso di errore.
+ *  Flag to repeat service in case of failure.
  */
 @property (nonatomic, readonly) BOOL isRepeatable;
 /**
- *  Recupera la response da un file locale. Il nome di default del file locale è il nome della classe del servizio, ma può essere sovrascritto mediante il metodo -(NSString*)demoModeJsonFileName.
+ *  Retreive response from a local file. The default name of file is the Class name of service, but it can be override using method -(NSString*)demoModeJsonFileName.
  *
  *  @return La response recuperata da file locale o nil se non riesce a recuperarla.
  */
-- (void) getResultFromJSONFileWithCompletion:(void (^) (id result))completion;
+- (void) getResultFromJSONFileWithCompletion:(void (^_Nullable)  (id _Nullable result))completion;
+- (void) getResultFromJSONFileAtPath:(NSString* _Nonnull)pathToFile withCompletion:(void (^_Nullable) (id _Nullable result))completion;
 
 @end

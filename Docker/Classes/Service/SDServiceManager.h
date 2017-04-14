@@ -2,11 +2,11 @@
 #import "SDServiceGeneric.h"
 #import <AFNetworking/AFNetworking.h>
 
-typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> response);
-typedef void (^ ServiceCompletionFailureHandler)(id<SDServiceGenericErrorProtocol> error);
+typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> _Nullable response);
+typedef void (^ ServiceCompletionFailureHandler)(id<SDServiceGenericErrorProtocol> _Nullable error);
 typedef void (^ ServiceDownloadProgressHandler)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
 typedef void (^ ServiceUploadProgressHandler)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
-typedef NSCachedURLResponse* (^ ServiceCachingBlock)(NSURLConnection* connection, NSCachedURLResponse* cachedResponse);
+typedef NSCachedURLResponse* _Nullable (^ ServiceCachingBlock)(NSURLConnection* _Nullable connection, NSCachedURLResponse* _Nullable cachedResponse);
 
 typedef NS_ENUM (NSInteger, SDServiceOperationType)
 {
@@ -15,73 +15,73 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 
 @protocol SDServiceManagerDelegate;
 /**
- *  Classe wrapper di una singola chiamata per un SDServiceGeneric.
+ *  Wrapper class for a single call of SDServiceGeneric.
  */
 @interface SDServiceCallInfo : NSObject
 
-- (instancetype) initWithService:(SDServiceGeneric*)service request:(id<SDServiceGenericRequestProtocol>)request;
+- (instancetype _Nonnull) initWithService:(SDServiceGeneric* _Nonnull)service request:(id<SDServiceGenericRequestProtocol> _Nonnull)request;
 
-@property (readonly, nonatomic, strong) SDServiceGeneric* service;
-@property (readonly, nonatomic, strong) id<SDServiceGenericRequestProtocol> request;
+@property (readonly, nonatomic, strong) SDServiceGeneric* _Nonnull service;
+@property (readonly, nonatomic, strong) id<SDServiceGenericRequestProtocol> _Nonnull request;
 @property (nonatomic, assign) SDServiceOperationType type;
-@property (nonatomic, weak) id <SDServiceManagerDelegate> delegate;
-@property (nonatomic, assign) SEL actionSelector;
+@property (nonatomic, weak) id <SDServiceManagerDelegate> _Nullable delegate;
+@property (nonatomic, assign) SEL _Nullable actionSelector;
 
 @property (nonatomic, assign) BOOL isProcessing;
 @property (nonatomic, assign) int numAutomaticRetry;
 
-@property (nonatomic, strong) ServiceCompletionSuccessHandler completionSuccess;
-@property (nonatomic, strong) ServiceCompletionFailureHandler completionFailure;
-@property (nonatomic, strong) ServiceDownloadProgressHandler downloadProgressHandler;
-@property (nonatomic, strong) ServiceUploadProgressHandler uploadProgressHandler;
-@property (nonatomic, strong) ServiceCachingBlock cachingBlock;
+@property (nonatomic, strong) ServiceCompletionSuccessHandler _Nullable completionSuccess;
+@property (nonatomic, strong) ServiceCompletionFailureHandler _Nullable completionFailure;
+@property (nonatomic, strong) ServiceDownloadProgressHandler _Nullable downloadProgressHandler;
+@property (nonatomic, strong) ServiceUploadProgressHandler _Nullable uploadProgressHandler;
+@property (nonatomic, strong) ServiceCachingBlock _Nullable cachingBlock;
 
 @end
 
 @protocol SDServiceManagerDelegate <NSObject>
 @optional
 /**
- *  Chiede al delegate se può iniziare l'operazione sul servizio del tipo passato.
+ *  Asks to delegate if can start operation for the service.
  *
- *  @param operation Il tipo di servizio
+ *  @param operation type of service
  *
- *  @return YES se il servizio può essere eseguito, NO se deve essere bloccato.
+ *  @return YES if the service could start, NO if service shouldn't start.
  */
 - (BOOL) shouldStartServiceOperation:(SDServiceOperationType)operation;  // called before operation process starts (default YES, if not implemented)
 
 /**
- *  Riporta al delegate il totale di bytes scaricati.
+ *  Returns to delegate the total number of downloaded bytes.
  *
- *  @param totalBytesRead           Totale di bytes scaricati.
- *  @param totalBytesExpectedToRead Totale di bytes stimati.
+ *  @param totalBytesRead           Total bytes downloaded.
+ *  @param totalBytesExpectedToRead Total bytes expected.
  */
 - (void) didDownloadBytes:(long long)totalBytesRead onTotalExpected:(long long)totalBytesExpectedToRead;
 
 /**
- *  Riporta al delegate il totale di bytes inviati.
+ *  Returns to delegate the total number of uploaded bytes.
  *
- *  @param totalBytesWritten         Totale di bytes inviati.
- *  @param totalBytesExpectedToWrite Totale di bytes stimati.
+ *  @param totalBytesWritten         Total bytes uploaded.
+ *  @param totalBytesExpectedToWrite Total bytes expected.
  */
 - (void) didUploadBytes:(long long)totalBytesWritten onTotalExpected:(long long)totalBytesExpectedToWrite;
 
 @required
 /**
- *  Informa il delegate che un servizio del tipo passato ha iniziato la propria operazione.
+ *  Informs delegate that service did start.
  *
- *  @param operation Il tipo di servizio
+ *  @param operation type of service
  */
 - (void) didStartServiceOperation:(SDServiceOperationType)operation;
 
 /**
- *  Informa il delegate che un servizio del tipo passato ha completato la propria operazione.
+ *  Informs delegate that service did end.
  *
- *  @param operation Il tipo di servizio
- *  @param request   La request legata al servizio
- *  @param result    La response del servizio. Il valore è nil se l'operazione è fallita.
- *  @param error     La response in caso di errore. Il valore è nil se l'operazione ha avuto successo.
+ *  @param operation type of service
+ *  @param request   request of the service
+ *  @param result    response of the service. Value nil if failure occured.
+ *  @param error     response in case of failure. Value nil if operation did end with success.
  */
-- (void) didEndServiceOperation:(SDServiceOperationType)operation withRequest:(id<SDServiceGenericRequestProtocol>)request result:(id<SDServiceGenericResponseProtocol>)result error:(id<SDServiceGenericErrorProtocol>)error; // called when Service operation process ends
+- (void) didEndServiceOperation:(SDServiceOperationType)operation withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request result:(id<SDServiceGenericResponseProtocol> _Nullable)result error:(id<SDServiceGenericErrorProtocol> _Nullable)error; // called when Service operation process ends
 @end
 
 /**
@@ -94,12 +94,12 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 @interface SDServiceManager : NSObject
 #endif
 
-+ (instancetype) sharedServiceManager;
++ (instancetype _Nonnull) sharedServiceManager;
 
 /**
  *  Il Request Operation Manager di default.
  */
-@property(nonatomic, strong) AFHTTPRequestOperationManager* defaultRequestOperationManager;
+@property(nonatomic, strong) AFHTTPRequestOperationManager* _Nullable defaultRequestOperationManager;
 
 /**
  *  Tempo di attesa in secondi tra un fallimento e il successivo retry di un servizio ripetibile. Di default è 3 secondi.
@@ -118,12 +118,12 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 /**
  *  Coda dei servizi non ancora eseguiti.
  */
-@property (nonatomic, strong, readonly) NSMutableArray* servicesQueue;
+@property (nonatomic, strong, readonly) NSMutableArray<SDServiceCallInfo*>* _Nullable servicesQueue;
 
 /**
  *  Mappa dei servizi pending divisi per delegate. Key: hash del delegate, Value: array di SDServiceGeneric.
  */
-@property (nonatomic, strong, readonly) NSMutableDictionary* serviceInvocationDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* _Nullable serviceInvocationDictionary;
 
 /**
  *  Questo metodo viene chiamato al termine di tutte le operazioni del servizio (chiamata e mapping). L'implementazione di default non fa nulla.
@@ -132,8 +132,8 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @param serviceInfo Il servizio completato con successo.
  */
-- (void) handleSuccessForServiceInfo:(SDServiceCallInfo*)serviceInfo withResponse:(id<SDServiceGenericResponseProtocol>)response;
-- (void) handleSuccessForServiceInfo:(SDServiceCallInfo*)serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleSuccessForServiceInfo:withResponse: instead")));
+- (void) handleSuccessForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo withResponse:(id<SDServiceGenericResponseProtocol> _Nullable)response;
+- (void) handleSuccessForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleSuccessForServiceInfo:withResponse: instead")));
 
 /**
  *  Questo metodo viene chiamato al termine di tutte le operazioni del servizio (chiamata e mapping). L'implementazione di default non fa nulla.
@@ -142,8 +142,8 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @param serviceInfo Il servizio completato con errore.
  */
-- (void) handleFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo withError:(id<SDServiceGenericErrorProtocol>)serviceError;
-- (void) handleFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleFailureForServiceInfo:withError: instead")));
+- (void) handleFailureForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo withError:(id<SDServiceGenericErrorProtocol> _Nullable)serviceError;
+- (void) handleFailureForServiceInfo:(SDServiceCallInfo*_Nullable )serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleFailureForServiceInfo:withError: instead")));
 
 
 /**
@@ -161,7 +161,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @param serviceInfo Il servizio da ripetere
  */
-- (void) performAutomaticRetry:(SDServiceCallInfo*)serviceInfo;
+- (void) performAutomaticRetry:(SDServiceCallInfo* _Nullable)serviceInfo;
 
 /**
  *  Ripete i servizi falliti ancora in coda.
@@ -179,26 +179,26 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @return Un flag che indica se il fallimento senza response deve essere propagato al delegato e chiamare il failure block.
  */
-- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo;
+- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo;
 
 /**
  *  Versione alternativa a quella sopra che passa anche l'errore ottenuto
  */
-- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo error:(NSError*)error;
+- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo error:(NSError* _Nullable)error;
 
 /**
  *  Cancella tutte le operazioni ancora in coda associate al servizio passato.
  *
  *  @param service Il servizio di cui si vuole cancellare tutte le operazioni pendenti.
  */
-- (void) cancelAllOperationsForService:(SDServiceGeneric*)service;
+- (void) cancelAllOperationsForService:(SDServiceGeneric* _Nullable)service;
 
 /**
  *  Cancella tutte le operazioni pendenti che hanno come delegate l'oggetto passato.
  *
  *  @param delegate Il delegate associato alle operazioni che si desidera cancellare.
  */
-- (void) cancelAllOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate;
+- (void) cancelAllOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable )delegate;
 
 /**
  *  Restituisce il numero di operazioni ancora pendenti associate al delegate passato
@@ -207,7 +207,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @return Il numero di operazioni.
  */
-- (NSUInteger) numberOfPendingOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate;
+- (NSUInteger) numberOfPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
  *  Controlla se ci sono operazioni pendenti associate al delegate passato.
@@ -216,7 +216,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @return YES se ci sono operazioni in coda che hanno come delegate l'oggetto passato, altrimenti NO.
  */
-- (BOOL) hasPendingOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate;
+- (BOOL) hasPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
  *  Restituisce il numero di operazioni ancora pendenti
@@ -237,7 +237,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @param serviceInfo Oggetto che contiene tutte le informazioni relative al servizio da chiamare.
  */
-- (void) callServiceWithServiceCallInfo:(SDServiceCallInfo*)serviceInfo;
+- (void) callServiceWithServiceCallInfo:(SDServiceCallInfo* _Nonnull)serviceInfo;
 
 /**
  *  Mette in coda l'operazione per chiamare il servizio dato con tutti i dettagli indicati.
@@ -254,17 +254,17 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *  @param completionFailure Blocco eseguito in caso di errore del servizio. Opzionale.
  *  @param cachingBlock      Blocco eseguito in caso di successo del servizio prima di cachare la response nella NSURLCache. Opzionale.
  */
-- (void) callService:(SDServiceGeneric*)service
-         withRequest:(id<SDServiceGenericRequestProtocol>)request
+- (void) callService:(SDServiceGeneric* _Nonnull)service
+         withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request
        operationType:(NSInteger)operationType
-      responseAction:(SEL)selector
+      responseAction:(SEL _Nullable)selector
    numAutomaticRetry:(int)numAutomaticRetry
-            delegate:(id <SDServiceManagerDelegate> )delegate
-       downloadBlock:(ServiceDownloadProgressHandler)downloadBlock
-         uploadBlock:(ServiceUploadProgressHandler)uploadBlock
-   completionSuccess:(ServiceCompletionSuccessHandler)completionSuccess
-   completionFailure:(ServiceCompletionFailureHandler)completionFailure
-        cachingBlock:(ServiceCachingBlock)cachingBlock;
+            delegate:(id <SDServiceManagerDelegate> _Nullable)delegate
+       downloadBlock:(ServiceDownloadProgressHandler _Nullable)downloadBlock
+         uploadBlock:(ServiceUploadProgressHandler _Nullable)uploadBlock
+   completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess
+   completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure
+        cachingBlock:(ServiceCachingBlock _Nullable)cachingBlock;
 
 /**
  *  Mette in coda l'operazione per chiamare il servizio dato. Il servizio non prevede nuovi tentativi in caso di errore.
@@ -276,6 +276,6 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *  @param completionSuccess Blocco eseguito in caso di successo del servizio. Opzionale.
  *  @param completionFailure Blocco eseguito in caso di errore del servizio. Opzionale.
  */
-- (void) callService:(SDServiceGeneric*)service withRequest:(id<SDServiceGenericRequestProtocol>)request operationType:(NSInteger)operationType delegate:(id <SDServiceManagerDelegate> )delegate completionSuccess:(ServiceCompletionSuccessHandler)completionSuccess completionFailure:(ServiceCompletionFailureHandler)completionFailure;
+- (void) callService:(SDServiceGeneric* _Nonnull)service withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request operationType:(NSInteger)operationType delegate:(id <SDServiceManagerDelegate> _Nullable)delegate completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure;
 
 @end

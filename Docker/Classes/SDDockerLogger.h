@@ -3,8 +3,12 @@
 #import <UIKit/UIKit.h>
 
 // This code is compatible with our logger "Plinio".
-#define kUmarellLogModuleName @"SysdataCore.DownloadManager"
-#define kUmarellLogModuleColor @"fbeed7"
+#define kDownloadManagerLogModuleName @"Docker.Download"
+#define kDownloadManagerLogModuleColor @"fbeed7"
+
+#define kServiceManagerLogModuleName @"Docker.Service"
+#define kServiceManagerLogModuleColor @"fbeed7"
+
 #ifdef SD_LOGGER_AVAILABLE
 #import "SDLogger.h"
 #else

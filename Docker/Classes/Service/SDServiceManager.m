@@ -26,19 +26,12 @@
 @interface SDServiceManager ()
 {
     /**
-     *  Thread sul quale sono eseguite le operazioni di mapping.
+     *  Thread to use for mapping operations.
      */
     dispatch_queue_t mappingQueue;
 }
 
-/**
- *  Coda dei servizi non ancora eseguiti.
- */
 @property (nonatomic, strong, readwrite) NSMutableArray<SDServiceCallInfo*>* servicesQueue;
-
-/**
- *  Mappa dei servizi pending divisi per delegate. Key: hash del delegate, Value: array di SDServiceGeneric.
- */
 @property (nonatomic, strong, readwrite) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* serviceInvocationDictionary;
 
 @end
@@ -109,7 +102,7 @@
     completionFailure:(ServiceCompletionFailureHandler)completionFailure
          cachingBlock:(ServiceCachingBlock)cachingBlock
 {
-    // instanzia il repeatable service per conservare tutti i dettagli, utili nel caso il servizio sia ripetibile
+    // instantiate repeatable service to keep all details (used in case of retries)
     SDServiceCallInfo* serviceInfo = [[SDServiceCallInfo alloc] initWithService:service request:request];
     
     serviceInfo.type              = operationType;
@@ -127,7 +120,7 @@
 
 - (void) callServiceWithServiceCallInfo:(SDServiceCallInfo*)serviceInfo
 {
-    // Chiede al delegato se può iniziare l'operazione.
+    // Asks to delegate if can start service.
     BOOL shouldStart = YES;
     
     if (serviceInfo.delegate && [serviceInfo.delegate respondsToSelector:@selector(shouldStartServiceOperation:)])
@@ -141,32 +134,32 @@
         return;
     }
     
-    // Avvisa il delegato che l'operazione è iniziata
+    // Advice delegate that service is started
     if (serviceInfo.delegate && [serviceInfo.delegate respondsToSelector:@selector(didStartServiceOperation:)])
     {
         [serviceInfo.delegate didStartServiceOperation:serviceInfo.type];
     }
     
-    // se il serviceManager o il servizio sono in demo mode tenta di recuperare la response da file. Indipendentemente dall'esito, non va oltre.
+    // if ServiceManager or specific service is in demo mode try to retreive response from file. Indipendently from result goes over.
     if (self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode]))
     {
         [self callServiceInDemoModeWithServiceCallInfo:serviceInfo];
         return;
     }
     
-    // aggiunge il servizio alla coda
+    // add service to queue
     [self.servicesQueue addObject:serviceInfo];
     serviceInfo.isProcessing = YES;
     
     AFHTTPRequestOperationManager* requestOperationManager = [serviceInfo.service requestOperationManager];
     AFHTTPRequestSerializer* serializer = requestOperationManager.requestSerializer;
     
-    // recupera path e parametri
+    // retreive path and parameters
     NSString* path = [serviceInfo.service pathResource];
     NSError* mappingError = nil;
     NSDictionary* parameters = [serviceInfo.service parametersForRequest:serviceInfo.request error:&mappingError];
     
-    // rimozione dei parametri nil dalla request
+    // remove nil parameters from request
     if ([serviceInfo.request respondsToSelector:@selector(removeNilParameters)] && [serviceInfo.request removeNilParameters])
     {
         parameters = [parameters pruneNullValues];
@@ -174,16 +167,16 @@
     
     if (mappingError)
     {
-        // Errore nel mapping della request. Torno l'errore e fermo l'operazione
+        // error occured mapping request, stop operation
         [self manageMappingFailureForServiceInfo:serviceInfo HTTPStatusCode:0 andError:mappingError];
         return;
     }
     
-    // mapping dei parametri nel path
+    // mapping of request parameters
     SOCPattern* pathPattern = [SOCPattern patternWithString:path];
     path = [pathPattern stringFromObject:serviceInfo.request];
     
-    // decido quale metodo di AFNetworking devo utilizzare in base al metodo HTTP del servizio
+    // switch on HTTP method
     __weak typeof(self)weakself = self;
     AFHTTPRequestOperation* operation = nil;
     switch (serviceInfo.service.requestMethodType)
@@ -265,7 +258,7 @@
         }
     }
     
-    // setta eventuali headers aggiuntivi alla chiamata HTTP
+    // set additional request parameters
     for (NSString* headerKey in [serviceInfo.request additionalRequestHeaders].allKeys)
     {
         // try setting custom headers directly on request avoiding problems that headers added on serializer will appear in all next requests (also in request that don't required them)
@@ -324,12 +317,12 @@
         [operation setCacheResponseBlock:serviceInfo.cachingBlock];
     }
     
-    // aggiorna la mappa di operazioni legate al delegate
+    // add operation to the caller
     [self addOperation:operation forDelegate:serviceInfo.delegate];
 }
 
 /**
- *  Tenta di recuperare la response del servizio passato da un file locale.
+ *  Retrieve response from local file.
  */
 - (void) callServiceInDemoModeWithServiceCallInfo:(SDServiceCallInfo*)serviceInfo
 {
@@ -352,7 +345,7 @@
 
 - (void) manageResponse:(id)responseObject inOperation:(AFHTTPRequestOperation*)operation forServiceInfo:(SDServiceCallInfo*)serviceInfo
 {
-    SDLogModuleInfo(kServiceManagerLogModuleName, @"\n**************** %@: ricevuta risposta\n!", [serviceInfo.service class]);
+    SDLogModuleInfo(kServiceManagerLogModuleName, @"\n**************** %@: received response\n!", [serviceInfo.service class]);
     
     if (operation.response.statusCode == 304)
     {
@@ -377,7 +370,7 @@
         response = [serviceInfo.service responseForObject:responseObject error:&mappingError];
         if (mappingError)
         {
-            // errore nel mapping della response.
+            // errore mapping response.
             [weakself manageMappingFailureForServiceInfo:serviceInfo HTTPStatusCode:operation.response.statusCode andError:mappingError];
             return;
         }
@@ -397,7 +390,6 @@
             [weakself handleSuccessForServiceInfo:serviceInfo withResponse:response];
             [weakself removeExecutedOperation:operation forDelegate:serviceInfo.delegate];
             
-            // Su tutti i servizi controllo se visualizzare un warning message
             if (serviceInfo.completionSuccess)
             {
                 serviceInfo.completionSuccess(response);
@@ -408,9 +400,9 @@
                 [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:response error:nil];
             }
             
-            if (!self.hasPendingOperations)
+            if (!weakself.hasPendingOperations)
             {
-                [self didCompleteAllServices];
+                [weakself didCompleteAllServices];
             }
         });
     });
@@ -432,8 +424,8 @@
     
     if (!operation.response)
     {
-        // non sono riuscito a raggiungere il server
-        // se non è stata cancellata ed è ripetibile allora la rieseguo
+        // can't reach server
+        // if is not cancelled and is a repeateble service, it will retry
         if (error.code != NSURLErrorCancelled)
         {
             BOOL catchFailure = [self shouldCatchFailureForMissingResponseInServiceInfo:serviceInfo error:error];
@@ -458,7 +450,7 @@
         __block id<SDServiceGenericErrorProtocol> errorObject = nil;
         if (operation.response)
         {
-            // se il server ha risposto, mi interessa interpretare il suo error code
+            // if there is a service response, get the error code
             NSError* mappingError = nil;
             id errorResponse = [serviceInfo.service.requestOperationManager.responseSerializer responseObjectForResponse:operation.response data:operation.responseData error:&mappingError];
             if (errorResponse)
@@ -469,25 +461,25 @@
                 errorObject.error = error;
                 if (mappingError)
                 {
-                    SDLogModuleError(kServiceManagerLogModuleName, @"L'oggetto di errore non è gestito: %@\nErrore: %@", errorResponse, mappingError);
+                    SDLogModuleError(kServiceManagerLogModuleName, @"Error object unmanaged: %@\nError: %@", errorResponse, mappingError);
                 }
             }
             else
             {
-                SDLogModuleError(kServiceManagerLogModuleName, @"Non è stato possibile recuperare l'oggetto di errore dalla response: %@", mappingError);
+                SDLogModuleError(kServiceManagerLogModuleName, @"Can't retreive error from response: %@", mappingError);
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            // mapping fallito
+            // mapping failed
             if (!errorObject)
             {
-                // non si ha una response o non è riuscito il mapping dell'errore, va verificato quale sia il problema
+                // missing service response or mapping failure. Check what is the problem
                 errorObject = [[[serviceInfo.service errorClass] alloc] init];
                 errorObject.httpStatusCode = (int)operation.response.statusCode;
                 errorObject.error = error;
             }
-            // la chiamata al servizio è stata completata, che sia fallito o meno
-            // l'unico caso in cui non viene chiamato questo metodo è quando ci sono problemi di connessione
+            // service call campleted
+            // method called only if there are connection erros
             [weakself handleFailureForServiceInfo:serviceInfo withError:errorObject];
             
             if (serviceInfo.completionFailure)
@@ -536,19 +528,9 @@
     });
 }
 
-- (void) handleSuccessForServiceInfo:(SDServiceCallInfo*)serviceInfo
-{
-    [self handleSuccessForServiceInfo:serviceInfo withResponse:nil];
-}
-
 - (void) handleSuccessForServiceInfo:(SDServiceCallInfo*)serviceInfo withResponse:(id<SDServiceGenericResponseProtocol>)response
 {
     [self.servicesQueue removeObject:serviceInfo];
-}
-
-- (void) handleFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo
-{
-    [self handleFailureForServiceInfo:serviceInfo withError:nil];
 }
 
 - (void) handleFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo withError:(id<SDServiceGenericErrorProtocol>)serviceError
@@ -556,14 +538,10 @@
     [self.servicesQueue removeObject:serviceInfo];
 }
 
-- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo
-{
-    [self shouldCatchFailureForMissingResponseInServiceInfo:serviceInfo error:nil];
-}
 
 - (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo error:(NSError *)error
 {
-    // di default se un servizio prevede l'automatic retry, impedisce di propagare il fallimento fino al chiamante
+    // by default if service expects authomatic retry, it will avoid to throw failure to the caller (failure block never called)
     if (serviceInfo.numAutomaticRetry > 0)
     {
         [self performSelector:@selector(performAutomaticRetry:) withObject:serviceInfo afterDelay:self.timeBeforeRetry];
@@ -589,7 +567,7 @@
         SDLogModuleInfo(kServiceManagerLogModuleName, @"Repeat service %@", serviceInfo);
         [self.servicesQueue removeObject:serviceInfo];
         serviceInfo.numAutomaticRetry--;
-        [self callServiceWithServiceCallInfo:serviceInfo]; // sostituito alla chiamata con tutti i parametri per non perdere l'oggetto serviceInfo
+        [self callServiceWithServiceCallInfo:serviceInfo];
     }
 }
 
@@ -604,7 +582,7 @@
         if (!serviceInfo.isProcessing)
         {
             [self.servicesQueue removeObject:serviceInfo];
-            [self callServiceWithServiceCallInfo:serviceInfo]; // sostituito alla chiamata con tutti i parametri per non perdere l'oggetto serviceInfo
+            [self callServiceWithServiceCallInfo:serviceInfo];
         }
     }
 }

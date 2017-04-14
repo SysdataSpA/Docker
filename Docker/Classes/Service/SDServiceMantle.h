@@ -10,42 +10,42 @@
 #import <Mantle/Mantle.h>
 
 /**
- *  Questa classe rappresenta il servizio di base da sottoclassare quando si usa Mantle per mappare la request e la response.
+ * This calss should be used as superclass for service that uses content type 'application/json'. Use Mantle to map request and response
  *
- *  Il servizio specifico deve sempre sottoclassare SDServiceMantle per definire i dettagli specifici del servizio.
+ *  Specific service should subclass SDServiceMantle to implement details.
  */
 @interface SDServiceMantle : SDServiceGeneric
 
 @end
 
 /**
- *  Questa classe rappresenta la request di base da sottoclassare quando si usa Mantle per mappare la request e la response.
+ *  This class represent base request superclass when use Mantle to map request (application/json).
  *
- *  La request del servizio specifico deve sottoclassare SDServiceMantleRequest se deve passare dei parametri in query string o nel body.
+ *  Request of specific servic should subclass SDServiceMantleRequest and define parameters and mapping that will be set in body or query string (depending of HTTP method set)
  *
- *  Per definire il mapping della request si deve reimplementare il metodo di MTLJSONSerializing +(NSDictionary*)JSONKeyPathsByPropertyKey.
+ *  To define request mapping implements MTLJSONSerializing method +(NSDictionary*)JSONKeyPathsByPropertyKey.
  */
 @interface SDServiceMantleRequest : MTLModel<MTLJSONSerializing, SDServiceGenericRequestProtocol>
 
 @end
 
 /**
- *  Questa classe rappresenta la response di base da sottoclassare quando si usa Mantle per mappare la request e la response.
+ *  This class represent base response superclass when use Mantle to map response (application/json).
  *
- *  La response del servizio specifico deve sottoclassare SDServiceMantleResponse se il servizio prevede un oggetto in risposta.
+ *  Response of specific servic should subclass SDServiceMantleResponse and define parameters and mapping that will be returned from service
  *
- *  Per definire il mapping della response si deve reimplementare il metodo di MTLJSONSerializing +(NSDictionary*)JSONKeyPathsByPropertyKey.
+ *  To define response mapping implements MTLJSONSerializing method +(NSDictionary*)JSONKeyPathsByPropertyKey.
  */
 @interface SDServiceMantleResponse : MTLModel<MTLJSONSerializing, SDServiceGenericResponseProtocol>
 
 @end
 
 /**
- *  Questa classe rappresenta la response di base da sottoclassare quando si usa Mantle per mappare la request e la response.
+ *  This class represent base error superclass when use Mantle to map error (application/json).
  *
- *  La response in caso di errore del servizio specifico deve sottoclassare SDServiceMantleError se il servizio prevede un oggetto in risposta nei casi di errore.
+ *  Error of specific servic should subclass SDServiceMantleError and define parameters and mapping that will be returned from service when fails
  *
- *  Per definire il mapping dell'errore si deve reimplementare il metodo di MTLMMTLJSONSerializingodel +(NSDictionary*)JSONKeyPathsByPropertyKey.
+ *  To define error mapping implements MTLJSONSerializing method +(NSDictionary*)JSONKeyPathsByPropertyKey.
  */
 @interface SDServiceMantleError : MTLModel<MTLJSONSerializing, SDServiceGenericErrorProtocol>
 

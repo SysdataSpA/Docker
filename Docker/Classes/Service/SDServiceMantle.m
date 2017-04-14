@@ -13,7 +13,7 @@
 
 - (NSDictionary*) parametersForRequest:(id<SDServiceGenericRequestProtocol>)request error:(NSError**)error
 {
-    NSAssert([request isKindOfClass:[SDServiceMantleRequest class]], @"La request passata deve ereditare da SDServiceMantleRequest");
+    NSAssert([request isKindOfClass:[SDServiceMantleRequest class]], @"Request passed should subclass SDServiceMantleRequest");
     NSMutableDictionary* dict = [[MTLJSONAdapter JSONDictionaryFromModel:(SDServiceMantleRequest*)request error:error] mutableCopy];
     [dict addEntriesFromDictionary:request.additionalRequestParameters];
     if (*error)

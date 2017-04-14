@@ -85,7 +85,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 @end
 
 /**
- *  Questa classe deve essere estesa e mai utilizzata direttamente.
+ *  This calss should be extended and never used directly.
  */
 
 #ifdef SD_LOGGER_AVAILABLE
@@ -97,162 +97,155 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 + (instancetype _Nonnull) sharedServiceManager;
 
 /**
- *  Il Request Operation Manager di default.
+ *  Default Request Operation Manager.
  */
 @property(nonatomic, strong) AFHTTPRequestOperationManager* _Nullable defaultRequestOperationManager;
 
 /**
- *  Tempo di attesa in secondi tra un fallimento e il successivo retry di un servizio ripetibile. Di default è 3 secondi.
+ *  Waiting time between service failure before retry call. Default is 3 seconds.
  */
 @property (nonatomic, assign) NSTimeInterval timeBeforeRetry;
 
 /**
- *  Flag che indica se le response dei servizi devono essere recuperate da file in locale. Default è NO.
+ *  Flag to use alla services in demo mode (response retreived from local files). If you want different behaviours, use this flag on specific services.
+    Default is NO.
  *
- *  @discussion Settare a YES per far sì che tutti i servizi tentino di recuperare le response da file.
- *  Se si vuole che solo alcuni servizi specifici usino la demo mode, allora settare il flag dei relativi servizi.
+ *  @discussion enable all services in demo mode.
  */
 @property (nonatomic, assign) BOOL useDemoMode;
 
 
 /**
- *  Coda dei servizi non ancora eseguiti.
+ *  Queue of all pending services.
  */
 @property (nonatomic, strong, readonly) NSMutableArray<SDServiceCallInfo*>* _Nullable servicesQueue;
 
 /**
- *  Mappa dei servizi pending divisi per delegate. Key: hash del delegate, Value: array di SDServiceGeneric.
+ *  Hashtable for pending services grouped by delegate (caller). Key: hash of delegate, Value: array of SDServiceGeneric.
  */
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* _Nullable serviceInvocationDictionary;
 
 /**
- *  Questo metodo viene chiamato al termine di tutte le operazioni del servizio (chiamata e mapping). L'implementazione di default non fa nulla.
+ *  This method is called every time service ends with success. Dafault implementation is empty.
  *
- *  N.B.: chiamare il super nelle estensioni.
+ *  N.B.: call super in extensions.
  *
- *  @param serviceInfo Il servizio completato con successo.
+ *  @param serviceInfo info about of service complete with success.
  */
 - (void) handleSuccessForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo withResponse:(id<SDServiceGenericResponseProtocol> _Nullable)response;
-- (void) handleSuccessForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleSuccessForServiceInfo:withResponse: instead")));
 
 /**
- *  Questo metodo viene chiamato al termine di tutte le operazioni del servizio (chiamata e mapping). L'implementazione di default non fa nulla.
+ *  This method is called every time ends with failure. Default implementation is empty.
  *
- *  N.B.: chiamare il super nelle estensioni.
+ *  N.B.: call super in extensions.
  *
- *  @param serviceInfo Il servizio completato con errore.
+ *  @param serviceInfo info about of service complete with failure.
  */
 - (void) handleFailureForServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo withError:(id<SDServiceGenericErrorProtocol> _Nullable)serviceError;
-- (void) handleFailureForServiceInfo:(SDServiceCallInfo*_Nullable )serviceInfo __attribute__((deprecated("Method has been deprecated, please use handleFailureForServiceInfo:withError: instead")));
 
 
 /**
- *  Questo metodo viene richiamato quando non ci sono più operazioni pendenti, sono state rimosse tutte dalla coda. Un'operazione viene rimossa SOLO se
- *     - ha successo
- *     - se viene cancellata
- *     - se ha un errore con response (un 400)
- *     - se ha errore di connessione (non ha response) e shouldCatchFailureForMissingResponseInServiceInfo ritorna NO
+ *  This method is called when there aren't any pending operations, alla services are removed from queue. An operation is removed from queue ONLY if:
+ *     - complete with success
+ *     - is cancelled
+ *     - occured an error with response (error 400)
+ *     - occured a connection error (no response returned) and shouldCatchFailureForMissingResponseInServiceInfo returns NO
  */
 - (void) didCompleteAllServices;
 
 
 /**
- *  Ripete immediatamente il servizio passato e decrementa il relativo numero di tentativi automatici
+ *  Repeat the service call and decrement number of authomatic retries.
  *
- *  @param serviceInfo Il servizio da ripetere
+ *  @param serviceInfo service to repeat
  */
 - (void) performAutomaticRetry:(SDServiceCallInfo* _Nullable)serviceInfo;
 
 /**
- *  Ripete i servizi falliti ancora in coda.
+ *  Repeat all services in queue not already completed.
  */
 - (void) repeatFailedServices;
 
 /**
- *  Se il servizio prevede l'automatic retry, di default il metodo la esegue e restituisce NO. Se invece il servizio non prevede l'automatic retry, di default restituisce YES.
+ *  If service expects authomatic retry, by default this method returns NO. If service doesn't provide authomatic retry, by default it returns YES.
  *
- *  YES indica che il fallimento viene propagato al delegato e chiama il failure block. NO indica che l'errore viene soppresso.
+ *  YES avoid failure to be thrown to the delegate and failure block is called.
+ *  NO caused that error will be suppressed.
  *
- *  Sovrascrivere questo metodo se si intende gestire in maniera differenziata per servizio il fallimento senza response.
+ *  Override this method if you want to handle in different modes failures without response.
  *
- *  @param serviceInfo Il servizio che è fallito senza response da parte del server.
+ *  @param serviceInfo service failed without server response.
+ *  @param error error occured
  *
- *  @return Un flag che indica se il fallimento senza response deve essere propagato al delegato e chiamare il failure block.
- */
-- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo;
-
-/**
- *  Versione alternativa a quella sopra che passa anche l'errore ottenuto
+ *  @return flag that avoid failure without response to be thrown to the delegate and called the failure block.
  */
 - (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo* _Nullable)serviceInfo error:(NSError* _Nullable)error;
 
 /**
- *  Cancella tutte le operazioni ancora in coda associate al servizio passato.
+ *  Cancel all pending requests in queue for specific kind of service (with same path).
  *
- *  @param service Il servizio di cui si vuole cancellare tutte le operazioni pendenti.
+ *  @param service service to cancel.
  */
 - (void) cancelAllOperationsForService:(SDServiceGeneric* _Nullable)service;
 
 /**
- *  Cancella tutte le operazioni pendenti che hanno come delegate l'oggetto passato.
+ *  Cancels all pending requests with the specific delegate (caller).
  *
- *  @param delegate Il delegate associato alle operazioni che si desidera cancellare.
+ *  @param delegate delegate (caller) with pending services to cancel.
  */
 - (void) cancelAllOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable )delegate;
 
 /**
- *  Restituisce il numero di operazioni ancora pendenti associate al delegate passato
+ *  Return number of pending operations associated to the delegate (caller).
  *
- *  @param delegate Il delegato di cui si desidera conoscere il numero di operazioni ancora pendenti.
+ *  @param delegate caller.
  *
- *  @return Il numero di operazioni.
+ *  @return number of pendsing requests.
  */
 - (NSUInteger) numberOfPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
- *  Controlla se ci sono operazioni pendenti associate al delegate passato.
+ *  Check if there are some pending request for a given caller (delegate).
  *
- *  @param delegate Il delegate di cui si desidera sapere se ci sono operazioni in coda.
- *
- *  @return YES se ci sono operazioni in coda che hanno come delegate l'oggetto passato, altrimenti NO.
+ *  @return if has pending requests.
  */
 - (BOOL) hasPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
- *  Restituisce il numero di operazioni ancora pendenti
+ *  Return number of total pending operations.
  *
- *  @return Il numero di operazioni.
+ *  @return number of pending requests.
  */
 - (NSUInteger) numberOfPendingOperations;
 
 /**
- *  Controlla se ci sono operazioni pendenti
+ *  Check if there are some pending operations
  *
- *  @return YES se ci sono operazioni in coda, altrimenti NO.
+ *  @return if has somee pending requests.
  */
 - (BOOL) hasPendingOperations;
 
 /**
- *  Mette in coda l'operazione per chiamare il servizio con tutti i dettagli indicati nell'oggetto info.
+ *  Enqueu service operation to call with all service info parameters.
  *
- *  @param serviceInfo Oggetto che contiene tutte le informazioni relative al servizio da chiamare.
+ *  @param serviceInfo object with all informations about service to call.
  */
 - (void) callServiceWithServiceCallInfo:(SDServiceCallInfo* _Nonnull)serviceInfo;
 
 /**
- *  Mette in coda l'operazione per chiamare il servizio dato con tutti i dettagli indicati.
+ *  Enqueu service operation to call with all details.
  *
- *  @param service           Il servizio da mettere in coda.
- *  @param request           L'oggetto request che contiene i parametri per la chiamata.
- *  @param operationType     Valore intero che identifica il tipo di servizio.
- *  @param selector          Il selettore del servizio da chiamare al termine delle operazioni. Opzionale.
- *  @param numAutomaticRetry Il massimo di tentativi da effettuare in caso di errore nel servizio. 0 indica che non verranno effettuati nuovi tentativi in caso di errore.
- *  @param delegate          Oggetto che implementa il protocollo SDServiceManagerDelegate per essere informato sul ciclo di vita dell'operazione. Opzionale.
- *  @param downloadBlock     Blocco eseguito alla ricezione di ogni pacchetto. Opzionale.
- *  @param uploadBlock       Blocco eseguito all'invio di ogni pacchetto. Opzionale.
- *  @param completionSuccess Blocco eseguito in caso di successo del servizio. Opzionale.
- *  @param completionFailure Blocco eseguito in caso di errore del servizio. Opzionale.
- *  @param cachingBlock      Blocco eseguito in caso di successo del servizio prima di cachare la response nella NSURLCache. Opzionale.
+ *  @param service           service to enqueue.
+ *  @param request           request object.
+ *  @param operationType     type of service.
+ *  @param selector          selector to call after service ends with success (optional).
+ *  @param numAutomaticRetry number of authomatic retry to perform after failure. 0 means that will never fire authomatic retry.
+ *  @param delegate          can be used to identify the caller (optional).
+ *  @param downloadBlock     block executed at every packet update (optional).
+ *  @param uploadBlock       block executed at every packet upload (optional).
+ *  @param completionSuccess block executed in case of service success (optional).
+ *  @param completionFailure block executed in case of service failure (optional).
+ *  @param cachingBlock      block executed in case of success before chaching response in NSURLCache (optional).
  */
 - (void) callService:(SDServiceGeneric* _Nonnull)service
          withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request
@@ -267,14 +260,14 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
         cachingBlock:(ServiceCachingBlock _Nullable)cachingBlock;
 
 /**
- *  Mette in coda l'operazione per chiamare il servizio dato. Il servizio non prevede nuovi tentativi in caso di errore.
+ * Enqueu service operation to call with all details. Service doesn't provide authomatic retry.
  *
- *  @param service           Il servizio da mettere in coda.
- *  @param request           L'oggetto request che contiene i parametri per la chiamata.
- *  @param operationType     Valore intero che identifica il tipo di servizio.
- *  @param delegate          Oggetto che implementa il protocollo SDServiceManagerDelegate per essere informato sul ciclo di vita dell'operazione. Opzionale.
- *  @param completionSuccess Blocco eseguito in caso di successo del servizio. Opzionale.
- *  @param completionFailure Blocco eseguito in caso di errore del servizio. Opzionale.
+ *  @param service           service to enqueue.
+ *  @param request           request object.
+ *  @param operationType     service type.
+ *  @param delegate          can be used to identify the caller (optional).
+ *  @param completionSuccess block executed in case of service success (optional).
+ *  @param completionFailure block executed in case of service failure (optional).
  */
 - (void) callService:(SDServiceGeneric* _Nonnull)service withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request operationType:(NSInteger)operationType delegate:(id <SDServiceManagerDelegate> _Nullable)delegate completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure;
 

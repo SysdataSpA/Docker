@@ -9,6 +9,7 @@
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
+iOS 8 and above, AFNetworking 2.0 (as pod dependency)
 
 ## Installation
 
@@ -29,7 +30,6 @@ Docker is composed by two modules.
 	- **SDServiceManager**: to handle web service calls
 	- **SDDownloadManager**: to handle resources download and local caching 
 
-================================
 Service Manager
 ================================
 **SDServiceManager** is the base class that handle web service calls. There's a **sharedServiceManager** as singleton, that can be used to call and manage all services that your app requires.
@@ -189,7 +189,7 @@ For more details visit
 - **SDServiceGenericResponseProtocol** to define details about the response
 - **SDServiceGenericErrorProtocol** to define details about response in case of failure
 
-================================
+
 Download Manager
 ================================
 

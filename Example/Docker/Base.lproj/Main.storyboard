@@ -14,7 +14,7 @@
         <scene sceneID="ZiH-sU-dSJ">
             <objects>
                 <navigationController id="WDz-0E-QAR" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="sgo-WL-eS4">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sgo-WL-eS4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.43529411759999997" green="0.76470588240000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -39,13 +39,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7I-ke-MzV">
-                                <rect key="frame" x="113.5" y="154" width="147" height="30"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <state key="normal" title="Donwload Manager"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wSd-1c-WDg">
-                                <rect key="frame" x="113.5" y="209" width="147" height="30"/>
+                                <rect key="frame" x="114" y="209" width="147" height="30"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <state key="normal" title="Donwload ImageView"/>
                                 <connections>
@@ -53,7 +48,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64E-C1-fgB">
-                                <rect key="frame" x="113.5" y="264" width="147" height="30"/>
+                                <rect key="frame" x="114" y="264" width="147" height="30"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <state key="normal" title="Service Manager"/>
                                 <connections>
@@ -63,14 +58,11 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="wSd-1c-WDg" firstAttribute="leading" secondItem="W7I-ke-MzV" secondAttribute="leading" id="LLw-Id-6zv"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="top" secondItem="wSd-1c-WDg" secondAttribute="bottom" constant="25" id="O0W-Sw-Z5C"/>
-                            <constraint firstItem="W7I-ke-MzV" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="90" id="ZUe-tu-6dN"/>
+                            <constraint firstItem="wSd-1c-WDg" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Zgi-2R-UJV"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="leading" secondItem="wSd-1c-WDg" secondAttribute="leading" id="b23-o0-1hv"/>
-                            <constraint firstItem="W7I-ke-MzV" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="ikw-tI-HaA"/>
-                            <constraint firstItem="wSd-1c-WDg" firstAttribute="top" secondItem="W7I-ke-MzV" secondAttribute="bottom" constant="25" id="myZ-W4-uyL"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="trailing" secondItem="wSd-1c-WDg" secondAttribute="trailing" id="oIU-Qn-1ZE"/>
-                            <constraint firstItem="wSd-1c-WDg" firstAttribute="trailing" secondItem="W7I-ke-MzV" secondAttribute="trailing" id="wdQ-WM-I13"/>
+                            <constraint firstItem="wSd-1c-WDg" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="145" id="sLM-Tz-GfK"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cNY-tI-28T"/>
@@ -99,11 +91,11 @@
                                         <rect key="frame" x="0.0" y="1" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z9I-7N-h1h" id="sCn-uS-kN4">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tMl-Vf-qx0" customClass="SDDownloadImageView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>

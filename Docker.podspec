@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/francescoceravolo/Docker'
+  s.homepage         = 'https://github.com/SysdataSpA/Docker'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'APACHE', :file => 'LICENSE' }
   s.author           = { 'francescoceravolo' => 'francesco.ceravolo@sysdata.it' }
-  s.source           = { :git => 'https://github.com/francescoceravolo/Docker.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/SysdataSpA/Docker.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'

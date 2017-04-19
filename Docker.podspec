@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Docker'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'Docker handle in some easy steps all connections with your remote servers. Offers you some classes to call Web Services defining http method, request, response, .... and some classes to handle resources download.'
 
 # This description is used to generate tags and improve search results.
@@ -24,7 +24,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/SysdataSpA/Docker'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'APACHE', :file => 'LICENSE' }
-  s.author           = { 'francescoceravolo' => 'francesco.ceravolo@sysdata.it' }
+  s.author           = { 'Sysdata S.p.A.' => 'team.mobile@sysdata.it' }
   s.source           = { :git => 'https://github.com/SysdataSpA/Docker.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 

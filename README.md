@@ -9,7 +9,7 @@
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
-iOS 8 and above, AFNetworking 2.0 (as pod dependency)
+iOS 8 and above, AFNetworking 2.6.3 (as pod dependency)
 
 ## Installation
 

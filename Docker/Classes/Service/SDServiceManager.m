@@ -95,6 +95,7 @@
 {
     [[SDLogger sharedLogger] setLogLevel:level forModuleWithName:self.loggerModuleName];
 }
+
 #endif
 
 #pragma mark - Call service
@@ -190,8 +191,15 @@
     SOCPattern* pathPattern = [SOCPattern patternWithString:path];
     path = [pathPattern stringFromObject:serviceInfo.request];
     
+    // set additional request parameters
+    NSDictionary<NSString*, NSString*>* additionalRequestHeaders = [serviceInfo.request additionalRequestHeaders];
+    for (NSString* headerKey in additionalRequestHeaders.allKeys)
+    {
+        [serializer setValue:additionalRequestHeaders[headerKey] forHTTPHeaderField:headerKey];
+    }
+    
     // switch on HTTP method
-    __weak typeof(self)weakself = self;
+    __weak typeof (self) weakself = self;
     AFHTTPRequestOperation* operation = nil;
     switch (serviceInfo.service.requestMethodType)
     {
@@ -272,20 +280,10 @@
         }
     }
     
-    // set additional request parameters
-    for (NSString* headerKey in [serviceInfo.request additionalRequestHeaders].allKeys)
+    // remove additional header from serializer
+    for (NSString* headerKey in additionalRequestHeaders.allKeys)
     {
-        // try setting custom headers directly on request avoiding problems that headers added on serializer will appear in all next requests (also in request that don't required them)
-        if([operation.request isKindOfClass:[NSMutableURLRequest class]])
-        {
-            NSMutableURLRequest* request = (NSMutableURLRequest*)operation.request;
-            [request setValue:[serviceInfo.request additionalRequestHeaders][headerKey] forHTTPHeaderField:headerKey];
-        }
-        else
-        {
-            // fallback: added on serializer
-            [serializer setValue:[serviceInfo.request additionalRequestHeaders][headerKey] forHTTPHeaderField:headerKey];
-        }
+        [serializer setValue:nil forHTTPHeaderField:headerKey];
     }
     
     
@@ -340,7 +338,7 @@
  */
 - (void) callServiceInDemoModeWithServiceCallInfo:(SDServiceCallInfo*)serviceInfo
 {
-    __weak typeof(self)weakSelf = self;
+    __weak typeof (self) weakSelf = self;
     [serviceInfo.service getResultFromJSONFileWithCompletion:^(id responseObject) {
         if (responseObject)
         {
@@ -377,7 +375,7 @@
     {
         SDLogModuleVerbose(kServiceManagerLogModuleName, @"FILE CONTENT:\n%@", responseObject);
     }
-    __weak typeof(self)weakself = self;
+    __weak typeof (self) weakself = self;
     dispatch_async(mappingQueue, ^{
         id<SDServiceGenericResponseProtocol> response = nil;
         NSError* mappingError = nil;
@@ -459,7 +457,7 @@
         }
     }
     
-    __weak typeof(self)weakself = self;
+    __weak typeof (self) weakself = self;
     dispatch_async(mappingQueue, ^{
         __block id<SDServiceGenericErrorProtocol> errorObject = nil;
         if (operation.response)
@@ -516,7 +514,7 @@
 
 - (void) manageMappingFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo HTTPStatusCode:(NSInteger)httpStatusCode andError:(NSError*)error
 {
-    __weak typeof(self)weakself = self;
+    __weak typeof (self) weakself = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself handleFailureForServiceInfo:serviceInfo withError:nil];
@@ -552,8 +550,7 @@
     [self.servicesQueue removeObject:serviceInfo];
 }
 
-
-- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo error:(NSError *)error
+- (BOOL) shouldCatchFailureForMissingResponseInServiceInfo:(SDServiceCallInfo*)serviceInfo error:(NSError*)error
 {
     // by default if service expects authomatic retry, it will avoid to throw failure to the caller (failure block never called)
     if (serviceInfo.numAutomaticRetry > 0)

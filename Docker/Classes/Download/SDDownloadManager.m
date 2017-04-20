@@ -719,10 +719,10 @@
             NSDate* lastUpdatedServer;
             if (!modificationDate)
             {
-				NSDictionary* dictionary = [operation.response allHeaderFields];
-				NSString* contentLenght = [dictionary valueForKey:@"Content-Length"];
+                NSDictionary* dictionary = [operation.response allHeaderFields];
+                NSString* contentLenght = [dictionary valueForKey:@"Content-Length"];
                 
-				if (contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
+                if (contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
                 {
                     SDLogModuleWarning(kDownloadManagerLogModuleName, @"SDDownloadManager: download new - resource empty or too small at URL: %@", urlString);
                     NSDictionary* userInfo = @{ DOWNLOAD_OPERATION_INFO_RESULT_TYPE:@(DownloadOperationResultDownloadedNewFailed) };
@@ -730,11 +730,11 @@
                     return;
                 }
                 
-				NSString* lastUpdated = [dictionary valueForKey:@"Last-Modified"];
+                NSString* lastUpdated = [dictionary valueForKey:@"Last-Modified"];
                 lastUpdatedServer = [weakSelf.serverDateFormatter dateFromString:lastUpdated];
-				if (!lastUpdatedServer)
+                if (!lastUpdatedServer)
                 {
-                   lastUpdatedServer = [NSDate date];
+                    lastUpdatedServer = [NSDate date];
                 }
             }
             
@@ -744,7 +744,7 @@
             NSDate* modificationDateOnServer = modificationDate ? modificationDate : lastUpdatedServer;
             if (!modificationDateOnServer)
             {
-				modificationDateOnServer = [NSDate date];
+                modificationDateOnServer = [NSDate date];
             }
             
             NSDictionary* userInfo = @{ DOWNLOAD_OPERATION_INFO_RESULT_TYPE:@(DownloadOperationResultDownloadedNew) };
@@ -975,7 +975,6 @@
         {
             if (weakSelf.downloadElementsProcessing && self.downloadElementsOperations.count == 0)
             {
-                weakSelf.downloadElementsProcessing = NO;
                 [weakSelf synchronizeCacheInfos];
             }
             

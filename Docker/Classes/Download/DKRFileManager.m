@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "SDFileManager.h"
+#import "DKRFileManager.h"
 #import "SDDockerLogger.h"
 
 
-@implementation SDFileInfo
+@implementation DKRFileInfo
 
 
 @end
@@ -24,7 +24,7 @@
 
 
 
-@implementation SDFileManager
+@implementation DKRFileManager
 
 + (instancetype)sharedManager
 {
@@ -86,7 +86,7 @@
 
 + (NSString*) getPathOfResourceDirectory
 {
-    NSString* cacheDirectory = [SDFileManager sharedManager].cacheDirectory;
+    NSString* cacheDirectory = [DKRFileManager sharedManager].cacheDirectory;
     return [cacheDirectory stringByAppendingPathComponent:RESOURCES_DIRECTORY];
 }
 
@@ -94,7 +94,7 @@
 {
     NSFileManager* fm = [NSFileManager defaultManager];
 
-    NSString* resourceCache = [SDFileManager getPathOfResourceDirectory];
+    NSString* resourceCache = [DKRFileManager getPathOfResourceDirectory];
     NSError* error = nil;
     if(![fm removeItemAtPath:resourceCache error:&error])
     {
@@ -151,14 +151,14 @@
 
 + (NSArray*) getInfoAboutFilesContentInDirectoryNamed:(NSString*)directoryName
 {
-	NSArray* dirContents = [SDFileManager getFilesContentInDirectoryNamed:directoryName];
+	NSArray* dirContents = [DKRFileManager getFilesContentInDirectoryNamed:directoryName];
 	NSMutableArray* arrayFileInfo = [[NSMutableArray alloc] initWithCapacity:0];
 
 	for (NSString* fileName in dirContents)
 	{
 		NSString* filePath = [directoryName stringByAppendingPathComponent:fileName];
 
-		SDFileInfo * fileInfo = [SDFileManager getInfoAboutFileAtPath:filePath];
+		DKRFileInfo * fileInfo = [DKRFileManager getInfoAboutFileAtPath:filePath];
         
         if (fileInfo)
             [arrayFileInfo addObject:fileInfo];
@@ -169,7 +169,7 @@
 
 
 
-+ (SDFileInfo*) getInfoAboutFileAtPath:(NSString*)path
++ (DKRFileInfo*) getInfoAboutFileAtPath:(NSString*)path
 {
 	NSError* error = nil;
 	NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
@@ -184,7 +184,7 @@
 		NSDate* creationDate = (NSDate*)[attrs objectForKey:NSFileCreationDate];
 		NSDate* modificationDate = (NSDate*)[attrs objectForKey:NSFileModificationDate];
 
-		SDFileInfo* fileInfo = [[SDFileInfo alloc] init];
+		DKRFileInfo* fileInfo = [[DKRFileInfo alloc] init];
 		fileInfo.name = [path lastPathComponent];
 		fileInfo.modificationDateOnServer = creationDate;
 		fileInfo.downloadDateLocal = modificationDate;
@@ -194,28 +194,28 @@
 	}
 }
 
-+ (SDFileInfo*) getInfoAboutFileNamed:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName
++ (DKRFileInfo*) getInfoAboutFileNamed:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName
 {
-	fileName = [SDFileManager getFileNameFromUrl:fileName];
+	fileName = [DKRFileManager getFileNameFromUrl:fileName];
 
 	NSString* filePath = [directoryName stringByAppendingPathComponent:fileName];
-	return [SDFileManager getInfoAboutFileAtPath:filePath];
+	return [DKRFileManager getInfoAboutFileAtPath:filePath];
 }
 
 
 + (BOOL) deleteFilesContentInDirectoryNamed:(NSString*)directoryName withModifyDateBefore:(NSDate*)expirationDate
 {
 	
-	NSArray* dirContents = [SDFileManager getFilesContentInDirectoryNamed:directoryName];
+	NSArray* dirContents = [DKRFileManager getFilesContentInDirectoryNamed:directoryName];
 	
 	for (NSString* fileName in dirContents)
 	{
 		NSString* filePath = [directoryName stringByAppendingPathComponent:fileName];
         
-		SDFileInfo * fileInfo = [SDFileManager getInfoAboutFileAtPath:filePath];
+		DKRFileInfo * fileInfo = [DKRFileManager getInfoAboutFileAtPath:filePath];
         
         if([fileInfo.downloadDateLocal compare:expirationDate] == NSOrderedAscending)
-           [SDFileManager deleteFilesAtPath:filePath];
+           [DKRFileManager deleteFilesAtPath:filePath];
 	}
     
 	return YES;
@@ -242,7 +242,7 @@
 #pragma mark - Images
 + (UIImage*) getImageNamed:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName
 {
-	fileName = [SDFileManager getFileNameFromUrl:fileName];
+	fileName = [DKRFileManager getFileNameFromUrl:fileName];
 
 	NSString* filePath = [directoryName stringByAppendingPathComponent:fileName];
 
@@ -251,7 +251,7 @@
 
 + (void) saveImage:(UIImage*)image named:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName
 {
-	fileName = [SDFileManager getFileNameFromUrl:fileName];
+	fileName = [DKRFileManager getFileNameFromUrl:fileName];
 
 	NSString* filePath = [directoryName stringByAppendingPathComponent:fileName];
 

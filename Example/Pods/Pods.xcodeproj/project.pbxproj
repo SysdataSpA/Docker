@@ -58,7 +58,7 @@
 		635F5D1AEF42E8D788AEAF0D09A65108 /* SDDownloadManagerUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BAC5C06937A15840978A8D883718BCA /* SDDownloadManagerUtils.m */; };
 		649CCEEC4141CFD891C20C0A95AC476F /* MTLValueTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 305BA0A328A5B377077418A4D306E999 /* MTLValueTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		67BA3A89BE1E7B6F0FB4F7D024C7AD9B /* SDDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D95DD11D9DCEAA337B5C005CFFD664 /* SDDownloadManager.m */; };
-		6AF5D00EEF8E0A4359C1C3F39864E5DB /* SDFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E152025E934ACF1D6BB7104F3DB795 /* SDFileManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6AF5D00EEF8E0A4359C1C3F39864E5DB /* DKRFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E152025E934ACF1D6BB7104F3DB795 /* DKRFileManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BD4B9445BCDE9B2D05D69684086FE1A /* NSDictionary+MTLManipulationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E9E9FA8DD853875C2EC9C8644D180F /* NSDictionary+MTLManipulationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6C679C82C911066CC17F394ACD559636 /* NSString+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 451A81DBB48FC946AFF60B65DB71205F /* NSString+Hashing.m */; };
 		6F9313FED3763C57F6EC60B6175CDD25 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5C36F1DB7624AD4FAF8859D64F972 /* UIWebView+AFNetworking.m */; };
@@ -70,7 +70,7 @@
 		750BDB1D02B6083F019948D85A91737C /* NSArray+MTLManipulationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = A2FFBFEC6E434843C490D696D0C89DAF /* NSArray+MTLManipulationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7821A47EE424BCE281373A1E5A3AE82B /* NSString+Hashing.h in Headers */ = {isa = PBXBuildFile; fileRef = A46E5C8BB52E41A310229B2B9A8CF688 /* NSString+Hashing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78705591C6850CE867D0356F476E0B6D /* AFNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = ECB5ECB4428F635B44E77F8934AA884D /* AFNetworkReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78FD1314B2BAA38D5C02E5C059E703F0 /* UIImageViewAligned.m in Sources */ = {isa = PBXBuildFile; fileRef = 19BEDFB40AD75D3C57B42B79DA13217E /* UIImageViewAligned.m */; };
+		78FD1314B2BAA38D5C02E5C059E703F0 /* SDUIImageViewAligned.m in Sources */ = {isa = PBXBuildFile; fileRef = 19BEDFB40AD75D3C57B42B79DA13217E /* SDUIImageViewAligned.m */; };
 		7A6F8593BBD598773DCC198202C35A7F /* UIButton+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 41BFA75997FA03001941D32963391633 /* UIButton+AFNetworking.m */; };
 		7BE524BB9BBF0000B8F603C1C60EC609 /* EXTScope.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EBD53E886CA367A37904FFC3533735 /* EXTScope.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		8217F73D6D01BA8DE53A3D744A26C82A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B40089AFA2F1F90643B079690091F6 /* Foundation.framework */; };
@@ -87,7 +87,7 @@
 		964BFEA9E3E84571F866D24102FEA675 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 3057B1E2232C3B81BDDC15275B9AFEA2 /* AFURLRequestSerialization.m */; };
 		98DF582360C22551593EAF38026AD33C /* SDServiceGeneric.m in Sources */ = {isa = PBXBuildFile; fileRef = B2FDAA731D2CDDB64C4CA916B012D2BB /* SDServiceGeneric.m */; };
 		9CD3B60945FD7D2A49DB5EF76EF5E22B /* NSValueTransformer+MTLPredefinedTransformerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = BC505C030DEFB01D5D22FDBF70F14F1F /* NSValueTransformer+MTLPredefinedTransformerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A1216ABC61C0D2AB90675B56153580D1 /* UIImageViewAligned.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DFA3914EB02ABAB9695BF356C58D4D /* UIImageViewAligned.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A1216ABC61C0D2AB90675B56153580D1 /* SDUIImageViewAligned.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DFA3914EB02ABAB9695BF356C58D4D /* SDUIImageViewAligned.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A1D737D6D3D781E98ABFEC6EE0C095EB /* AFSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 220B449E9FAAAF01BE87D87E6D2A5E7E /* AFSecurityPolicy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A59DAB03052563E6969C022D22135623 /* SDServiceGeneric.h in Headers */ = {isa = PBXBuildFile; fileRef = C2A43057BC07E689C3CE475D668DF1C9 /* SDServiceGeneric.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AAC28E6DE7468FC3C9857C9741C2C27E /* Docker-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BEB59FA83D5850972112748EF8F52CE5 /* Docker-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,7 +101,7 @@
 		BABFE14A987B65E879D4F84AFC761884 /* MTLValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FCD5735F7F3DD9F920FF7B8877A220E /* MTLValueTransformer.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		BB3A08898B587F1FC7D1E10F4FD47FBC /* NSObject+DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D54A47A9F60C64A60611727738608CE /* NSObject+DownloadManager.m */; };
 		C07011D5B4BD073DE0115A973578229A /* NSArray+MTLManipulationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 565A50D21F1D13B41FE4431CFC0EE5CA /* NSArray+MTLManipulationAdditions.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		C1E9FCC0FC5756F36A9357768BC8D106 /* SDFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC1A257B1ACC73B79F08547709A6383 /* SDFileManager.m */; };
+		C1E9FCC0FC5756F36A9357768BC8D106 /* DKRFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC1A257B1ACC73B79F08547709A6383 /* DKRFileManager.m */; };
 		C280FBCFA62DE272531D7A024F259994 /* MTLModel+NSCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC96C36921A7D6DCB2DEC752401AA578 /* MTLModel+NSCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5892088530E6A6790A7B7BF50E3C97A /* NSError+MTLModelException.m in Sources */ = {isa = PBXBuildFile; fileRef = C753E06F91F52A428A3E7017E43D2633 /* NSError+MTLModelException.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		C5C3434FB7FB0533A136199F94877CEC /* UIActivityIndicatorView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B75DC7593492DC7959408CCB36A9AA4 /* UIActivityIndicatorView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -179,7 +179,7 @@
 		0E6101BF838734A14DA050FD8311BC75 /* NSValueTransformer+MTLInversionAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSValueTransformer+MTLInversionAdditions.m"; path = "Mantle/NSValueTransformer+MTLInversionAdditions.m"; sourceTree = "<group>"; };
 		12F8B8472EE57D76E124CDA385F708BD /* MTLTransformerErrorHandling.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MTLTransformerErrorHandling.m; path = Mantle/MTLTransformerErrorHandling.m; sourceTree = "<group>"; };
 		1992EF5BC61D87B234A71307A5E84DC3 /* UIAlertView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+AFNetworking.h"; path = "UIKit+AFNetworking/UIAlertView+AFNetworking.h"; sourceTree = "<group>"; };
-		19BEDFB40AD75D3C57B42B79DA13217E /* UIImageViewAligned.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = UIImageViewAligned.m; sourceTree = "<group>"; };
+		19BEDFB40AD75D3C57B42B79DA13217E /* SDUIImageViewAligned.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDUIImageViewAligned.m; sourceTree = "<group>"; };
 		1A236A3197E15B60331F976146C854C7 /* Mantle-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Mantle-dummy.m"; sourceTree = "<group>"; };
 		1D4419E9A319A15402C9289F4F51732A /* Mantle-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Mantle-prefix.pch"; sourceTree = "<group>"; };
 		216BF500BD4BEC6D89DE60AB8A7A7C96 /* Docker-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Docker-prefix.pch"; sourceTree = "<group>"; };
@@ -196,7 +196,7 @@
 		305BA0A328A5B377077418A4D306E999 /* MTLValueTransformer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MTLValueTransformer.h; path = Mantle/MTLValueTransformer.h; sourceTree = "<group>"; };
 		30A4F13679A779DAA73223B20F959688 /* Pods-Docker_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Docker_Example-umbrella.h"; sourceTree = "<group>"; };
 		3438C83554C718E4E8E2E998CF6D3E46 /* Pods-Docker_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Docker_Example.release.xcconfig"; sourceTree = "<group>"; };
-		36189F69F4F462EE80C05937158AC029 /* Mantle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Mantle.framework; path = Mantle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36189F69F4F462EE80C05937158AC029 /* Mantle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mantle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38989CE54D8A3159E1B20BFAF51ACAAB /* MTLReflection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MTLReflection.h; path = Mantle/MTLReflection.h; sourceTree = "<group>"; };
 		38E97531888BD9E9A42459BCDC2684EA /* AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
 		3C64608124954B6F96BD218BBA5E4E02 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 		456C2ECE2308E1D1CF3CB3F6B9C90948 /* MTLJSONAdapter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MTLJSONAdapter.h; path = Mantle/MTLJSONAdapter.h; sourceTree = "<group>"; };
 		47016C1B750FFA54C9E52DE5A4266826 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperation.h; path = AFNetworking/AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		4749F7B935F3E49AA78A76ADD73471FD /* Docker-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Docker-dummy.m"; sourceTree = "<group>"; };
-		499C6DF36C5982C80C71CC7AD672C521 /* Docker.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Docker.modulemap; sourceTree = "<group>"; };
+		499C6DF36C5982C80C71CC7AD672C521 /* Docker.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Docker.modulemap; sourceTree = "<group>"; };
 		49BD9D48C538863C18F8880E1DAD885B /* UIProgressView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIProgressView+AFNetworking.h"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.h"; sourceTree = "<group>"; };
 		4AB6C34C7B7A3E7267461A78669F472C /* MTLModel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MTLModel.h; path = Mantle/MTLModel.h; sourceTree = "<group>"; };
 		4CBC53C90951EB08ED556B580065D089 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
@@ -227,17 +227,17 @@
 		5B75DC7593492DC7959408CCB36A9AA4 /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIActivityIndicatorView+AFNetworking.h"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
 		5BAC5C06937A15840978A8D883718BCA /* SDDownloadManagerUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDDownloadManagerUtils.m; sourceTree = "<group>"; };
 		5FCD5735F7F3DD9F920FF7B8877A220E /* MTLValueTransformer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MTLValueTransformer.m; path = Mantle/MTLValueTransformer.m; sourceTree = "<group>"; };
-		60E152025E934ACF1D6BB7104F3DB795 /* SDFileManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SDFileManager.h; sourceTree = "<group>"; };
+		60E152025E934ACF1D6BB7104F3DB795 /* DKRFileManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DKRFileManager.h; sourceTree = "<group>"; };
 		674465047B00228DA2304519A823F6DE /* Pods-Docker_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Docker_Tests-resources.sh"; sourceTree = "<group>"; };
 		67FF8B5EF739E953B6CF3BD689AA2A50 /* Pods-Docker_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Docker_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		687591104E4B6201ADCB493CE9D51432 /* Docker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Docker.framework; path = Docker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		687591104E4B6201ADCB493CE9D51432 /* Docker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Docker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C6D284A74FA9A648B08C7A831A402EE /* Pods-Docker_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Docker_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		6C9133AF65F3F2ACBAFF71D69F4E812A /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationManager.m; path = AFNetworking/AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
 		6E520314606AA68B019D117FF2F3E404 /* Pods-Docker_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Docker_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		710DEE75A489B63160A079077E3E55A7 /* SOCKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SOCKit.h; sourceTree = "<group>"; };
 		71F64F1DCF1A37B4C20B313B0FA4D36F /* NSDictionary+Utils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Utils.m"; sourceTree = "<group>"; };
-		73148D6791E16705067198A91057FC64 /* Pods_Docker_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Docker_Tests.framework; path = "Pods-Docker_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		735B874A8BACE6EBD26F9A7A47E10BB0 /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AFNetworking.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		73148D6791E16705067198A91057FC64 /* Pods_Docker_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Docker_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		735B874A8BACE6EBD26F9A7A47E10BB0 /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		775B538D25A19EC526222669937F5C9F /* Mantle-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Mantle-umbrella.h"; sourceTree = "<group>"; };
 		77CFB8287D04CBD7DAC68FBB8AA1682D /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIProgressView+AFNetworking.m"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
 		7C1AF2B9C7061473F873C4896A4DA798 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
@@ -252,7 +252,7 @@
 		8D54A47A9F60C64A60611727738608CE /* NSObject+DownloadManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSObject+DownloadManager.m"; sourceTree = "<group>"; };
 		8FCA7993CAEBCC06958497E0B9D01A12 /* NSDictionary+MTLMappingAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+MTLMappingAdditions.m"; path = "Mantle/NSDictionary+MTLMappingAdditions.m"; sourceTree = "<group>"; };
 		8FEEC09CBDD5186FB7ED83B840503C99 /* SDDownloadManagerUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SDDownloadManagerUtils.h; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9818A7EDDCA08CADF8B1D24CF2766961 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		994081955723FBEEB0CAAA7D3B11D3AA /* NSObject+MTLComparisonAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+MTLComparisonAdditions.m"; path = "Mantle/NSObject+MTLComparisonAdditions.m"; sourceTree = "<group>"; };
 		9A117CCE1EEFF352FFFF3197FD462149 /* EXTScope.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EXTScope.h; path = Mantle/extobjc/EXTScope.h; sourceTree = "<group>"; };
@@ -274,13 +274,13 @@
 		B36156B1529343951753F0F9A99F605E /* Pods-Docker_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Docker_Example-resources.sh"; sourceTree = "<group>"; };
 		B52CF877D8DCDB8AB66EE6915D318DB7 /* UIActivityIndicatorView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIActivityIndicatorView+AFNetworking.m"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.m"; sourceTree = "<group>"; };
 		B54F1309BE69BB67F8044A3BB4CC5E8D /* SDDownloadManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SDDownloadManager.h; sourceTree = "<group>"; };
-		B6DFA3914EB02ABAB9695BF356C58D4D /* UIImageViewAligned.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = UIImageViewAligned.h; sourceTree = "<group>"; };
+		B6DFA3914EB02ABAB9695BF356C58D4D /* SDUIImageViewAligned.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SDUIImageViewAligned.h; sourceTree = "<group>"; };
 		B9D95DD11D9DCEAA337B5C005CFFD664 /* SDDownloadManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDDownloadManager.m; sourceTree = "<group>"; };
 		BC505C030DEFB01D5D22FDBF70F14F1F /* NSValueTransformer+MTLPredefinedTransformerAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSValueTransformer+MTLPredefinedTransformerAdditions.h"; path = "Mantle/NSValueTransformer+MTLPredefinedTransformerAdditions.h"; sourceTree = "<group>"; };
 		BE4D9B99350BEDB158871095053F8002 /* MTLModel+NSCoding.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "MTLModel+NSCoding.m"; path = "Mantle/MTLModel+NSCoding.m"; sourceTree = "<group>"; };
 		BEB59FA83D5850972112748EF8F52CE5 /* Docker-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Docker-umbrella.h"; sourceTree = "<group>"; };
 		BF11D5C7BC7445299F24B7EC66FB16C5 /* UIImage+SDExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIImage+SDExtension.h"; sourceTree = "<group>"; };
-		BFC1A257B1ACC73B79F08547709A6383 /* SDFileManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDFileManager.m; sourceTree = "<group>"; };
+		BFC1A257B1ACC73B79F08547709A6383 /* DKRFileManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DKRFileManager.m; sourceTree = "<group>"; };
 		C15DF5FA53397DC1150EB171CBE8902D /* SDServiceMantle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SDServiceMantle.h; sourceTree = "<group>"; };
 		C1633BB5CEEAC1D8D110F2D43E99F1C1 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		C27D7091F6F15F5E46C1A94687B84FB9 /* SDServiceManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDServiceManager.m; sourceTree = "<group>"; };
@@ -290,9 +290,9 @@
 		C753E06F91F52A428A3E7017E43D2633 /* NSError+MTLModelException.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSError+MTLModelException.m"; path = "Mantle/NSError+MTLModelException.m"; sourceTree = "<group>"; };
 		C75C06F1B0B630DC3334A50F702F785F /* NSObject+DownloadManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSObject+DownloadManager.h"; sourceTree = "<group>"; };
 		CCA56FF9875254B842F9C974ABFB1D0B /* MTLJSONAdapter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MTLJSONAdapter.m; path = Mantle/MTLJSONAdapter.m; sourceTree = "<group>"; };
-		D12D536729B89D64234CF1C84006CEF2 /* Pods-Docker_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Docker_Tests.modulemap"; sourceTree = "<group>"; };
-		D4A776F9FB849D1FD55FE93863B47B78 /* Mantle.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Mantle.modulemap; sourceTree = "<group>"; };
-		D706C652327924833FAE32B11775287D /* Pods-Docker_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Docker_Example.modulemap"; sourceTree = "<group>"; };
+		D12D536729B89D64234CF1C84006CEF2 /* Pods-Docker_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Docker_Tests.modulemap"; sourceTree = "<group>"; };
+		D4A776F9FB849D1FD55FE93863B47B78 /* Mantle.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Mantle.modulemap; sourceTree = "<group>"; };
+		D706C652327924833FAE32B11775287D /* Pods-Docker_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Docker_Example.modulemap"; sourceTree = "<group>"; };
 		D805E9779B296415BA85FA4BE3D418E5 /* AFNetworking-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AFNetworking-dummy.m"; sourceTree = "<group>"; };
 		D9C56F19239A54AB096B5A6BB63FAEDF /* MTLModel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MTLModel.m; path = Mantle/MTLModel.m; sourceTree = "<group>"; };
 		DC96C36921A7D6DCB2DEC752401AA578 /* MTLModel+NSCoding.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MTLModel+NSCoding.h"; path = "Mantle/MTLModel+NSCoding.h"; sourceTree = "<group>"; };
@@ -310,11 +310,11 @@
 		EC5EA91DF08A2A768914C65D186235FF /* NSDictionary+MTLMappingAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+MTLMappingAdditions.h"; path = "Mantle/NSDictionary+MTLMappingAdditions.h"; sourceTree = "<group>"; };
 		ECB5ECB4428F635B44E77F8934AA884D /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkReachabilityManager.h; path = AFNetworking/AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		EEC32D19DB4FB36085D20698A6A3C1F6 /* SDDownloadImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SDDownloadImageView.m; sourceTree = "<group>"; };
-		EFBC4E79DADD92D5E0FC172EAEF2B29D /* Pods_Docker_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Docker_Example.framework; path = "Pods-Docker_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFBC4E79DADD92D5E0FC172EAEF2B29D /* Pods_Docker_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Docker_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F108D4F4A503CBCF445782B4B59D3054 /* AFNetworking-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AFNetworking-prefix.pch"; sourceTree = "<group>"; };
 		F2EA726EFEED58439AEF2A0BACE8ED83 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkActivityIndicatorManager.h; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h"; sourceTree = "<group>"; };
 		F3F3E8D7BF8D630A96E9319977BC4945 /* Pods-Docker_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Docker_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		F49DD935D4956E0AC4C91AF0F50BD196 /* AFNetworking.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = AFNetworking.modulemap; sourceTree = "<group>"; };
+		F49DD935D4956E0AC4C91AF0F50BD196 /* AFNetworking.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = AFNetworking.modulemap; sourceTree = "<group>"; };
 		F6BAB90C2C93F9A8EC6DC1922E69D6D5 /* Mantle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Mantle.h; path = Mantle/Mantle.h; sourceTree = "<group>"; };
 		F6DEB439C1D2067413259D311427ADBB /* MTLTransformerErrorHandling.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MTLTransformerErrorHandling.h; path = Mantle/MTLTransformerErrorHandling.h; sourceTree = "<group>"; };
 		F7AD32B20A219A2DCE077D48B7030ACD /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFNetworkActivityIndicatorManager.m; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m"; sourceTree = "<group>"; };
@@ -432,7 +432,6 @@
 				710DEE75A489B63160A079077E3E55A7 /* SOCKit.h */,
 				E0B18CA5A2CF121CBCE1479418256A36 /* SOCKit.m */,
 			);
-			name = Service;
 			path = Service;
 			sourceTree = "<group>";
 		};
@@ -598,7 +597,6 @@
 				013E0492C2BA1B434D1CFB1D8E3E8CF1 /* extobjc */,
 				CD0A3B5C39E94CDBC83F9C195187DB3C /* Support Files */,
 			);
-			name = Mantle;
 			path = Mantle;
 			sourceTree = "<group>";
 		};
@@ -615,14 +613,13 @@
 				B9D95DD11D9DCEAA337B5C005CFFD664 /* SDDownloadManager.m */,
 				8FEEC09CBDD5186FB7ED83B840503C99 /* SDDownloadManagerUtils.h */,
 				5BAC5C06937A15840978A8D883718BCA /* SDDownloadManagerUtils.m */,
-				60E152025E934ACF1D6BB7104F3DB795 /* SDFileManager.h */,
-				BFC1A257B1ACC73B79F08547709A6383 /* SDFileManager.m */,
+				60E152025E934ACF1D6BB7104F3DB795 /* DKRFileManager.h */,
+				BFC1A257B1ACC73B79F08547709A6383 /* DKRFileManager.m */,
 				BF11D5C7BC7445299F24B7EC66FB16C5 /* UIImage+SDExtension.h */,
 				2E9E0C9AAE35E94177817125F72C7DCC /* UIImage+SDExtension.m */,
-				B6DFA3914EB02ABAB9695BF356C58D4D /* UIImageViewAligned.h */,
-				19BEDFB40AD75D3C57B42B79DA13217E /* UIImageViewAligned.m */,
+				B6DFA3914EB02ABAB9695BF356C58D4D /* SDUIImageViewAligned.h */,
+				19BEDFB40AD75D3C57B42B79DA13217E /* SDUIImageViewAligned.m */,
 			);
-			name = Download;
 			path = Download;
 			sourceTree = "<group>";
 		};
@@ -666,7 +663,6 @@
 				B60B30E457C1A8A09865E794B6096A7F /* Download */,
 				514DC78CB1539B45FB5141C792F26B66 /* Service */,
 			);
-			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -689,7 +685,6 @@
 			children = (
 				C8D37E3F8DF578EB4E85FE655B3BA3AB /* Classes */,
 			);
-			name = Docker;
 			path = Docker;
 			sourceTree = "<group>";
 		};
@@ -723,7 +718,6 @@
 				EFB903C9A7E88DD040AD2A82FD5EF3A7 /* Support Files */,
 				5374058E9062906C9688DEE903F005F2 /* UIKit */,
 			);
-			name = AFNetworking;
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
@@ -757,13 +751,13 @@
 				148EBA0BE067CF29AC6A1AF83EDD2ECD /* SDDownloadImageView.h in Headers */,
 				36F5F580EAB56978B47916CEEBD8D954 /* SDDownloadManager.h in Headers */,
 				12E87BD6B547790EB9AD7DF3644A5F83 /* SDDownloadManagerUtils.h in Headers */,
-				6AF5D00EEF8E0A4359C1C3F39864E5DB /* SDFileManager.h in Headers */,
+				6AF5D00EEF8E0A4359C1C3F39864E5DB /* DKRFileManager.h in Headers */,
 				A59DAB03052563E6969C022D22135623 /* SDServiceGeneric.h in Headers */,
 				CECC39115F0DA3859CE254B9180965B0 /* SDServiceManager.h in Headers */,
 				DFFE9FF9598935F00A8EA0ECFADB9AB5 /* SDServiceMantle.h in Headers */,
 				D1093BAE5C124C10308AC691E82CF239 /* SOCKit.h in Headers */,
 				73A6C14B0083017876C891CA257B6A21 /* UIImage+SDExtension.h in Headers */,
-				A1216ABC61C0D2AB90675B56153580D1 /* UIImageViewAligned.h in Headers */,
+				A1216ABC61C0D2AB90675B56153580D1 /* SDUIImageViewAligned.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -973,13 +967,13 @@
 				FA25DF424589544D543F85188DA08E36 /* SDDownloadImageView.m in Sources */,
 				67BA3A89BE1E7B6F0FB4F7D024C7AD9B /* SDDownloadManager.m in Sources */,
 				635F5D1AEF42E8D788AEAF0D09A65108 /* SDDownloadManagerUtils.m in Sources */,
-				C1E9FCC0FC5756F36A9357768BC8D106 /* SDFileManager.m in Sources */,
+				C1E9FCC0FC5756F36A9357768BC8D106 /* DKRFileManager.m in Sources */,
 				98DF582360C22551593EAF38026AD33C /* SDServiceGeneric.m in Sources */,
 				203DE39154ACD1107684C40C9DB15D1E /* SDServiceManager.m in Sources */,
 				1A0D7EF496E075B108A0874EDA049786 /* SDServiceMantle.m in Sources */,
 				EE5CFCAED1B93A05E394AAD3EBA89EB5 /* SOCKit.m in Sources */,
 				B9769624C933E1CAE2611A791C2E378F /* UIImage+SDExtension.m in Sources */,
-				78FD1314B2BAA38D5C02E5C059E703F0 /* UIImageViewAligned.m in Sources */,
+				78FD1314B2BAA38D5C02E5C059E703F0 /* SDUIImageViewAligned.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

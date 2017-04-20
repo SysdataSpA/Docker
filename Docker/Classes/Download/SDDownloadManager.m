@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "SDDownloadManager.h"
-#import "SDFileManager.h"
+#import "DKRFileManager.h"
 #import "SDDockerLogger.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
@@ -183,8 +183,8 @@
         self.useFileSystem = YES;
         self.useHeadRequestToCheckUpdates = YES;
         
-        NSString* localPath = [[[SDFileManager sharedManager] cacheDirectory] stringByAppendingPathComponent:DEAFULT_PATH_FOLDER];
-        if ([SDFileManager createDirectoryAtPath:localPath withIntermediateDirectories:YES])
+        NSString* localPath = [[[DKRFileManager sharedManager] cacheDirectory] stringByAppendingPathComponent:DEAFULT_PATH_FOLDER];
+        if ([DKRFileManager createDirectoryAtPath:localPath withIntermediateDirectories:YES])
         {
             self.fileSystemPath = localPath;
         }
@@ -357,7 +357,7 @@
     NSTimeInterval interval = numdays * 24 * 60 * 60;
     NSDate* beforeDate = [NSDate dateWithTimeIntervalSinceNow:-interval];
     
-    [SDFileManager deleteFilesContentInDirectoryNamed:self.fileSystemPath withModifyDateBefore:beforeDate];
+    [DKRFileManager deleteFilesContentInDirectoryNamed:self.fileSystemPath withModifyDateBefore:beforeDate];
 }
 
 #pragma mark Local Resources
@@ -420,7 +420,7 @@
         
         if (storedObject)
         {
-            SDFileInfo* fileInfo = [SDFileManager getInfoAboutFileAtPath:path];
+            DKRFileInfo* fileInfo = [DKRFileManager getInfoAboutFileAtPath:path];
             NSDate* lastModifiedDate = fileInfo.modificationDateOnServer;
             
             resourceInfo = [[NSMutableDictionary alloc] init];
@@ -709,7 +709,7 @@
     
     AFHTTPRequestOperation* downloadOperation = [self.downloadRequestOperationManager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
         // Delete file at local path before coping the temporary to it (otherwise if already exist a file it will fail)
-        [SDFileManager deleteFilesAtPath:localPath];
+        [DKRFileManager deleteFilesAtPath:localPath];
         
         NSError* error = nil;
         BOOL copy = [[NSFileManager defaultManager] moveItemAtPath:tmpPath toPath:localPath error:&error];
@@ -753,10 +753,10 @@
         else
         {
             SDLogModuleError(kDownloadManagerLogModuleName, @"SDDownloadManager: erro while moving resource from %@ to %@.\n\nError: %@", tmpPath, localPath, error.localizedDescription);
-            [SDFileManager deleteFilesAtPath:tmpPath];
+            [DKRFileManager deleteFilesAtPath:tmpPath];
         }
     } failure:^(AFHTTPRequestOperation* _Nonnull operation, NSError* _Nonnull error) {
-        [SDFileManager deleteFilesAtPath:tmpPath];
+        [DKRFileManager deleteFilesAtPath:tmpPath];
         
         SDLogModuleError(kDownloadManagerLogModuleName, @"SDDownloadManager: download new - error while downloading resource from URL: %@ to local path %@\n\nError: %@\n%@", urlString, localPath, error, [error userInfo]);
         NSDictionary* userInfo = @{ DOWNLOAD_OPERATION_INFO_RESULT_TYPE:@(DownloadOperationResultDownloadedNewFailed) };
@@ -851,7 +851,7 @@
         else
         {
             // if shouldn't be saved into file system, delete from local path
-            [SDFileManager deleteFilesAtPath:localPath];
+            [DKRFileManager deleteFilesAtPath:localPath];
         }
         
         if (useMemoryCache)
@@ -918,7 +918,7 @@
         
         if (useFileSystem)
         {
-            [SDFileManager deleteFilesAtPath:localPath];
+            [DKRFileManager deleteFilesAtPath:localPath];
         }
         
         if (useMemoryCache)
@@ -1086,7 +1086,7 @@
             NSString* directoryPath = [localPath stringByDeletingLastPathComponent];
             if (directoryPath.length > 0)
             {
-                [SDFileManager createDirectoryForFileAtPathIfNeeded:directoryPath];
+                [DKRFileManager createDirectoryForFileAtPathIfNeeded:directoryPath];
             }
         }
         

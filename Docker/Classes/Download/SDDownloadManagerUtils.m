@@ -13,20 +13,20 @@
 // limitations under the License.
 
 #import "SDDownloadManagerUtils.h"
-#import "SDFileManager.h"
+#import "DKRFileManager.h"
 #import "SDDockerLogger.h"
 
 @implementation SDDownloadManagerUtils
 
 + (void) exportCreationDatesPlistForFilesContentInDirectoryAtPath:(NSString*)directoryPath
 {
-    NSArray* directoryContents = [SDFileManager getFilesContentInDirectoryNamed:directoryPath];
+    NSArray* directoryContents = [DKRFileManager getFilesContentInDirectoryNamed:directoryPath];
     NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] initWithCapacity:0];
     
     for (NSString* fileName in directoryContents)
     {
         NSString* filePath = [directoryPath stringByAppendingPathComponent:fileName];
-        SDFileInfo* fileInfo = [SDFileManager getInfoAboutFileAtPath:filePath];
+        DKRFileInfo* fileInfo = [DKRFileManager getInfoAboutFileAtPath:filePath];
         if (fileInfo.modificationDateOnServer)
         {
             dictionary[fileName] = fileInfo.modificationDateOnServer;
@@ -46,7 +46,7 @@
     NSString* fileInfosPath = [bundleFolderPath stringByAppendingPathComponent:@"ResourceInfos.plist"];
     NSDictionary* dictionaryInfos = [NSDictionary dictionaryWithContentsOfFile:fileInfosPath];
     
-    NSArray* directoryContents = [SDFileManager getFilesContentInDirectoryNamed:bundleFolderPath];
+    NSArray* directoryContents = [DKRFileManager getFilesContentInDirectoryNamed:bundleFolderPath];
     
     for (NSString* fileName in directoryContents)
     {

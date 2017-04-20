@@ -16,7 +16,7 @@
 
 #define RESOURCES_DIRECTORY @"resources"
 
-@interface SDFileInfo : NSObject
+@interface DKRFileInfo : NSObject
 
 @property (nonatomic, strong) NSString* name;
 @property (nonatomic, strong) NSDate* modificationDateOnServer;
@@ -26,7 +26,7 @@
 @end
 
 
-@interface SDFileManager : NSObject
+@interface DKRFileManager : NSObject
 
 @property (nonatomic, strong) NSString* cacheDirectory;
 @property (nonatomic, strong) NSString* documentsDirectory;
@@ -46,8 +46,8 @@
 + (NSArray*) getFilesContentInDirectoryNamed:(NSString*)directoryName;
 
 + (NSArray*) getInfoAboutFilesContentInDirectoryNamed:(NSString*)directoryName;
-+ (SDFileInfo*) getInfoAboutFileAtPath:(NSString*)path;
-+ (SDFileInfo*) getInfoAboutFileNamed:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName;
++ (DKRFileInfo*) getInfoAboutFileAtPath:(NSString*)path;
++ (DKRFileInfo*) getInfoAboutFileNamed:(NSString*)fileName inDirectoryNamed:(NSString*)directoryName;
 
 + (BOOL) deleteFilesAtPath:(NSString*)filePath;
 + (BOOL) deleteFilesContentInDirectoryNamed:(NSString*)directoryName withModifyDateBefore:(NSDate*)expirationDate;

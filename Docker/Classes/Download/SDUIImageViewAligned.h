@@ -32,7 +32,7 @@ typedef enum
 
 
 
-@interface UIImageViewAligned : UIImageView
+@interface SDUIImageViewAligned : UIImageView
 
 // This property holds the current alignment
 @property (nonatomic) UIImageViewAignmentMask alignment;

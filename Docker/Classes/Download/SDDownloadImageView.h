@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "UIImageViewAligned.h"
+#import "SDUIImageViewAligned.h"
 #import "SDDownloadManager.h"
 
 typedef void (^ SDDownloadImageViewCompletionHandler)(NSString* _Nullable urlString, UIImage* _Nullable image, DownloadOperationResultType resultType);
@@ -48,7 +48,7 @@ typedef NS_OPTIONS (NSUInteger, SDDownloadImageTransitionType)
 
 
 
-@interface SDDownloadImageView : UIImageViewAligned
+@interface SDDownloadImageView : SDUIImageViewAligned
 
 /**
  *  Type of animation executed when the image will be updated. The animation will fired when:

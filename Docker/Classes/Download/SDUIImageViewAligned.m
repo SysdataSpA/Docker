@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "UIImageViewAligned.h"
+#import "SDUIImageViewAligned.h"
 
-@implementation UIImageViewAligned
+@implementation SDUIImageViewAligned
 
 - (id)initWithFrame:(CGRect)frame
 {

@@ -11,6 +11,8 @@
 		341A67D61E9D2A6900711B11 /* SDServiceViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 341A67D51E9D2A6900711B11 /* SDServiceViewCell.m */; };
 		347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD18F1E9BD113000064DC /* SDImageViewController.m */; };
 		347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD1921E9BD193000064DC /* SDTableViewCell.m */; };
+		34CBB1C61EAA401E00468D7F /* DemoFileForSuccess.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */; };
+		34CBB1C81EAA410300468D7F /* DemoFileForFailure.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */; };
 		34DF146B1E9CCE4C00C7558C /* SDServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */; };
 		34DF146E1E9CD0A000C7558C /* SDServiceExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF146D1E9CD0A000C7558C /* SDServiceExample.m */; };
 		34DF14711E9CD5EA00C7558C /* MyServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF14701E9CD5EA00C7558C /* MyServiceManager.m */; };
@@ -49,6 +51,8 @@
 		347DD18F1E9BD113000064DC /* SDImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageViewController.m; sourceTree = "<group>"; };
 		347DD1911E9BD193000064DC /* SDTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDTableViewCell.h; sourceTree = "<group>"; };
 		347DD1921E9BD193000064DC /* SDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDTableViewCell.m; sourceTree = "<group>"; };
+		34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = DemoFileForSuccess.json; path = Docker/Assets/DemoFileForSuccess.json; sourceTree = "<group>"; };
+		34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = DemoFileForFailure.json; path = Docker/Assets/DemoFileForFailure.json; sourceTree = "<group>"; };
 		34DF14691E9CCE4C00C7558C /* SDServiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDServiceViewController.h; sourceTree = "<group>"; };
 		34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDServiceViewController.m; sourceTree = "<group>"; };
 		34DF146C1E9CD0A000C7558C /* SDServiceExample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDServiceExample.h; sourceTree = "<group>"; };
@@ -124,6 +128,15 @@
 			name = service;
 			sourceTree = "<group>";
 		};
+		34CBB1C41EAA3FE500468D7F /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */,
+				34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		34DF14671E9CCD7B00C7558C /* Service example */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
+				34CBB1C41EAA3FE500468D7F /* Assets */,
 				6003F593195388D20070C39A /* Example for Docker */,
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
@@ -335,8 +349,10 @@
 			files = (
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
+				34CBB1C61EAA401E00468D7F /* DemoFileForSuccess.json in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				34CBB1C81EAA410300468D7F /* DemoFileForFailure.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

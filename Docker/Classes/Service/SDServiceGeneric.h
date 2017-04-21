@@ -220,7 +220,7 @@ typedef NS_ENUM (NSUInteger, SDHTTPMethod)
 /**
  *  File name of local file that contains the response of service (in the Bundle).
  *
- *  @return Nome del file in locale.
+ *  @return local file name.
  */
 - (NSString* _Nullable) demoModeJsonFileName;
 
@@ -230,6 +230,31 @@ typedef NS_ENUM (NSUInteger, SDHTTPMethod)
  *  @return range for the waiting time
  */
 - (NSRange) demoWaitingTimeRange;
+
+
+/**
+ *  File name of local file that contains the response of service (in the Bundle) to simulate error cases.
+ *
+ *  @return local file name.
+ */
+- (NSString* _Nullable) demoModeJsonFailureFileName;
+
+
+/**
+ *  Status code to return in case of failure in demo mode.
+ *
+ *  @return status code in failure case.
+ */
+- (int) demoModeFailureStatusCode;
+
+
+/**
+ *  Probability of error in demo mode. Default is 0 (never appens). This value must be between 0 and 1 (0 = never appens, 1 = always appens)
+ *
+ *  @return chance of error occurs.
+ */
+- (double) demoModeFailureChanceEvent;
+
 
 @end
 

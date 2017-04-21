@@ -32,6 +32,37 @@
     return [SDServiceExampleResponse class];
 }
 
+- (Class)errorClass
+{
+    return [SDServiceExampleError class];
+}
+
+
+- (BOOL)useDemoMode
+{
+    return NO;
+}
+
+- (NSString *)demoModeJsonFileName
+{
+    return @"DemoFileForSuccess";
+}
+
+- (NSString *)demoModeJsonFailureFileName
+{
+    return @"DemoFileForFailure";
+}
+
+- (double)demoModeFailureChanceEvent
+{
+    return 0.5;
+}
+
+- (int)demoModeFailureStatusCode
+{
+    return 503;
+}
+
 @end
 
 
@@ -76,6 +107,20 @@
               @"lastName":@"name.last",
               @"imageUrl":@"picture.medium"
             };
+}
+
+
+@end
+
+@implementation SDServiceExampleError
+
++ (NSDictionary*) JSONKeyPathsByPropertyKey
+{
+    return @{
+             @"errorMessage":@"errorMessage",
+             @"technicalErrorMessage":@"techInfo.message",
+             @"technicalErrorCode":@"techInfo.code"
+             };
 }
 
 

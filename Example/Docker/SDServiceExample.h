@@ -33,3 +33,12 @@
 @property (nonatomic, strong) NSArray<MTLUser*>* users;
 
 @end
+
+
+@interface SDServiceExampleError : SDServiceMantleError
+
+@property (nonatomic, strong) NSString* errorMessage;
+@property (nonatomic, strong) NSString* technicalErrorMessage;
+@property (nonatomic, assign) int technicalErrorCode;
+
+@end

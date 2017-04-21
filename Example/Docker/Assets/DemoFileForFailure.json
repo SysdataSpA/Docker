@@ -1,0 +1,7 @@
+{
+    "errorMessage" : "This is the error message retreived from service response in failure case",
+    "techInfo" : {
+        "message" : "your request has wrong parameters",
+        "code" : 23
+    }
+}

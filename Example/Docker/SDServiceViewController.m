@@ -34,8 +34,13 @@
         weakSelf.users = response.users;
         [weakSelf.tableView reloadData];
         
-    } failure:^(id<SDServiceGenericErrorProtocol> error) {
+    } failure:^(SDServiceExampleError* error) {
+        NSString* message = [NSString stringWithFormat:@"ErrorMessage = %@\nTechnicalMessage = %@\nHTTP status code = %d\nTechnical error code = %d", error.errorMessage, error.technicalErrorMessage, error.httpStatusCode, error.technicalErrorCode];
         
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [weakSelf presentViewController:alert animated:YES completion:nil];
+            
     }];
 }
 

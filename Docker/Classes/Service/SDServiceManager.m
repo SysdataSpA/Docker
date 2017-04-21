@@ -158,6 +158,30 @@
     // if ServiceManager or specific service is in demo mode try to retreive response from file. Indipendently from result goes over.
     if (self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode]))
     {
+        double failureChance = 0;
+        
+        // check if need error demo
+        if([serviceInfo.service respondsToSelector:@selector(demoModeFailureChanceEvent)] && [serviceInfo.service respondsToSelector:@selector(demoModeJsonFailureFileName)] && [serviceInfo.service demoModeJsonFailureFileName].length > 0)
+        {
+            failureChance = [serviceInfo.service demoModeFailureChanceEvent];
+        }
+        
+        if(failureChance > 0)
+        {
+            double chance = arc4random_uniform(1000)/1000.;
+            if(chance < failureChance)
+            {
+                // simulate error in demo mode
+                SDLogModuleInfo(kServiceManagerLogModuleName, @"Service %@ in DEMO MODE -> FAILURE CASE", NSStringFromClass([serviceInfo.service class]));
+                
+                [self callServiceInDemoModeForFailureWithServiceCallInfo:serviceInfo];
+                return;
+            }
+        }
+        
+        // simulate success response in demo mode
+        SDLogModuleInfo(kServiceManagerLogModuleName, @"Service %@ in DEMO MODE -> SUCCESS CASE", NSStringFromClass([serviceInfo.service class]));
+        
         [self callServiceInDemoModeWithServiceCallInfo:serviceInfo];
         return;
     }
@@ -353,6 +377,49 @@
     }];
 }
 
+/**
+ *  Retrieve error response from local file.
+ */
+- (void) callServiceInDemoModeForFailureWithServiceCallInfo:(SDServiceCallInfo*)serviceInfo
+{
+    // read json from file asking at service the demo file name
+    NSString* jsonFileName;
+    
+    if ([serviceInfo.service respondsToSelector:@selector(demoModeJsonFailureFileName)])
+    {
+        jsonFileName = [serviceInfo.service demoModeJsonFailureFileName];
+    }
+    
+    NSString* pathToFile = [[NSBundle mainBundle] pathForResource:jsonFileName ofType:@"json"];
+
+    __weak typeof (self) weakSelf = self;
+    [serviceInfo.service getResultFromJSONFileAtPath:pathToFile withCompletion:^(id  _Nullable responseObject) {
+        if (responseObject)
+        {
+            int statusCode = 400;
+            if([serviceInfo.service respondsToSelector:@selector(demoModeFailureStatusCode)])
+            {
+                statusCode = [serviceInfo.service demoModeFailureStatusCode];
+            }
+            
+            NSError* mappingError = nil;
+            id errorObject = [serviceInfo.service errorForObject:responseObject error:&mappingError];
+            if (mappingError)
+            {
+                SDLogModuleError(kServiceManagerLogModuleName, @"Error object unmanaged: %@\nError: %@", responseObject, mappingError);
+            }
+            
+            [weakSelf manageError:mappingError forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:statusCode];
+        }
+        else
+        {
+            NSString* errorString = [NSString stringWithFormat:@"Cannot find JSON file %@ for service %@", jsonFileName, NSStringFromClass([serviceInfo.service class])];
+            NSError* error = [NSError errorWithDomain:@"DEMO_MODE" code:-1 userInfo:@{ NSLocalizedDescriptionKey : errorString }];
+            [weakSelf manageError:error inOperation:nil forServiceInfo:serviceInfo];
+        }
+    }];
+}
+
 #pragma mark - Operation result management
 
 - (void) manageResponse:(id)responseObject inOperation:(AFHTTPRequestOperation*)operation forServiceInfo:(SDServiceCallInfo*)serviceInfo
@@ -469,8 +536,6 @@
             {
                 mappingError = nil;
                 errorObject = [serviceInfo.service errorForObject:errorResponse error:&mappingError];
-                errorObject.httpStatusCode = (int)operation.response.statusCode;
-                errorObject.error = error;
                 if (mappingError)
                 {
                     SDLogModuleError(kServiceManagerLogModuleName, @"Error object unmanaged: %@\nError: %@", errorResponse, mappingError);
@@ -482,35 +547,44 @@
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            // mapping failed
-            if (!errorObject)
-            {
-                // missing service response or mapping failure. Check what is the problem
-                errorObject = [[[serviceInfo.service errorClass] alloc] init];
-                errorObject.httpStatusCode = (int)operation.response.statusCode;
-                errorObject.error = error;
-            }
-            // service call campleted
-            // method called only if there are connection erros
-            [weakself handleFailureForServiceInfo:serviceInfo withError:errorObject];
-            
-            if (serviceInfo.completionFailure)
-            {
-                serviceInfo.completionFailure(errorObject);
-            }
-            
-            if ([serviceInfo.delegate respondsToSelector:@selector(didEndServiceOperation:withRequest:result:error:)])
-            {
-                [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:nil error:errorObject];
-            }
-            
-            if (!weakself.hasPendingOperations)
-            {
-                [weakself didCompleteAllServices];
-            }
+            [weakself manageError:error forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:(int)operation.response.statusCode];
         });
     });
 }
+
+
+- (void) manageError:(NSError*)error forServiceInfo:(SDServiceCallInfo*)serviceInfo withErrorObject:(id<SDServiceGenericErrorProtocol>)errorObject statusCode:(int)statusCode
+{
+    // mapping failed
+    if (!errorObject)
+    {
+        // missing service response or mapping failure. Check what is the problem
+        errorObject = [[[serviceInfo.service errorClass] alloc] init];
+    }
+    errorObject.httpStatusCode = statusCode;
+    errorObject.error = error;
+    
+    // service call campleted
+    // method called only if there are connection erros
+    [self handleFailureForServiceInfo:serviceInfo withError:errorObject];
+    
+    if (serviceInfo.completionFailure)
+    {
+        serviceInfo.completionFailure(errorObject);
+    }
+    
+    if ([serviceInfo.delegate respondsToSelector:@selector(didEndServiceOperation:withRequest:result:error:)])
+    {
+        [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:nil error:errorObject];
+    }
+    
+    if (!self.hasPendingOperations)
+    {
+        [self didCompleteAllServices];
+    }
+}
+
+
 
 - (void) manageMappingFailureForServiceInfo:(SDServiceCallInfo*)serviceInfo HTTPStatusCode:(NSInteger)httpStatusCode andError:(NSError*)error
 {

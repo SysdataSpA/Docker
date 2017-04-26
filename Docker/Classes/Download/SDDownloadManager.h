@@ -64,7 +64,7 @@ typedef void (^ SDDownloadManagerCompletionFailureHandler)(NSString* _Nullable u
 
 typedef void (^ SDDownloadManagerCheckSizeCompletion)(double totalSize, NSUInteger numElementsToDownload);
 typedef void (^ SDDownloadManagerBatchOperationProgressHandler)(double totalSize, NSUInteger numElementsToDownload);
-typedef void (^ SDDownloadManagerBatchOperationCompletion)();
+typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadCompleted);
 
 
 

@@ -1002,7 +1002,8 @@
     {
         if (self.downloadElementsCompletionHandler)
         {
-            self.downloadElementsCompletionHandler();
+            BOOL downloadCompleted = self.downloadElementsOperations.count == 0;
+            self.downloadElementsCompletionHandler(downloadCompleted);
             self.downloadElementsCompletionHandler = nil;
         }
         self.downloadElementsProgressHandler = nil;
@@ -1022,10 +1023,6 @@
         }
         [operation cancel];
     }
-    
-    [self.downloadElementsOperations removeAllObjects];
-    [self.downloadElementsSizeInfos removeAllObjects];
-    self.downloadElementsTotalSize = 0.0;
 }
 
 #pragma mark Resource Download
@@ -1204,6 +1201,10 @@
     self.checkSizeCompletion = completion;
     self.checkSizeProgressHandler = progress;
     
+    [self.downloadElementsOperations removeAllObjects];
+    [self.downloadElementsSizeInfos removeAllObjects];
+    self.downloadElementsTotalSize = 0.0;
+    
     for (NSString* urlString in urlStrings)
     {
         NSURL* url = [self encodedUrlFromString:urlString];
@@ -1234,6 +1235,10 @@
     self.checkSizeElementsProcessing = YES;
     self.checkSizeCompletion = completion;
     self.checkSizeProgressHandler = progress;
+    
+    [self.downloadElementsOperations removeAllObjects];
+    [self.downloadElementsSizeInfos removeAllObjects];
+    self.downloadElementsTotalSize = 0.0;
     
     for (NSMutableURLRequest* request in requests)
     {

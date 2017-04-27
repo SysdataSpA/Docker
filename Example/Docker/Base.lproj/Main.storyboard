@@ -55,12 +55,23 @@
                                     <segue destination="0HL-wc-Xyf" kind="show" id="7wa-AI-R4x"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a6h-jk-rvJ">
+                                <rect key="frame" x="114" y="318" width="147" height="30"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <state key="normal" title="Download Batch"/>
+                                <connections>
+                                    <segue destination="hfL-la-vml" kind="show" id="yRc-di-SvE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="top" secondItem="wSd-1c-WDg" secondAttribute="bottom" constant="25" id="O0W-Sw-Z5C"/>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Zgi-2R-UJV"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="leading" secondItem="wSd-1c-WDg" secondAttribute="leading" id="b23-o0-1hv"/>
+                            <constraint firstItem="a6h-jk-rvJ" firstAttribute="top" secondItem="64E-C1-fgB" secondAttribute="bottom" constant="24" id="b4I-CZ-rwc"/>
+                            <constraint firstItem="a6h-jk-rvJ" firstAttribute="leading" secondItem="64E-C1-fgB" secondAttribute="leading" id="jvS-ld-LBe"/>
+                            <constraint firstItem="a6h-jk-rvJ" firstAttribute="trailing" secondItem="64E-C1-fgB" secondAttribute="trailing" id="nuk-Pg-4l9"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="trailing" secondItem="wSd-1c-WDg" secondAttribute="trailing" id="oIU-Qn-1ZE"/>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="145" id="sLM-Tz-GfK"/>
                         </constraints>
@@ -70,6 +81,101 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="305" y="433"/>
+        </scene>
+        <!--Download View Controller-->
+        <scene sceneID="PeT-Uc-YuP">
+            <objects>
+                <viewController id="hfL-la-vml" customClass="SDDownloadViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="PgH-XM-0E8"/>
+                        <viewControllerLayoutGuide type="bottom" id="4ai-oU-MQd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="EPS-qU-Erb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size of elements" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="98j-rm-WN3">
+                                <rect key="frame" x="20" y="99" width="335" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current operation...." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfQ-CZ-83L">
+                                <rect key="frame" x="20" y="127.5" width="335" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGz-lH-Hpi">
+                                <rect key="frame" x="20" y="193.5" width="157.5" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="H14-cO-hAi"/>
+                                </constraints>
+                                <state key="normal" title="Check size"/>
+                                <connections>
+                                    <action selector="checkSizeTapped:" destination="hfL-la-vml" eventType="touchUpInside" id="eUb-cg-z80"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMm-LQ-Jlg">
+                                <rect key="frame" x="197.5" y="193.5" width="157.5" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Download all checked"/>
+                                <connections>
+                                    <action selector="downloadAllCheckedTapped:" destination="hfL-la-vml" eventType="touchUpInside" id="WJ2-Ib-713"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z7f-sj-J7C">
+                                <rect key="frame" x="20" y="248.5" width="335" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="INTERRUPT"/>
+                                <connections>
+                                    <action selector="interruptTapped:" destination="hfL-la-vml" eventType="touchUpInside" id="rYp-nr-fNq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m6r-4T-phh">
+                                <rect key="frame" x="20" y="303.5" width="335" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Delete local files"/>
+                                <connections>
+                                    <action selector="deleteLocalFilesTapped:" destination="hfL-la-vml" eventType="touchUpInside" id="97z-6P-ZKq"/>
+                                    <action selector="interruptTapped:" destination="hfL-la-vml" eventType="touchUpInside" id="YIw-78-QYo"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="z7f-sj-J7C" firstAttribute="top" secondItem="TGz-lH-Hpi" secondAttribute="bottom" constant="10" id="3Ae-2z-DUO"/>
+                            <constraint firstItem="BfQ-CZ-83L" firstAttribute="trailing" secondItem="98j-rm-WN3" secondAttribute="trailing" id="6cy-RS-KNc"/>
+                            <constraint firstItem="TMm-LQ-Jlg" firstAttribute="bottom" secondItem="TGz-lH-Hpi" secondAttribute="bottom" id="9eG-ys-aOZ"/>
+                            <constraint firstItem="z7f-sj-J7C" firstAttribute="trailing" secondItem="BfQ-CZ-83L" secondAttribute="trailing" id="Bgp-bU-GbB"/>
+                            <constraint firstItem="TGz-lH-Hpi" firstAttribute="leading" secondItem="BfQ-CZ-83L" secondAttribute="leading" id="IiM-Xz-9fz"/>
+                            <constraint firstItem="TGz-lH-Hpi" firstAttribute="top" secondItem="BfQ-CZ-83L" secondAttribute="bottom" constant="45" id="JH0-md-nzL"/>
+                            <constraint firstItem="BfQ-CZ-83L" firstAttribute="leading" secondItem="98j-rm-WN3" secondAttribute="leading" id="NkN-sZ-N9s"/>
+                            <constraint firstItem="m6r-4T-phh" firstAttribute="height" secondItem="z7f-sj-J7C" secondAttribute="height" id="Rvn-Oh-CE3"/>
+                            <constraint firstItem="TMm-LQ-Jlg" firstAttribute="leading" secondItem="TGz-lH-Hpi" secondAttribute="trailing" constant="20" id="Rvu-Vq-wCk"/>
+                            <constraint firstItem="TMm-LQ-Jlg" firstAttribute="top" secondItem="TGz-lH-Hpi" secondAttribute="top" id="Uzw-7T-Zzn"/>
+                            <constraint firstItem="TMm-LQ-Jlg" firstAttribute="width" secondItem="TGz-lH-Hpi" secondAttribute="width" id="ZUc-EM-zYS"/>
+                            <constraint firstItem="m6r-4T-phh" firstAttribute="leading" secondItem="z7f-sj-J7C" secondAttribute="leading" id="heP-eq-dfC"/>
+                            <constraint firstItem="m6r-4T-phh" firstAttribute="top" secondItem="z7f-sj-J7C" secondAttribute="bottom" constant="10" id="ld3-IP-pJn"/>
+                            <constraint firstItem="98j-rm-WN3" firstAttribute="leading" secondItem="EPS-qU-Erb" secondAttribute="leading" constant="20" id="o3P-6e-Z6t"/>
+                            <constraint firstItem="98j-rm-WN3" firstAttribute="top" secondItem="PgH-XM-0E8" secondAttribute="bottom" constant="35" id="oFg-4M-LvN"/>
+                            <constraint firstItem="BfQ-CZ-83L" firstAttribute="top" secondItem="98j-rm-WN3" secondAttribute="bottom" constant="15" id="p2E-32-Eyg"/>
+                            <constraint firstAttribute="trailing" secondItem="98j-rm-WN3" secondAttribute="trailing" constant="20" id="ped-5O-kt4"/>
+                            <constraint firstItem="z7f-sj-J7C" firstAttribute="leading" secondItem="BfQ-CZ-83L" secondAttribute="leading" id="qSa-5I-yCf"/>
+                            <constraint firstItem="m6r-4T-phh" firstAttribute="trailing" secondItem="z7f-sj-J7C" secondAttribute="trailing" id="slj-9T-g0I"/>
+                            <constraint firstItem="z7f-sj-J7C" firstAttribute="height" secondItem="TGz-lH-Hpi" secondAttribute="height" id="tyP-kK-cm0"/>
+                            <constraint firstItem="TMm-LQ-Jlg" firstAttribute="trailing" secondItem="BfQ-CZ-83L" secondAttribute="trailing" id="zlZ-Zh-Bwc"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="currentOperationLabel" destination="BfQ-CZ-83L" id="7UY-Qd-QTs"/>
+                        <outlet property="sizeLabel" destination="98j-rm-WN3" id="iP6-P8-imc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gBs-tx-XSg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1774" y="1353"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="avG-5V-3CB">
@@ -126,7 +232,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MPq-z6-vzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1774" y="759"/>
+            <point key="canvasLocation" x="1774" y="596"/>
         </scene>
         <!--Service View Controller-->
         <scene sceneID="2e0-Hd-zyg">

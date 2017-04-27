@@ -11,6 +11,7 @@
 		341A67D61E9D2A6900711B11 /* SDServiceViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 341A67D51E9D2A6900711B11 /* SDServiceViewCell.m */; };
 		347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD18F1E9BD113000064DC /* SDImageViewController.m */; };
 		347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD1921E9BD193000064DC /* SDTableViewCell.m */; };
+		34B13CC51EB0E6E50004F907 /* SDDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */; };
 		34CBB1C61EAA401E00468D7F /* DemoFileForSuccess.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */; };
 		34CBB1C81EAA410300468D7F /* DemoFileForFailure.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */; };
 		34DF146B1E9CCE4C00C7558C /* SDServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34DF146A1E9CCE4C00C7558C /* SDServiceViewController.m */; };
@@ -51,6 +52,8 @@
 		347DD18F1E9BD113000064DC /* SDImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageViewController.m; sourceTree = "<group>"; };
 		347DD1911E9BD193000064DC /* SDTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDTableViewCell.h; sourceTree = "<group>"; };
 		347DD1921E9BD193000064DC /* SDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDTableViewCell.m; sourceTree = "<group>"; };
+		34B13CC31EB0E6E50004F907 /* SDDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDDownloadViewController.h; sourceTree = "<group>"; };
+		34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDDownloadViewController.m; sourceTree = "<group>"; };
 		34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = DemoFileForSuccess.json; path = Docker/Assets/DemoFileForSuccess.json; sourceTree = "<group>"; };
 		34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = DemoFileForFailure.json; path = Docker/Assets/DemoFileForFailure.json; sourceTree = "<group>"; };
 		34DF14691E9CCE4C00C7558C /* SDServiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDServiceViewController.h; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				347DD18F1E9BD113000064DC /* SDImageViewController.m */,
 				347DD1911E9BD193000064DC /* SDTableViewCell.h */,
 				347DD1921E9BD193000064DC /* SDTableViewCell.m */,
+				34B13CC31EB0E6E50004F907 /* SDDownloadViewController.h */,
+				34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */,
 			);
 			name = Download;
 			sourceTree = "<group>";
@@ -473,6 +478,7 @@
 				347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */,
 				34DF14711E9CD5EA00C7558C /* MyServiceManager.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				34B13CC51EB0E6E50004F907 /* SDDownloadViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

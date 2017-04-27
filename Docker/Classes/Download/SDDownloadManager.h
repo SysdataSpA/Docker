@@ -62,8 +62,9 @@ typedef void (^ SDDownloadManagerProgressHandler)(NSString* _Nullable urlString,
 typedef void (^ SDDownloadManagerCompletionFailureHandler)(NSString* _Nullable urlString, NSError* _Nullable error);
 
 
-typedef void (^ SDDownloadManagerCheckSizeCompletion)(double totalSize, NSUInteger numElementsToDownload);
-typedef void (^ SDDownloadManagerBatchOperationProgressHandler)(double totalSize, NSUInteger numElementsToDownload);
+typedef void (^ SDDownloadManagerCheckSizeCompletion)(long long totalSize, long numElementsToDownload);
+
+typedef void (^ SDDownloadManagerBatchOperationProgressHandler)(long long totalSizeExpected, long long sizeRemaining, long numElementsToDownloadExpected, long numElementsToDownloadRemaining);
 typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadCompleted);
 
 
@@ -243,12 +244,23 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 /**
  *  Total size (in byte) of the resource checked with countDownloadSizeForResourceAtUrls:completion: (if some local resources are valid will not be count)
  */
-@property (atomic, readonly) long long downloadElementsTotalSize;
+@property (atomic, readonly) long long downloadElementsExpectedTotalSize;
+
+/**
+ *  Size (in byte) of the remaining resource in download
+ */
+@property (atomic, readonly) long long downloadElementsRemainingSize;
+
 
 /**
  *  Number of files to download checked with countDownloadSizeForResourceAtUrls:completion: (if some local resources are valid will not be count)
  */
-@property (nonatomic, readonly) NSUInteger downloadOperationQueueCount;
+@property (nonatomic, readonly) long downloadOperationExpectedQueueCount;
+
+/**
+*  Number of files of remaining resources in download
+*/
+@property (nonatomic, readonly) long downloadOperationRemainingQueueCount;
 
 /**
  *  YES if the download batch is processing (after call downloadAllElementsCheckedWithProgress:completion)
@@ -273,11 +285,11 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerBatchOperationProgressHandler _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerBatchOperationProgressHandler _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 
 /**

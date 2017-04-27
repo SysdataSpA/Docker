@@ -17,6 +17,7 @@
 #import "SDDockerLogger.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
+#define OPERATION_INFO_OPTIONS                 @"options"
 
 #define LOCAL_STORED_OBJECT_LAST_MODIFIED_DATE @"lastModfiedDate"
 #define LOCAL_STORED_OBJECT                    @"object"
@@ -88,9 +89,20 @@
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
+@interface SDDownloadStatistic : NSObject 
 
+@property (nonatomic, assign, readwrite) long long totalSizeExpected;
+@property (nonatomic, assign, readwrite) long long sizeRemaining;
 
+@end
 
+@implementation SDDownloadStatistic
+
+@end
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
 
 
 
@@ -114,13 +126,18 @@
 
 @property (nonatomic, readwrite) BOOL checkSizeElementsProcessing;
 @property (nonatomic, strong) SDDownloadManagerCheckSizeCompletion checkSizeCompletion;
-@property (nonatomic, strong) SDDownloadManagerBatchOperationProgressHandler checkSizeProgressHandler;
+@property (nonatomic, strong) SDDownloadManagerCheckSizeCompletion checkSizeProgressHandler;
 
 
 @property (nonatomic, readwrite) BOOL downloadElementsProcessing;
-@property (nonatomic, strong) NSMutableDictionary<NSString*, NSNumber*>* downloadElementsSizeInfos;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, SDDownloadStatistic*>* downloadElementsSizeInfos;
 @property (nonatomic, strong) NSMutableArray<AFHTTPRequestOperation*>* downloadElementsOperations;
-@property (atomic, readwrite) long long downloadElementsTotalSize;
+
+@property (atomic, readwrite) long long downloadElementsExpectedTotalSize;
+@property (atomic, readwrite) long long downloadElementsRemainingSize;
+
+@property (nonatomic, readwrite) long downloadOperationExpectedQueueCount;
+
 @property (nonatomic, strong) SDDownloadManagerBatchOperationProgressHandler downloadElementsProgressHandler;
 @property (nonatomic, strong) SDDownloadManagerBatchOperationCompletion downloadElementsCompletionHandler;
 
@@ -131,7 +148,6 @@
 
 
 @implementation SDDownloadManager
-@synthesize downloadElementsTotalSize = _downloadElementsTotalSize;
 
 + (instancetype) sharedManager
 {
@@ -509,7 +525,7 @@
     return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSUInteger) downloadOperationQueueCount
+- (long) downloadOperationRemainingQueueCount
 {
     return self.downloadElementsOperations.count;
 }
@@ -698,10 +714,6 @@
     NSString* urlString = request.URL.absoluteString;
     NSString* localPath = options.localPath;
     
-    NSMutableDictionary* info = [[NSMutableDictionary alloc] init];
-    
-    [info setValue:localPath forKey:OPERATION_INFO_LOCAL_PATH];
-    
     __weak typeof(self)weakSelf = self;
     
     // Download file in a temporary path so that if download is interrupted (ex. app killed) there will not be a corrupted file that will be consider good at the final local path
@@ -770,9 +782,12 @@
         downloadOperation.qualityOfService = NSQualityOfServiceUserInteractive;
     }
     
-    
     downloadOperation.outputStream = [NSOutputStream outputStreamToFileAtPath:tmpPath append:NO];
-    downloadOperation.userInfo = [NSDictionary dictionaryWithDictionary:info];
+    
+    NSMutableDictionary* info = [[NSMutableDictionary alloc] init];
+    [info setValue:localPath forKey:OPERATION_INFO_LOCAL_PATH];
+    [info setValue:options forKey:OPERATION_INFO_OPTIONS];
+    downloadOperation.userInfo = info;
     
     [downloadOperation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead)
      {
@@ -805,7 +820,7 @@
             
             if (self.downloadElementsProgressHandler)
             {
-                self.downloadElementsProgressHandler(self.downloadElementsTotalSize, self.downloadOperationQueueCount);
+                self.downloadElementsProgressHandler(self.downloadElementsExpectedTotalSize, self.downloadElementsRemainingSize, self.downloadOperationExpectedQueueCount, self.downloadOperationRemainingQueueCount);
             }
         }
     }
@@ -928,6 +943,16 @@
         }
     }
     
+    // re-add downloaded size for operation failed
+    if (self.downloadElementsProcessing)
+    {
+        SDDownloadStatistic* statistic = self.downloadElementsSizeInfos[urlString];
+        long long downloadedSize = statistic.totalSizeExpected - statistic.sizeRemaining;
+        
+        self.downloadElementsRemainingSize += downloadedSize;
+    }
+    
+    
     // notifies all subscribers for the downloaded url
     NSMutableArray<SDDownloadObjectInfo*>* subscribers = self.urlDownloadersDictionary[urlString];
     for (SDDownloadObjectInfo* info in subscribers)
@@ -947,11 +972,14 @@
     // update the remaining size if the download batch is processing and calls the progress handler
     if (self.downloadElementsProcessing)
     {
-        self.downloadElementsTotalSize -= bytesRead;
+        self.downloadElementsRemainingSize -= bytesRead;
+        
+        SDDownloadStatistic* statistic = self.downloadElementsSizeInfos[urlString];
+        statistic.sizeRemaining -= bytesRead;
     }
     if (self.downloadElementsProgressHandler)
     {
-        self.downloadElementsProgressHandler(self.downloadElementsTotalSize, self.downloadOperationQueueCount);
+        self.downloadElementsProgressHandler(self.downloadElementsExpectedTotalSize, self.downloadElementsRemainingSize, self.downloadOperationExpectedQueueCount, self.downloadOperationRemainingQueueCount);
     }
     
     // call the progress handler for the all subscribers for the specific url
@@ -990,7 +1018,7 @@
     {
         if (self.checkSizeCompletion)
         {
-            self.checkSizeCompletion(self.downloadElementsTotalSize, self.downloadOperationQueueCount);
+            self.checkSizeCompletion(self.downloadElementsExpectedTotalSize, self.downloadOperationExpectedQueueCount);
             self.checkSizeCompletion = nil;
         }
         self.checkSizeProgressHandler = nil;
@@ -1177,11 +1205,21 @@
         return;
     }
     
-    SDLogModuleInfo(kDownloadManagerLogModuleName, @"SDDownloadManager: download batch started for %d resources with total size %.3f MB", (int)self.downloadElementsOperations.count, self.downloadElementsTotalSize / (1024.*1024.));
+    SDLogModuleInfo(kDownloadManagerLogModuleName, @"SDDownloadManager: download batch started for %d resources with total size %.3f MB", (int)self.downloadElementsOperations.count, self.downloadElementsRemainingSize / (1024.*1024.));
     
     for (AFHTTPRequestOperation* downloadOperation in self.downloadElementsOperations)
     {
-        [self.downloadRequestOperationManager.operationQueue addOperation:downloadOperation];
+        AFHTTPRequestOperation* operation;
+        if(downloadOperation.isFinished)
+        {
+            SDDownloadOptions* options = downloadOperation.userInfo[OPERATION_INFO_OPTIONS];
+            operation = [self downloadOperationForElement:DownloadOperationTypeGeneric withRequest:downloadOperation.request overridingModificationDate:nil options:options];
+        }
+        else
+        {
+            operation = downloadOperation;
+        }
+         [self.downloadRequestOperationManager.operationQueue addOperation:operation];
     }
 }
 
@@ -1195,7 +1233,7 @@
     [self countDownloadSizeForResourceAtUrls:urlStrings options:options progress:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(SDDownloadOptions*)options progress:(SDDownloadManagerBatchOperationProgressHandler)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(SDDownloadOptions*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
     self.checkSizeElementsProcessing = YES;
     self.checkSizeCompletion = completion;
@@ -1203,7 +1241,9 @@
     
     [self.downloadElementsOperations removeAllObjects];
     [self.downloadElementsSizeInfos removeAllObjects];
-    self.downloadElementsTotalSize = 0.0;
+    self.downloadElementsExpectedTotalSize = 0;
+    self.downloadElementsRemainingSize = 0;
+    self.downloadOperationExpectedQueueCount = 0;
     
     for (NSString* urlString in urlStrings)
     {
@@ -1225,7 +1265,7 @@
     [self countDownloadSizeForResourceWithRequests:requests options:options progress:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(SDDownloadOptions*)options progress:(SDDownloadManagerBatchOperationProgressHandler)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(SDDownloadOptions*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
     if (!options)
     {
@@ -1238,7 +1278,9 @@
     
     [self.downloadElementsOperations removeAllObjects];
     [self.downloadElementsSizeInfos removeAllObjects];
-    self.downloadElementsTotalSize = 0.0;
+    self.downloadElementsExpectedTotalSize = 0;
+    self.downloadElementsRemainingSize = 0;
+    self.downloadOperationExpectedQueueCount = 0;
     
     for (NSMutableURLRequest* request in requests)
     {
@@ -1353,7 +1395,7 @@
             NSString* elementSize = [dictionary valueForKey:@"Content-Length"]; // dimension in byte
             double elementSizeValue = elementSize.doubleValue;
             
-            weakSelf.downloadElementsTotalSize += elementSizeValue;
+            
             
             if ([weakSelf indexDownloadingElementsOperations:localPath] == NSNotFound && elementSizeValue > 0)
             {
@@ -1361,11 +1403,24 @@
                 
                 
                 [weakSelf.downloadElementsOperations addObject:downloadOperation];
-                [weakSelf.downloadElementsSizeInfos setObject:@(elementSizeValue) forKey:urlString];
+                weakSelf.downloadOperationExpectedQueueCount = weakSelf.downloadElementsOperations.count;
+                
+                BOOL resourceAlreadyChecked = weakSelf.downloadElementsSizeInfos[urlString] != nil;
+                if(!resourceAlreadyChecked)
+                {
+                    weakSelf.downloadElementsExpectedTotalSize += elementSizeValue;
+                    weakSelf.downloadElementsRemainingSize = weakSelf.downloadElementsExpectedTotalSize;
+                    
+                    SDDownloadStatistic* statistic = [SDDownloadStatistic new];
+                    statistic.totalSizeExpected = elementSizeValue;
+                    statistic.sizeRemaining = elementSizeValue;
+                    
+                    [weakSelf.downloadElementsSizeInfos setObject:statistic forKey:urlString];
+                }
                 
                 if (weakSelf.checkSizeProgressHandler)
                 {
-                    weakSelf.checkSizeProgressHandler(weakSelf.downloadElementsTotalSize, weakSelf.downloadOperationQueueCount);
+                    weakSelf.checkSizeProgressHandler(weakSelf.downloadElementsExpectedTotalSize, weakSelf.downloadOperationExpectedQueueCount);
                 }
             }
             else

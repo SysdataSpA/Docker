@@ -34,8 +34,6 @@
                        @"http://media.istockphoto.com/photos/lights-at-night-in-snowy-hills-in-sierra-nevada-picture-id469817092",
                        @"http://media.istockphoto.com/photos/colorful-banners-decorations-between-balconies-over-a-street-picture-id188070898"
                        ];
-    
-    
 }
 
 

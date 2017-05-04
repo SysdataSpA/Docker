@@ -15,6 +15,7 @@
 #import "SDDownloadManager.h"
 #import "DKRFileManager.h"
 #import "SDDockerLogger.h"
+#import "NSString+Hashing.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
 #define OPERATION_INFO_OPTIONS                 @"options"
@@ -520,7 +521,8 @@
 
 - (NSString*) localResourceIdentifierForUrlString:(NSString*)urlString
 {
-    NSString* url = [urlString lastPathComponent];
+    NSString* uniquePath = [urlString.stringByDeletingLastPathComponent MD5String];
+    NSString* url = [NSString stringWithFormat:@"%@_%@", uniquePath, urlString.lastPathComponent];
     
     return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }

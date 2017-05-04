@@ -11,6 +11,9 @@
 		341A67D61E9D2A6900711B11 /* SDServiceViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 341A67D51E9D2A6900711B11 /* SDServiceViewCell.m */; };
 		347DD1901E9BD113000064DC /* SDImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD18F1E9BD113000064DC /* SDImageViewController.m */; };
 		347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DD1921E9BD193000064DC /* SDTableViewCell.m */; };
+		3485758B1EBB395A00BBB77E /* SDBundleExportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3485758A1EBB395A00BBB77E /* SDBundleExportViewController.m */; };
+		3485758D1EBB3DAE00BBB77E /* resources_to_copy in Resources */ = {isa = PBXBuildFile; fileRef = 3485758C1EBB3DAE00BBB77E /* resources_to_copy */; };
+		3485758F1EBB40BA00BBB77E /* seed_resources in Resources */ = {isa = PBXBuildFile; fileRef = 3485758E1EBB40BA00BBB77E /* seed_resources */; };
 		34B13CC51EB0E6E50004F907 /* SDDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */; };
 		34CBB1C61EAA401E00468D7F /* DemoFileForSuccess.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */; };
 		34CBB1C81EAA410300468D7F /* DemoFileForFailure.json in Resources */ = {isa = PBXBuildFile; fileRef = 34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */; };
@@ -52,6 +55,10 @@
 		347DD18F1E9BD113000064DC /* SDImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageViewController.m; sourceTree = "<group>"; };
 		347DD1911E9BD193000064DC /* SDTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDTableViewCell.h; sourceTree = "<group>"; };
 		347DD1921E9BD193000064DC /* SDTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDTableViewCell.m; sourceTree = "<group>"; };
+		348575891EBB395A00BBB77E /* SDBundleExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBundleExportViewController.h; sourceTree = "<group>"; };
+		3485758A1EBB395A00BBB77E /* SDBundleExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBundleExportViewController.m; sourceTree = "<group>"; };
+		3485758C1EBB3DAE00BBB77E /* resources_to_copy */ = {isa = PBXFileReference; lastKnownFileType = folder; name = resources_to_copy; path = Docker/Assets/resources_to_copy; sourceTree = "<group>"; };
+		3485758E1EBB40BA00BBB77E /* seed_resources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = seed_resources; path = Docker/Assets/seed_resources; sourceTree = "<group>"; };
 		34B13CC31EB0E6E50004F907 /* SDDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDDownloadViewController.h; sourceTree = "<group>"; };
 		34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDDownloadViewController.m; sourceTree = "<group>"; };
 		34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = DemoFileForSuccess.json; path = Docker/Assets/DemoFileForSuccess.json; sourceTree = "<group>"; };
@@ -136,6 +143,8 @@
 			children = (
 				34CBB1C51EAA401E00468D7F /* DemoFileForSuccess.json */,
 				34CBB1C71EAA410300468D7F /* DemoFileForFailure.json */,
+				3485758E1EBB40BA00BBB77E /* seed_resources */,
+				3485758C1EBB3DAE00BBB77E /* resources_to_copy */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -161,6 +170,8 @@
 				347DD1921E9BD193000064DC /* SDTableViewCell.m */,
 				34B13CC31EB0E6E50004F907 /* SDDownloadViewController.h */,
 				34B13CC41EB0E6E50004F907 /* SDDownloadViewController.m */,
+				348575891EBB395A00BBB77E /* SDBundleExportViewController.h */,
+				3485758A1EBB395A00BBB77E /* SDBundleExportViewController.m */,
 			);
 			name = Download;
 			sourceTree = "<group>";
@@ -169,8 +180,8 @@
 			isa = PBXGroup;
 			children = (
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
-				34CBB1C41EAA3FE500468D7F /* Assets */,
 				6003F593195388D20070C39A /* Example for Docker */,
+				34CBB1C41EAA3FE500468D7F /* Assets */,
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
@@ -353,10 +364,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
+				3485758F1EBB40BA00BBB77E /* seed_resources in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				34CBB1C61EAA401E00468D7F /* DemoFileForSuccess.json in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				3485758D1EBB3DAE00BBB77E /* resources_to_copy in Resources */,
 				34CBB1C81EAA410300468D7F /* DemoFileForFailure.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34DF146B1E9CCE4C00C7558C /* SDServiceViewController.m in Sources */,
+				3485758B1EBB395A00BBB77E /* SDBundleExportViewController.m in Sources */,
 				341A67D61E9D2A6900711B11 /* SDServiceViewCell.m in Sources */,
 				34DF146E1E9CD0A000C7558C /* SDServiceExample.m in Sources */,
 				347DD1931E9BD193000064DC /* SDTableViewCell.m in Sources */,

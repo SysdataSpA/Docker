@@ -236,7 +236,7 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *
  *  @return path        local path where persist the resource
  */
-- (NSString* _Nonnull) localResourcePathForUrlString:(NSString* _Nonnull)urlString;
+- (NSString* _Nullable) localResourcePathForUrlString:(NSString* _Nonnull)urlString;
 
 
 #pragma mark - Count size
@@ -336,6 +336,6 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *
  *  @return url encoded
  */
-- (NSURL* _Nonnull) encodedUrlFromString:(NSString* _Nonnull)urlString;
+- (NSURL* _Nullable) encodedUrlFromString:(NSString* _Nonnull)urlString;
 
 @end

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import "SDDownloadImageView.h"
 
 typedef enum
 {
@@ -32,7 +33,7 @@ typedef enum
 
 
 
-@interface SDUIImageViewAligned : UIImageView
+@interface SDUIImageViewAligned : SDDownloadImageView
 
 // This property holds the current alignment
 @property (nonatomic) UIImageViewAignmentMask alignment;

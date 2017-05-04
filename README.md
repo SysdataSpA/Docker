@@ -204,12 +204,12 @@ For more details visit
 <a name="SDDownloadManager"></a> Download Manager
 ================================
 
-**SDDownloadManager** is the main class that manage all download comunications, cache the downloaded resources locally (in NSCache, File System, depending of given settings). It use AFHTTPRequestOperationManager of AFNetworking framework (vers. 2.0).
+**SDDownloadManager** is the main class that manage all download communications, cache the downloaded resources locally (in NSCache, File System, depending of given settings). It use AFHTTPRequestOperationManager of AFNetworking framework (vers. 2.0).
 
 #### Main features:
 * search resources from **bundle** before download (ex. in case you have a bundle seed)
 * can use **file system** to persist downloaded resources
-* can use **NSCache** to retreive them faster
+* can use **NSCache** to retrieve them faster
 * can use **HEAD request to check new updates** of a downloaded resource (compare modified date of server resource with your local one and if reveal an update it will download it)
 * can define the local path to persist resources
 * **check global size of many resources** to download in a batch operation

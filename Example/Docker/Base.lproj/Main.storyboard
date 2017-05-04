@@ -63,9 +63,20 @@
                                     <segue destination="hfL-la-vml" kind="show" id="yRc-di-SvE"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfG-uB-Az0">
+                                <rect key="frame" x="114" y="373" width="147" height="30"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <state key="normal" title="Bundle resources"/>
+                                <connections>
+                                    <segue destination="ybq-nS-O8l" kind="show" id="3YY-8b-gTt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="QfG-uB-Az0" firstAttribute="top" secondItem="a6h-jk-rvJ" secondAttribute="bottom" constant="25" id="2Yi-cA-5Sa"/>
+                            <constraint firstItem="QfG-uB-Az0" firstAttribute="trailing" secondItem="a6h-jk-rvJ" secondAttribute="trailing" id="B1S-20-oC0"/>
+                            <constraint firstItem="QfG-uB-Az0" firstAttribute="leading" secondItem="a6h-jk-rvJ" secondAttribute="leading" id="JfD-0O-Pwg"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="top" secondItem="wSd-1c-WDg" secondAttribute="bottom" constant="25" id="O0W-Sw-Z5C"/>
                             <constraint firstItem="wSd-1c-WDg" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Zgi-2R-UJV"/>
                             <constraint firstItem="64E-C1-fgB" firstAttribute="leading" secondItem="wSd-1c-WDg" secondAttribute="leading" id="b23-o0-1hv"/>
@@ -81,6 +92,75 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="305" y="433"/>
+        </scene>
+        <!--Bundle Export View Controller-->
+        <scene sceneID="d01-iw-Ssq">
+            <objects>
+                <viewController id="ybq-nS-O8l" customClass="SDBundleExportViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JD5-jd-ebe"/>
+                        <viewControllerLayoutGuide type="bottom" id="l4j-ce-YKg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zN3-XW-Wso">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export creation/modified date information about all downloaded files. It will create the ResourceInfos.plist file" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxt-wA-IFg">
+                                <rect key="frame" x="20" y="84" width="335" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ES-Eb-jLr">
+                                <rect key="frame" x="117" y="115" width="141" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="zPm-mY-RkK"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                <state key="normal" title="create plist file"/>
+                                <connections>
+                                    <action selector="createPlistFileTapped:" destination="ybq-nS-O8l" eventType="touchUpInside" id="Gwc-2K-3ms"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dU1-Tl-bvy">
+                                <rect key="frame" x="134.5" y="301.5" width="106" height="45"/>
+                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="7xn-vM-qPj"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                <state key="normal" title="copy files"/>
+                                <connections>
+                                    <action selector="copyFilesTapped:" destination="ybq-nS-O8l" eventType="touchUpInside" id="RlE-id-Vdm"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0jI-Sy-3hO">
+                                <rect key="frame" x="20" y="210" width="335" height="81.5"/>
+                                <string key="text">Create seed resources copying files from bundle to file system.  NB: bundle folder should contain both files and plist file generated with top button.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="dU1-Tl-bvy" firstAttribute="top" secondItem="0jI-Sy-3hO" secondAttribute="bottom" constant="10" id="Hph-6c-Utk"/>
+                            <constraint firstItem="qxt-wA-IFg" firstAttribute="top" secondItem="JD5-jd-ebe" secondAttribute="bottom" constant="20" id="IZ4-f9-08D"/>
+                            <constraint firstItem="2ES-Eb-jLr" firstAttribute="centerX" secondItem="zN3-XW-Wso" secondAttribute="centerX" id="OOj-ak-o9e"/>
+                            <constraint firstAttribute="trailing" secondItem="qxt-wA-IFg" secondAttribute="trailing" constant="20" id="Qb2-cJ-rX5"/>
+                            <constraint firstItem="dU1-Tl-bvy" firstAttribute="centerX" secondItem="zN3-XW-Wso" secondAttribute="centerX" id="REf-0s-cgK"/>
+                            <constraint firstItem="0jI-Sy-3hO" firstAttribute="trailing" secondItem="qxt-wA-IFg" secondAttribute="trailing" id="a1B-xc-0Fn"/>
+                            <constraint firstItem="qxt-wA-IFg" firstAttribute="leading" secondItem="zN3-XW-Wso" secondAttribute="leading" constant="20" id="dfU-I3-EiT"/>
+                            <constraint firstItem="0jI-Sy-3hO" firstAttribute="leading" secondItem="qxt-wA-IFg" secondAttribute="leading" id="kRe-ff-KM8"/>
+                            <constraint firstItem="0jI-Sy-3hO" firstAttribute="top" secondItem="2ES-Eb-jLr" secondAttribute="bottom" constant="50" id="pOn-AR-X3b"/>
+                            <constraint firstItem="2ES-Eb-jLr" firstAttribute="top" secondItem="qxt-wA-IFg" secondAttribute="bottom" constant="10" id="xeg-kR-fWa"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fgr-la-h0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="900" y="1513"/>
         </scene>
         <!--Download View Controller-->
         <scene sceneID="PeT-Uc-YuP">

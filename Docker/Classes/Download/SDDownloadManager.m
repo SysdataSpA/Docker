@@ -172,11 +172,6 @@
         [[SDLogger sharedLogger] setLogLevel:SDLogLevelWarning forModuleWithName:kDownloadManagerLogModuleName];
         SDLogModuleSetting* setting = [[SDLogger sharedLogger] moduleWithName:kDownloadManagerLogModuleName];
 #endif
-        //        [setting setForegroundColor:[setting foregroundColorForLogLevel:SDLogLevelVerbose] andBackgroundColor:[UIColor colorWithHexString:kDownloadManagerLogModuleColor] forLogLevel:SDLogLevelVerbose];
-        //        [setting setForegroundColor:[setting foregroundColorForLogLevel:SDLogLevelInfo] andBackgroundColor:[UIColor colorWithHexString:kDownloadManagerLogModuleColor] forLogLevel:SDLogLevelInfo];
-        //        [setting setForegroundColor:[setting foregroundColorForLogLevel:SDLogLevelWarning] andBackgroundColor:[UIColor colorWithHexString:kDownloadManagerLogModuleColor] forLogLevel:SDLogLevelWarning];
-        //        [setting setForegroundColor:[setting foregroundColorForLogLevel:SDLogLevelError] andBackgroundColor:[UIColor colorWithHexString:kDownloadManagerLogModuleColor] forLogLevel:SDLogLevelError];
-        
         // fake url
         self.downloadRequestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.sysdata.it"]];
         self.downloadRequestOperationManager.operationQueue.maxConcurrentOperationCount = OPERATION_QUEUE_COUNT;                                                                                                                               // NSOperationQueueDefaultMaxConcurrentOperationCount; NB non usarlo perché non gestito bene e va in timeout

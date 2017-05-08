@@ -2,15 +2,14 @@
 
 #import <UIKit/UIKit.h>
 
-// This code is compatible with our logger "Plinio".
+// This code is compatible with our logger "Blabber".
 #define kDownloadManagerLogModuleName @"Docker.Download"
-#define kDownloadManagerLogModuleColor @"fbeed7"
 
 #define kServiceManagerLogModuleName @"Docker.Service"
-#define kServiceManagerLogModuleColor @"fbeed7"
 
-#ifdef SD_LOGGER_AVAILABLE
-#import "SDLogger.h"
+#if __has_include("SDLogger.h") || __has_include("Blabber/SDLogger.h")
+#define SD_LOGGER_AVAILABLE 1
+#import <Blabber/SDLogger.h>
 #else
 #define SDLogError(frmt, ...)   NSLog(frmt, ##__VA_ARGS__)
 #define SDLogWarning(frmt, ...) NSLog(frmt, ##__VA_ARGS__)

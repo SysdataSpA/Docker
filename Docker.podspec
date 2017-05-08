@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Docker'
-  s.version          = '1.1.1'
+  s.version          = '1.2.0'
   s.summary          = 'Docker handle in some easy steps all connections with your remote servers. Offers you some classes to call Web Services defining http method, request, response, .... and some classes to handle resources download.'
 
 # This description is used to generate tags and improve search results.
@@ -40,4 +40,8 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'AFNetworking', '~> 2.6.0'
   s.dependency 'Mantle'
+
+  s.subspec 'Blabber' do |bl|
+     bl.dependency 'Blabber'
+  end
 end

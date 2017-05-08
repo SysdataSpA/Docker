@@ -19,6 +19,11 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "Docker"
 ```
+If you want a log system integrated you can import the subpod
+```ruby
+pod "Docker/Blabber"
+```
+See more details about [Blabber](https://github.com/SysdataSpA/Blabber).
 
 ## License
 

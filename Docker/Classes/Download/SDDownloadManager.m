@@ -169,8 +169,8 @@
     {
         // Log module
 #ifdef SD_LOGGER_AVAILABLE
-        [[SDLogger sharedLogger] setLogLevel:SDLogLevelWarning forModuleWithName:kDownloadManagerLogModuleName];
-        SDLogModuleSetting* setting = [[SDLogger sharedLogger] moduleWithName:kDownloadManagerLogModuleName];
+        SDLogLevel logLevel = DEBUG ? SDLogLevelInfo : SDLogLevelWarning;
+        [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
         // fake url
         self.downloadRequestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.sysdata.it"]];

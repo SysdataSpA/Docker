@@ -69,6 +69,10 @@
     self = [super init];
     if (self)
     {
+#ifdef SD_LOGGER_AVAILABLE
+        SDLogLevel logLevel = DEBUG ? SDLogLevelVerbose : SDLogLevelWarning;
+        [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
+#endif
         self.servicesQueue = [NSMutableArray arrayWithCapacity:0];
         self.serviceInvocationDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
         self.timeBeforeRetry = 3.;

@@ -7,12 +7,14 @@
 //
 
 #import "SDAppDelegate.h"
+#import <Blabber/SDLogger.h>
 
 @implementation SDAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    [[SDLogger sharedLogger] setup];
+    
     return YES;
 }
 

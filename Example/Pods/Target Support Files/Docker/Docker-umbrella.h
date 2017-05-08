@@ -10,14 +10,14 @@
 #endif
 #endif
 
+#import "DKRFileManager.h"
 #import "NSObject+DownloadManager.h"
 #import "NSString+Hashing.h"
 #import "SDDownloadImageView.h"
 #import "SDDownloadManager.h"
 #import "SDDownloadManagerUtils.h"
-#import "DKRFileManager.h"
-#import "UIImage+SDExtension.h"
 #import "SDUIImageViewAligned.h"
+#import "UIImage+SDExtension.h"
 #import "SDDocker.h"
 #import "SDDockerLogger.h"
 #import "NSDictionary+Utils.h"

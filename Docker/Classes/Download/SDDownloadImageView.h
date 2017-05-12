@@ -99,9 +99,10 @@ typedef NS_OPTIONS (NSUInteger, SDDownloadImageTransitionType)
 /**
  *  Start retreiving the image (form local or downloading from remote) usign the SDDwonloadManager. Updates and image managements are completely auotnomous and handled by the SDDownloadManager. In case should be usefull get infos about the retreived image use the completion handler.
  *
- *  @param urlString          url of the desired resource (use this or specific request)
- *  @param request            request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
- *  @param completion         block executed when the image is returned
+ *  @param urlString / request         url of the desired resource (use this or specific request)
+                                       or
+                                       request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
+  *  @param completion         block executed when the image is returned
  */
 - (void) setImageWithURLString:(NSString* _Nonnull)urlString completion:(SDDownloadImageViewCompletionHandler _Nullable)completion;
 - (void) setImageWithURLWithRequest:(NSMutableURLRequest* _Nonnull)request completion:(SDDownloadImageViewCompletionHandler _Nullable)completion;

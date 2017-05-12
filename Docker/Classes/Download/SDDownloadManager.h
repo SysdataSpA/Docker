@@ -209,20 +209,20 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
     Once the resource is download it will update the expiration date inside the ExpirationDatePlist (if used), saved inside NSCache (if set) and into File System (if set)
  *
  *
- *  @param urlString          url of resource (use this for "normal" request)
- *  @param request            use request if you want to set specific parameters or custom headers to reach your resources (use this if resource is behind a custom service)
+ *  @param urlString  / request        url of resource (use this for "normal" request)
+                                       or
+                                       use request if you want to set specific parameters or custom headers to reach your resources (use this if resource is behind a custom service)
  *  @param type               type of resource to retreive a casted object
  *  @param options            options object to override global settings for the specific request
  *  @param completionSuccess  block called when resorce is retreived
  *  @param progress           block called to check download progress
  *  @param completionFailure  block called when a failure occured
  */
-- (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
+- (void) getResourceAtUrl:(NSString* _Nonnull)urlString type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
 - (void) getResourceAtUrl:( NSString* _Nonnull )urlString completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable )completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable )progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
-- (void) getResourceAtUrl:(NSString* _Nonnull)urlString type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
-
+- (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
 - (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 

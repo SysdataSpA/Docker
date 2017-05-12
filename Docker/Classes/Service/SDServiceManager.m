@@ -69,7 +69,11 @@
     if (self)
     {
 #if BLABBER
-        SDLogLevel logLevel = DEBUG ? SDLogLevelVerbose : SDLogLevelWarning;
+        SDLogLevel logLevel = SDLogLevelWarning;
+#if DEBUG
+        logLevel = SDLogLevelVerbose;
+#endif
+        
         [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
         self.servicesQueue = [NSMutableArray arrayWithCapacity:0];

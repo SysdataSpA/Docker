@@ -168,7 +168,10 @@
     {
         // Log module
 #if BALBBER
-        SDLogLevel logLevel = DEBUG ? SDLogLevelInfo : SDLogLevelWarning;
+        SDLogLevel logLevel = SDLogLevelWarning;
+#if DEBUG
+        logLevel = SDLogLevelInfo;
+#endif
         [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
         // fake url

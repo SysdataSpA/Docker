@@ -17,13 +17,17 @@ Docker is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Docker"
+pod 'Docker'
 ```
-If you want a log system integrated you can import the subpod
-```ruby
-pod "Docker/Blabber"
+If you want to use our logger framework Blabber, use subpod
 ```
-See more details about [Blabber](https://github.com/SysdataSpA/Blabber).
+pod 'Docker/Blabber'
+```
+With Blabber you can manage all log messages or use CocoaLumberjack. In this case import also the corresponding subpod. [See more](https://github.com/SysdataSpA/Blabber) details...
+```
+pod 'Docker/Blabber'
+pod 'Blabber/CocoaLumberjack'
+```
 
 ## License
 

@@ -13,10 +13,8 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
-#define SD_LOGGER_AVAILABLE 1
-
 #if __has_include("CocoaLumberjack.h") || __has_include("CocoaLumberjack/CocoaLumberjack.h")
-#define HAS_COCOALUMBERJACK 1
+#define COCOALUMBERJACK_AVAILABLE 1
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #endif
 

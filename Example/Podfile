@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'Docker_Example' do
-  pod 'Docker', :path => '../'
+  pod 'Docker/Blabber', :path => '../'
   
   pod 'Blabber/CocoaLumberjack'
   

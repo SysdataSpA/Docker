@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import <AFNetworking/AFNetworking.h>
-
+#import "SDDockerLogger.h"
 
 /**
  *  Type of resource you want retreive. If not specified it will be return a generic NSData object. 
@@ -105,7 +105,7 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
 
-#ifdef SD_LOGGER_AVAILABLE
+#if BLABBER
 @interface SDDownloadManager : NSObject <SDLoggerModuleProtocol>
 #else
 @interface SDDownloadManager : NSObject

@@ -13,18 +13,16 @@
 // limitations under the License.
 
 #import "SDLogger.h"
+#ifdef COCOALUMBERJACK_AVAILABLE
 #import "DDLog.h"
-
-#ifdef HAS_COCOALUMBERJACK
 #import "SDDDFormatter.h"
 #endif
-
 
 #define kGenericModuleName  @"SDLogger.Generic"
 
 @interface SDLoggerUtils : NSObject
 
-#ifdef HAS_COCOALUMBERJACK
+#ifdef COCOALUMBERJACK_AVAILABLE
 + (DDLogLevel)ddLogLevelFromSDLogLevel:(SDLogLevel)level;
 + (DDLogFlag)ddLogFlagFromSDLogLevel:(SDLogLevel)level;
 #endif
@@ -34,7 +32,7 @@
 @implementation SDLoggerUtils
 
 
-#ifdef HAS_COCOALUMBERJACK
+#ifdef COCOALUMBERJACK_AVAILABLE
 /**
  *  utility method to convert SDLogLevel into corresponding DDLogLevel
  */
@@ -180,7 +178,7 @@
 
 - (void) setupWithLoggers:(NSArray*)loggers
 {
-#ifdef HAS_COCOALUMBERJACK
+#ifdef COCOALUMBERJACK_AVAILABLE
     // default setup
     if (loggers.count == 0)
     {
@@ -303,7 +301,7 @@
     // Log with CocoaLumberjack
     if (format)
     {
-#ifdef HAS_COCOALUMBERJACK
+#ifdef COCOALUMBERJACK_AVAILABLE
         [DDLog log:!syncLog
              level:[SDLoggerUtils ddLogLevelFromSDLogLevel:level]
               flag:[SDLoggerUtils ddLogFlagFromSDLogLevel:level]

@@ -16,7 +16,6 @@
 #import <Mantle/Mantle.h>
 #import "SOCKit.h"
 #import "NSDictionary+Utils.h"
-#import "SDDockerLogger.h"
 
 #define MappingQueueName "com.sysdata.SDServiceManager.mappingQueue"
 
@@ -69,7 +68,7 @@
     self = [super init];
     if (self)
     {
-#ifdef SD_LOGGER_AVAILABLE
+#if BLABBER
         SDLogLevel logLevel = DEBUG ? SDLogLevelVerbose : SDLogLevelWarning;
         [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
@@ -83,7 +82,7 @@
 
 #pragma mark - SDLoggerModuleProtocol
 
-#ifdef SD_LOGGER_AVAILABLE
+#if BLABBER
 
 - (NSString*) loggerModuleName
 {

@@ -32,13 +32,11 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.4.0):
     - CocoaLumberjack/Default
-  - Docker (1.2.0):
-    - AFNetworking (~> 2.6.0)
-    - Docker/Blabber (= 1.2.0)
-    - Mantle
   - Docker/Blabber (1.2.0):
-    - AFNetworking (~> 2.6.0)
     - Blabber
+    - Docker/Core
+  - Docker/Core (1.2.0):
+    - AFNetworking (~> 2.6.0)
     - Mantle
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
@@ -46,7 +44,7 @@ PODS:
 
 DEPENDENCIES:
   - Blabber/CocoaLumberjack
-  - Docker (from `../`)
+  - Docker/Blabber (from `../`)
 
 EXTERNAL SOURCES:
   Docker:
@@ -56,9 +54,9 @@ SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   Blabber: 0dd009dd7eaea75b9fc360b8b41e6819d1a094af
   CocoaLumberjack: aa9dcab71bdf9eaf2a63bbd9ddc87863efe45457
-  Docker: a22ac4fc8483a42d6a8fe6ec04ac9274ce5c253f
+  Docker: d1f97c322e37f4716782ae46fc4eed3934ad8e44
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
 
-PODFILE CHECKSUM: f0377a0784a3bb993d7c6a3a65f01fd2ec7009a1
+PODFILE CHECKSUM: 4e16a6dd5e0e21da7b6c98ab292aca51679d8313
 
 COCOAPODS: 1.2.1

@@ -14,7 +14,6 @@
 
 #import "SDDownloadManager.h"
 #import "DKRFileManager.h"
-#import "SDDockerLogger.h"
 #import "NSString+Hashing.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
@@ -168,7 +167,7 @@
     if (self)
     {
         // Log module
-#ifdef SD_LOGGER_AVAILABLE
+#if BALBBER
         SDLogLevel logLevel = DEBUG ? SDLogLevelInfo : SDLogLevelWarning;
         [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
@@ -240,7 +239,7 @@
 
 #pragma mark - SDLoggerModuleProtocol
 
-#ifdef SD_LOGGER_AVAILABLE
+#if BLABBER
 
 - (NSString*) loggerModuleName
 {

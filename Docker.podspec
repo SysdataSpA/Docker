@@ -30,18 +30,26 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Docker/Classes/**/*'
-  
   # s.resource_bundles = {
   #   'Docker' => ['Docker/Assets/*.png']
   # }
 
+  s.subspec 'Core' do |co|
+    co.source_files = 'Docker/Classes/**/*'
+    co.dependency 'AFNetworking', '~> 2.6.0'
+    co.dependency 'Mantle'
+  end
+
+
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'AFNetworking', '~> 2.6.0'
-  s.dependency 'Mantle'
 
   s.subspec 'Blabber' do |bl|
+     bl.dependency 'Docker/Core'
      bl.dependency 'Blabber'
+     bl.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'BLABBER=1' }
   end
+
+  s.default_subspec = 'Core'
+
 end

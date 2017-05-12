@@ -18,22 +18,32 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "Docker/Classes/**/*",
-  "dependencies": {
-    "AFNetworking": [
-      "~> 2.6.0"
-    ],
-    "Mantle": [
-
-    ]
-  },
+  "default_subspecs": "Core",
   "subspecs": [
+    {
+      "name": "Core",
+      "source_files": "Docker/Classes/**/*",
+      "dependencies": {
+        "AFNetworking": [
+          "~> 2.6.0"
+        ],
+        "Mantle": [
+
+        ]
+      }
+    },
     {
       "name": "Blabber",
       "dependencies": {
+        "Docker/Core": [
+
+        ],
         "Blabber": [
 
         ]
+      },
+      "xcconfig": {
+        "GCC_PREPROCESSOR_DEFINITIONS": "BLABBER=1"
       }
     }
   ]

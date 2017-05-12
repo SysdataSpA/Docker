@@ -15,6 +15,7 @@
 #import <Foundation/Foundation.h>
 #import "SDServiceGeneric.h"
 #import <AFNetworking/AFNetworking.h>
+#import "SDDockerLogger.h"
 
 typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> _Nullable response);
 typedef void (^ ServiceCompletionFailureHandler)(id<SDServiceGenericErrorProtocol> _Nullable error);
@@ -102,7 +103,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *  This calss should be extended and never used directly.
  */
 
-#ifdef SD_LOGGER_AVAILABLE
+#if BLABBER
 @interface SDServiceManager : NSObject <SDLoggerModuleProtocol>
 #else
 @interface SDServiceManager : NSObject

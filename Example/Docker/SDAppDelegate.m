@@ -7,13 +7,17 @@
 //
 
 #import "SDAppDelegate.h"
+#if BLABBER
 #import <Blabber/SDLogger.h>
+#endif
 
 @implementation SDAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if BLABBER
     [[SDLogger sharedLogger] setup];
+#endif
     
     return YES;
 }

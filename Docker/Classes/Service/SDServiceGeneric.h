@@ -273,7 +273,6 @@ typedef NS_ENUM (NSUInteger, SDHTTPMethod)
 /**
  *  Retreive response from a local file. The default name of file is the Class name of service, but it can be override using method -(NSString*)demoModeJsonFileName.
  *
- *  @return La response recuperata da file locale o nil se non riesce a recuperarla.
  */
 - (void) getResultFromJSONFileWithCompletion:(void (^_Nullable)  (id _Nullable result))completion;
 - (void) getResultFromJSONFileAtPath:(NSString* _Nonnull)pathToFile withCompletion:(void (^_Nullable) (id _Nullable result))completion;

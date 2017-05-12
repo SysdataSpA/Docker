@@ -217,6 +217,7 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *  @param progress           block called to check download progress
  *  @param completionFailure  block called when a failure occured
  */
+- (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
 - (void) getResourceAtUrl:( NSString* _Nonnull )urlString completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable )completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable )progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
@@ -224,8 +225,6 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 
 - (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
-
-- (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request type:(DownloadOperationType)type options:(SDDownloadOptions* _Nullable)options completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
 /**
  *  Return the local path where persist the resource at the given url. It will be used to retreive manually the resource or to check if is present locally (ex. [UIImage imageWithContentOFUrl: <this path>])
@@ -273,19 +272,15 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 @property (nonatomic, readonly) BOOL checkSizeElementsProcessing;
 
 /**
- *  Controlla se la risorsa è da scaricare (secondo le logiche sopra) e in tal caso fa una chiamata HEAD per sapere il Content-Lenght in modo da contare la dimensione del file.
- *  Ogni risorsa da scaricare va ad incrementare downloadElementsTotalSize e viene accodata in una coda, in modo da poter cominciarne il caricamento con downloadAllElementsChecked.
- *  Una volta terminate tutte le richieste HEAD viene inviata una notifica di coda vuota NOTIFICATION_DOWNLOAD_QUEUE_EMPTY.
+ *  Check if each resources should be download using options and global settings (defined before). In this case makes a HEAD request to check the file size using Content-Lenght header's field.
+ *  Each resource that should be downloaded increments downloadElementsExpectedTotalSize and is enqueued for the next download that could be start with downloadAllElementsCheckedWithProgress:completion method.
  *
- *  @param type               tipo della risorsa
- *  @param urlString          url da cui scaricare
- *  @param options            opzioni nel caso la risorsa si debba scaricare (possono essere concatenate)
- *  @param expirationInterval data limite entro cui la risorsa locale si ritiene valida
+ *  @param urlStrings         urls of resources to download
+ *  @param options            options to use
  */
-
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
@@ -297,9 +292,7 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *  It will fired a progress handler to return the amount of remaining size and number of files.
  *
  *  @param progress           handler of progress
- *  @param urlString          url da cui scaricare
- *  @param options            opzioni nel caso la risorsa si debba scaricare (possono essere concatenate)
- *  @param expirationInterval data limite entro cui la risorsa locale si ritiene valida
+ *  @param completion         handler of completion
  */
 - (void) downloadAllElementsCheckedWithProgress:(SDDownloadManagerBatchOperationProgressHandler _Nullable)progress completion:(SDDownloadManagerBatchOperationCompletion _Nullable)completion;
 

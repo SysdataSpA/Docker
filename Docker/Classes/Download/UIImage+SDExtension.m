@@ -14,7 +14,7 @@
 
 #import "UIImage+SDExtension.h"
 
-@implementation UIImage (SDExtension)
+@implementation UIImage (DockerExtension)
 
 
 static void CGContextMakeRoundCornerPath(CGContextRef c, CGRect rrect, float rad_tl, float rad_tr, float rad_br, float rad_bl) {

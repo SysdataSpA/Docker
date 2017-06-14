@@ -16,7 +16,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
 
-@implementation NSString (Hashing)
+@implementation NSString (DockerHashing)
 
 - (NSString *)MD5String {
 	if (self == nil || [self length] == 0)

@@ -14,7 +14,7 @@
 
 #import "NSDictionary+Utils.h"
 
-@implementation NSDictionary (Utils)
+@implementation NSDictionary (DockerUtils)
 
 - (NSDictionary *)pruneNullValues
 {

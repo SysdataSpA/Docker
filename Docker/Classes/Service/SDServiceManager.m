@@ -15,7 +15,7 @@
 #import "SDServiceManager.h"
 #import <Mantle/Mantle.h>
 #import "SOCKit.h"
-#import "NSDictionary+Utils.h"
+#import "NSDictionary+Docker.h"
 
 #define MappingQueueName "com.sysdata.SDServiceManager.mappingQueue"
 

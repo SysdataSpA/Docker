@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "NSString+Hashing.h"
+#import "NSString+Docker.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
 
-@implementation NSString (DockerHashing)
+@implementation NSString (Docker)
 
 - (NSString *)MD5String {
 	if (self == nil || [self length] == 0)

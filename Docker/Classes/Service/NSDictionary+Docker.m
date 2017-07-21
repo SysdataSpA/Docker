@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "NSDictionary+Utils.h"
+#import "NSDictionary+Docker.h"
 
-@implementation NSDictionary (DockerUtils)
+@implementation NSDictionary (Docker)
 
 - (NSDictionary *)pruneNullValues
 {

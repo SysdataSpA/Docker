@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "UIImage+SDExtension.h"
+#import "UIImage+Docker.h"
 
-@implementation UIImage (DockerExtension)
+@implementation UIImage (Docker)
 
 
 static void CGContextMakeRoundCornerPath(CGContextRef c, CGRect rrect, float rad_tl, float rad_tr, float rad_br, float rad_bl) {

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "SDDownloadImageView.h"
-#import "UIImage+SDExtension.h"
+#import "UIImage+Docker.h"
 #import "SDDockerLogger.h"
 
 #define kAIVTag                     8000

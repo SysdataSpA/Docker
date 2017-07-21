@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, UIImageResizeFillType) {
     UIImageResizeFillTypeFitIn = 2,
 };
 
-@interface UIImage (DockerExtension)
+@interface UIImage (Docker)
 
 /*
  * resize image with options to keep aspect ratio using different method. And optionally round the corners

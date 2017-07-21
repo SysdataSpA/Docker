@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString(DockerHashing)
+@interface NSString(Docker)
 
 - (NSString *) MD5String;
 - (NSString *) SHA512StringWithSalt:(NSString *)salt;

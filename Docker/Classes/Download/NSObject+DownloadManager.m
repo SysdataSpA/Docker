@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "NSObject+DownloadManager.h"
-#import "NSString+Hashing.h"
+#import "NSString+Docker.h"
 #import "SDDownloadManager.h"
 
 @implementation NSObject (DownloadManager)

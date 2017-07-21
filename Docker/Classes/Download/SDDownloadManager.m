@@ -14,7 +14,7 @@
 
 #import "SDDownloadManager.h"
 #import "DKRFileManager.h"
-#import "NSString+Hashing.h"
+#import "NSString+Docker.h"
 
 #define OPERATION_INFO_LOCAL_PATH              @"localPath"
 #define OPERATION_INFO_OPTIONS                 @"options"

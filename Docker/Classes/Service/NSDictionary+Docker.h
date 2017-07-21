@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSDictionary (DockerUtils)
+@interface NSDictionary (Docker)
 
 - (NSDictionary *)pruneNullValues;
 

@@ -129,9 +129,9 @@
     }
     
     
-    if (urlString)
+    if (urlString || request)
     {
-        self.urlString = urlString;
+        self.urlString = urlString ? urlString : request.URL.absoluteString;
         
         __weak typeof (self) weakSelf = self;
         SDDownloadManagerCompletionSuccessHandler successCompletionBlock = ^(id downloadedObject, NSString *urlString, NSString *localPath, DownloadOperationResultType resultType) {

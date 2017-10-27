@@ -25,7 +25,14 @@
         if ([object isKindOfClass:[NSDictionary class]])
         {
             NSDictionary* prunedDict = [(NSDictionary *)object pruneNullValues];
-            [dictionaryCopy setObject:prunedDict forKey:key];
+            if(prunedDict.allKeys.count > 0)
+            {
+                [dictionaryCopy setObject:prunedDict forKey:key];
+            }
+            else
+            {
+                [dictionaryCopy removeObjectForKey:key];
+            }
         }
         else if([object isKindOfClass:[NSArray class]])
         {
@@ -34,12 +41,20 @@
             {
                 if([subobject isKindOfClass:[NSDictionary class]])
                 {
-                    [arrayCopy replaceObjectAtIndex:[arrayCopy indexOfObject:subobject] withObject:[subobject pruneNullValues]];
+                    NSDictionary* prunedDict = [(NSDictionary *)subobject pruneNullValues];
+                    if(prunedDict.allKeys.count > 0)
+                    {
+                        [arrayCopy replaceObjectAtIndex:[arrayCopy indexOfObject:subobject] withObject:prunedDict];
+                    }
+                    else
+                    {
+                        [arrayCopy removeObjectAtIndex:[arrayCopy indexOfObject:subobject]];
+                    }
                 }
             }
             [dictionaryCopy setObject:arrayCopy forKey:key];
         }
-        else if ((NSString*)object == (id)[NSNull null])
+        else if (object == (id)[NSNull null])
         {
             [dictionaryCopy removeObjectForKey:key];
         }

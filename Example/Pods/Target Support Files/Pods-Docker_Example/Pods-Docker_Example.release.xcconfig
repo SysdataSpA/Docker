@@ -1,6 +1,6 @@
 EMBEDDED_CONTENT_CONTAINS_SWIFT = YES
 FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking" "$PODS_CONFIGURATION_BUILD_DIR/Blabber" "$PODS_CONFIGURATION_BUILD_DIR/CocoaLumberjack" "$PODS_CONFIGURATION_BUILD_DIR/Docker" "$PODS_CONFIGURATION_BUILD_DIR/Mantle"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 BLABBER=1
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 COCOALUMBERJACK=1 BLABBER=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking/AFNetworking.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/Blabber/Blabber.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/CocoaLumberjack/CocoaLumberjack.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/Docker/Docker.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/Mantle/Mantle.framework/Headers"
 OTHER_LDFLAGS = $(inherited) -framework "AFNetworking" -framework "Blabber" -framework "CocoaLumberjack" -framework "Docker" -framework "Mantle"

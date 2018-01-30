@@ -27,7 +27,7 @@
     return nil;
 }
 
-- (AFHTTPRequestOperationManager*) requestOperationManager
+- (AFHTTPSessionManager*) sessionManager
 {
     return nil;
 }

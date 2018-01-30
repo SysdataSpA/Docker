@@ -13,8 +13,7 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
-#if __has_include("CocoaLumberjack.h") || __has_include("CocoaLumberjack/CocoaLumberjack.h")
-#define COCOALUMBERJACK_AVAILABLE 1
+#ifdef COCOALUMBERJACK
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #endif
 

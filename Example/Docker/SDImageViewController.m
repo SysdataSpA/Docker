@@ -57,13 +57,12 @@
     
     NSString* urlString = [self.imageUrls objectAtIndex:indexPath.row];
     
-    cell.downloadImageView.showActivityIndicatorWhileLoading = YES;
-    cell.downloadImageView.showLocalImageBeforeCheckingValidity = YES;
-    cell.downloadImageView.placeHolderImage = nil;
-    //    cell.downloadImageView.downloadOptions = DownloadOperationOptionForceDownload;
+    //cell.downloadImageView.showActivityIndicatorWhileLoading = YES;
+    //cell.downloadImageView.showLocalImageBeforeCheckingValidity = YES;
+    //cell.downloadImageView.placeHolderImage = nil;
+    //cell.downloadImageView.downloadOptions = DownloadOperationOptionForceDownload;
     
-    [cell.downloadImageView setImageWithURLString:urlString completion:^(NSString* urlString, UIImage* image, DownloadOperationResultType resultType) {
-    }];
+    //[cell.downloadImageView setImageWithURLString:urlString completion:^(NSString* urlString, UIImage* image, DownloadOperationResultType resultType) {}];
     return cell;
 }
 

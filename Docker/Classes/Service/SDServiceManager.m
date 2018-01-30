@@ -45,7 +45,7 @@
 }
 
 @property (nonatomic, strong, readwrite) NSMutableArray<SDServiceCallInfo*>* servicesQueue;
-@property (nonatomic, strong, readwrite) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* serviceInvocationDictionary;
+@property (nonatomic, strong, readwrite) NSMutableDictionary<NSNumber*, NSMutableArray<NSURLSessionTask*>*>* serviceInvocationDictionary;
 
 @end
 
@@ -197,8 +197,8 @@
     [self.servicesQueue addObject:serviceInfo];
     serviceInfo.isProcessing = YES;
     
-    AFHTTPRequestOperationManager* requestOperationManager = [serviceInfo.service requestOperationManager];
-    AFHTTPRequestSerializer* serializer = requestOperationManager.requestSerializer;
+    AFHTTPSessionManager* sessionManager = [serviceInfo.service sessionManager];
+    AFHTTPRequestSerializer* serializer = sessionManager.requestSerializer;
     
     // retreive path and parameters
     NSString* path = [serviceInfo.service pathResource];
@@ -231,21 +231,30 @@
     
     // switch on HTTP method
     __weak typeof (self) weakself = self;
-    AFHTTPRequestOperation* operation = nil;
+    NSURLSessionDataTask* task = nil;
     switch (serviceInfo.service.requestMethodType)
     {
         case SDHTTPMethodGET : {
-            operation = [requestOperationManager GET:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-            } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+            
+            task = [sessionManager GET:path parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+                //-- TODO: Gestire
+            } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [weakself manageResponse:responseObject inTask:task forServiceInfo:serviceInfo];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
             }];
+            
+            
             break;
         }
         case SDHTTPMethodPOST : {
             if (serviceInfo.request.multipartInfos.count > 0)
             {
-                operation = [requestOperationManager POST:path parameters:parameters constructingBodyWithBlock:^(id < AFMultipartFormData >  _Nonnull formData) {
+                
+                task = [sessionManager POST:path parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                    
+                    //TODO:Verificare
+                    
                     for (MultipartBodyInfo* multipartInfo in serviceInfo.request.multipartInfos)
                     {
                         if (multipartInfo.data && multipartInfo.name)
@@ -260,52 +269,57 @@
                             }
                         }
                     }
-                } success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                    [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-                } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                    [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+                    
+                } progress:^(NSProgress * _Nonnull uploadProgress) {
+                    //-- TODO:Gestire
+                } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    [weakself manageResponse:responseObject inTask:task forServiceInfo:serviceInfo];
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
                 }];
             }
             else
             {
-                operation = [requestOperationManager POST:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                    [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-                } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                    [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+                task = [sessionManager POST:path parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+                    //--
+                } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    [weakself manageResponse:responseObject inTask:task forServiceInfo:serviceInfo];
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
                 }];
             }
             
             break;
         }
         case SDHTTPMethodPUT : {
-            operation = [requestOperationManager PUT:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-            } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+            task  = [sessionManager PUT:path parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [weakself manageResponse:responseObject inTask:task forServiceInfo:serviceInfo];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
             }];
             break;
         }
         case SDHTTPMethodDELETE : {
-            operation = [requestOperationManager DELETE:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-            } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+            task = [sessionManager DELETE:path parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [weakself manageResponse:responseObject inTask:task forServiceInfo:serviceInfo];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
             }];
             break;
         }
         case SDHTTPMethodHEAD : {
-            operation = [requestOperationManager HEAD:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation) {
-                [weakself manageResponse:nil inOperation:operation forServiceInfo:serviceInfo];
-            } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+            task = [sessionManager HEAD:path parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task) {
+                [weakself manageResponse:nil inTask:task forServiceInfo:serviceInfo];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
             }];
             break;
         }
         case SDHTTPMethodPATCH : {
-            operation = [requestOperationManager PATCH:path parameters:parameters success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
-                [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
-            } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
-                [weakself manageError:error inOperation:operation forServiceInfo:serviceInfo];
+            task = [sessionManager PATCH:path parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [weakself manageResponse:nil inTask:task forServiceInfo:serviceInfo];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakself manageError:error inTask:task forServiceInfo:serviceInfo];
             }];
             break;
         }
@@ -321,47 +335,47 @@
     // set the operation's download progress block if needed
     if (serviceInfo.downloadProgressHandler != nil || [serviceInfo.delegate respondsToSelector:@selector(didDownloadBytes:onTotalExpected:)])
     {
-        ServiceDownloadProgressHandler downloadHandler = ^void (NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        // TODO Verificare
+        ServiceDownloadProgressHandler downloadHandler = ^void (NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
             if ([serviceInfo.delegate respondsToSelector:@selector(didDownloadBytes:onTotalExpected:)])
             {
-                [serviceInfo.delegate didDownloadBytes:totalBytesRead onTotalExpected:totalBytesExpectedToRead];
+                [serviceInfo.delegate didDownloadBytes:bytesWritten onTotalExpected:totalBytesExpectedToWrite];
             }
             
             if (serviceInfo.downloadProgressHandler)
             {
-                serviceInfo.downloadProgressHandler(bytesRead, totalBytesRead, totalBytesExpectedToRead);
+                serviceInfo.downloadProgressHandler(session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
             }
         };
-        
-        [operation setDownloadProgressBlock:downloadHandler];
+        [sessionManager setDownloadTaskDidWriteDataBlock:downloadHandler];
     }
     
     // set the operation's upload progress block if needed
     if (serviceInfo.uploadProgressHandler != nil || [serviceInfo.delegate respondsToSelector:@selector(didUploadBytes:onTotalExpected:)])
     {
-        ServiceUploadProgressHandler uploadHandler = ^void (NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        //TODO:VERIFICARE
+        ServiceUploadProgressHandler uploadHandler = ^void (NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend){
             if ([serviceInfo.delegate respondsToSelector:@selector(didUploadBytes:onTotalExpected:)])
             {
-                [serviceInfo.delegate didUploadBytes:totalBytesWritten onTotalExpected:totalBytesExpectedToWrite];
+                [serviceInfo.delegate didUploadBytes:totalBytesSent onTotalExpected:totalBytesExpectedToSend];
             }
             
             if (serviceInfo.uploadProgressHandler)
             {
-                serviceInfo.uploadProgressHandler(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+                serviceInfo.uploadProgressHandler(session, task, bytesSent, totalBytesSent, totalBytesExpectedToSend);
             }
         };
-        
-        [operation setUploadProgressBlock:uploadHandler];
+        [sessionManager setTaskDidSendBodyDataBlock:uploadHandler];
     }
-    
     // set the operation's caching block if needed
     if (serviceInfo.cachingBlock != nil)
     {
-        [operation setCacheResponseBlock:serviceInfo.cachingBlock];
+        //TODO:VERIFICARE
+        [sessionManager setDataTaskWillCacheResponseBlock:serviceInfo.cachingBlock];
     }
     
     // add operation to the caller
-    [self addOperation:operation forDelegate:serviceInfo.delegate];
+    [self addTask:task forDelegate:serviceInfo.delegate];
 }
 
 /**
@@ -373,13 +387,13 @@
     [serviceInfo.service getResultFromJSONFileWithCompletion:^(id responseObject) {
         if (responseObject)
         {
-            [weakSelf manageResponse:responseObject inOperation:nil forServiceInfo:serviceInfo];
+            [weakSelf manageResponse:responseObject inTask:nil forServiceInfo:serviceInfo];
         }
         else
         {
             NSString* errorString = [NSString stringWithFormat:@"Cannot find JSON file %@ for service %@", [serviceInfo.service demoModeJsonFileName], NSStringFromClass([serviceInfo.service class])];
             NSError* error = [NSError errorWithDomain:@"DEMO_MODE" code:-1 userInfo:@{ NSLocalizedDescriptionKey : errorString }];
-            [weakSelf manageError:error inOperation:nil forServiceInfo:serviceInfo];
+            [weakSelf manageError:error inTask:nil forServiceInfo:serviceInfo];
         }
     }];
 }
@@ -422,28 +436,32 @@
         {
             NSString* errorString = [NSString stringWithFormat:@"Cannot find JSON file %@ for service %@", jsonFileName, NSStringFromClass([serviceInfo.service class])];
             NSError* error = [NSError errorWithDomain:@"DEMO_MODE" code:-1 userInfo:@{ NSLocalizedDescriptionKey : errorString }];
-            [weakSelf manageError:error inOperation:nil forServiceInfo:serviceInfo];
+            [weakSelf manageError:error inTask:nil forServiceInfo:serviceInfo];
         }
     }];
 }
 
 #pragma mark - Operation result management
 
-- (void) manageResponse:(id)responseObject inOperation:(AFHTTPRequestOperation*)operation forServiceInfo:(SDServiceCallInfo*)serviceInfo
+- (void) manageResponse:(id)responseObject inTask:(NSURLSessionDataTask*)task forServiceInfo:(SDServiceCallInfo*)serviceInfo
 {
     SDLogModuleInfo(kServiceManagerLogModuleName, @"\n**************** %@: received response\n!", [serviceInfo.service class]);
     
-    if (operation.response.statusCode == 304)
+    NSHTTPURLResponse *httpResponse = [self httpUrlResponseWithTask:task];
+    
+    if (httpResponse.statusCode == 304)
     {
-        NSCachedURLResponse* r = [[NSURLCache sharedURLCache] cachedResponseForRequest:operation.request];
+        NSCachedURLResponse* r = [[NSURLCache sharedURLCache] cachedResponseForRequest:task.originalRequest];
         NSError* error = nil;
-        responseObject = [operation.responseSerializer responseObjectForResponse:r.response data:r.data error:&error];
+        responseObject = [serviceInfo.service.sessionManager.responseSerializer responseObjectForResponse:r.response data:r.data error:&error];
     }
+        
+   
     
     if (!(self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode])))
     {
-        [SDServiceManager printWebServiceRequest:operation];
-        [SDServiceManager printWebServiceResponse:operation];
+        [SDServiceManager printWebServiceRequest:task];
+        [SDServiceManager printWebServiceResponse:task];
     }
     else
     {
@@ -457,7 +475,7 @@
         if (mappingError)
         {
             // errore mapping response.
-            [weakself manageMappingFailureForServiceInfo:serviceInfo HTTPStatusCode:operation.response.statusCode andError:mappingError];
+            [weakself manageMappingFailureForServiceInfo:serviceInfo HTTPStatusCode:httpResponse.statusCode andError:mappingError];
             return;
         }
         
@@ -470,11 +488,11 @@
 #pragma clang diagnostic pop
             }
             
-            response.httpStatusCode = (int)operation.response.statusCode;
-            response.headers = operation.response.allHeaderFields;
+            response.httpStatusCode = (int)httpResponse.statusCode;
+            response.headers = httpResponse.allHeaderFields;
             
             [weakself handleSuccessForServiceInfo:serviceInfo withResponse:response];
-            [weakself removeExecutedOperation:operation forDelegate:serviceInfo.delegate];
+            [weakself removeExecutedTask:task forDelegate:serviceInfo.delegate];
             
             if (serviceInfo.completionSuccess)
             {
@@ -486,7 +504,7 @@
                 [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:response error:nil];
             }
             
-            if (!weakself.hasPendingOperations)
+            if (!weakself.hasPendingTasks)
             {
                 [weakself didCompleteAllServices];
             }
@@ -494,21 +512,21 @@
     });
 }
 
-- (void) manageError:(NSError*)error inOperation:(AFHTTPRequestOperation*)operation forServiceInfo:(SDServiceCallInfo*)serviceInfo
+- (void) manageError:(NSError*)error inTask:(NSURLSessionDataTask*)task forServiceInfo:(SDServiceCallInfo*)serviceInfo
 {
     if (!(self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode])))
     {
-        [SDServiceManager printWebServiceRequest:operation];
-        [SDServiceManager printWebServiceResponse:operation];
+        [SDServiceManager printWebServiceRequest:task];
+        [SDServiceManager printWebServiceResponse:task];
     }
     
     serviceInfo.isProcessing = NO;
     
-    [self removeExecutedOperation:operation forDelegate:serviceInfo.delegate];
+    [self removeExecutedTask:task forDelegate:serviceInfo.delegate];
     
     SDLogModuleError(kServiceManagerLogModuleName, @"SERVICE FAILURE: %@ with code: %d", NSStringFromClass([serviceInfo.service class]), (int)error.code);
     
-    if (!operation.response)
+    if (!task.response)
     {
         // can't reach server
         // if is not cancelled and is a repeateble service, it will retry
@@ -523,7 +541,7 @@
         else
         {
             [self.servicesQueue removeObject:serviceInfo];
-            if (!self.hasPendingOperations)
+            if (!self.hasPendingTasks)
             {
                 [self didCompleteAllServices];
             }
@@ -534,11 +552,16 @@
     __weak typeof (self) weakself = self;
     dispatch_async(mappingQueue, ^{
         __block id<SDServiceGenericErrorProtocol> errorObject = nil;
-        if (operation.response)
+        if (task.response)
         {
             // if there is a service response, get the error code
             NSError* mappingError = nil;
-            id errorResponse = [serviceInfo.service.requestOperationManager.responseSerializer responseObjectForResponse:operation.response data:operation.responseData error:&mappingError];
+            NSData *responseData = nil;
+            if (error.userInfo)
+            {
+                 responseData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+            }
+            id errorResponse = [serviceInfo.service.sessionManager.responseSerializer responseObjectForResponse:task.response data:responseData error:&mappingError];
             if (errorResponse)
             {
                 mappingError = nil;
@@ -554,7 +577,10 @@
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself manageError:error forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:(int)operation.response.statusCode];
+            //TODO:VERIFICARE
+            NSHTTPURLResponse *httpResponse = [self httpUrlResponseWithTask:task];
+            int statusCode = (int)httpResponse.statusCode;
+            [weakself manageError:error forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:statusCode];
         });
     });
 }
@@ -585,7 +611,7 @@
         [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:nil error:errorObject];
     }
     
-    if (!self.hasPendingOperations)
+    if (!self.hasPendingTasks)
     {
         [self didCompleteAllServices];
     }
@@ -614,7 +640,7 @@
             [serviceInfo.delegate didEndServiceOperation:serviceInfo.type withRequest:serviceInfo.request result:nil error:errorObject];
         }
         
-        if (!weakself.hasPendingOperations)
+        if (!weakself.hasPendingTasks)
         {
             [weakself didCompleteAllServices];
         }
@@ -679,94 +705,123 @@
     }
 }
 
-#pragma mark - Cancel Operations
+#pragma mark - Cancel Tasks
 
-- (void) cancelAllOperationsForService:(SDServiceGeneric*)service
+- (void) cancelAllTasksForService:(SDServiceGeneric*)service
 {
-    for (AFHTTPRequestOperation* operation in [service requestOperationManager].operationQueue.operations)
+    for (NSURLSessionDataTask* task in [service sessionManager].operationQueue.operations)
     {
-        if ([[[operation.request URL] relativePath] rangeOfString:service.pathResource].location != NSNotFound)
+        if ([[[task.originalRequest URL] relativePath] rangeOfString:service.pathResource].location != NSNotFound)
         {
-            [operation cancel];
+            [task cancel];
         }
     }
 }
 
-- (void) cancelAllOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate
+- (void) cancelAllTaskForDelegate:(id <SDServiceManagerDelegate> )delegate
 {
     NSMutableArray* arrayOfServices = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
     
-    for (AFHTTPRequestOperation* operation in arrayOfServices)
+    for (NSURLSessionDataTask* task  in arrayOfServices)
     {
-        [operation cancel];
+        [task cancel];
     }
     [self.serviceInvocationDictionary removeObjectForKey:@([delegate hash])];
 }
 
 #pragma mark - Interrogation methods
 
-- (NSUInteger) numberOfPendingOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate
+- (NSUInteger) numberOfPendingTasksForDelegate:(id <SDServiceManagerDelegate> )delegate
 {
     NSMutableArray* arrayOfServices = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
     
     return arrayOfServices.count;
 }
 
-- (BOOL) hasPendingOperationsForDelegate:(id <SDServiceManagerDelegate> )delegate
+- (BOOL) hasPendingTasksForDelegate:(id <SDServiceManagerDelegate> )delegate
 {
-    return ([self numberOfPendingOperationsForDelegate:delegate] > 0);
+    return ([self numberOfPendingTasksForDelegate:delegate] > 0);
 }
 
-- (NSUInteger) numberOfPendingOperations
+- (NSUInteger) numberOfPendingTasks
 {
     return self.servicesQueue.count;
 }
 
-- (BOOL) hasPendingOperations
+- (BOOL) hasPendingTasks
 {
-    return ([self numberOfPendingOperations] > 0);
+    return ([self numberOfPendingTasks] > 0);
 }
 
 #pragma mark - Service Dictionary management
 
-- (void) addOperation:(AFHTTPRequestOperation*)operation forDelegate:(id <SDServiceManagerDelegate> )delegate
+- (void) addTask:(NSURLSessionDataTask*)task forDelegate:(id <SDServiceManagerDelegate> )delegate
 {
-    NSMutableArray* arrayOfOperations = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
+    NSMutableArray* arrayOfTasks = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
     
-    if (!arrayOfOperations)
+    if (!arrayOfTasks)
     {
-        arrayOfOperations = [NSMutableArray arrayWithCapacity:0];
+        arrayOfTasks = [NSMutableArray arrayWithCapacity:0];
     }
-    [arrayOfOperations addObject:operation];
-    [self.serviceInvocationDictionary setObject:arrayOfOperations forKey:@([delegate hash])];
+    [arrayOfTasks addObject:task];
+    [self.serviceInvocationDictionary setObject:arrayOfTasks forKey:@([delegate hash])];
 }
 
-- (void) removeExecutedOperation:(AFHTTPRequestOperation*)operation forDelegate:(id <SDServiceManagerDelegate> )delegate
+- (void) removeExecutedTask:(NSURLSessionDataTask*)task  forDelegate:(id <SDServiceManagerDelegate> )delegate
 {
-    NSMutableArray* arrayOfOperations = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
+    NSMutableArray* arrayOfTasks = [self.serviceInvocationDictionary objectForKey:@([delegate hash])];
     
-    if (!arrayOfOperations)
+    if (!arrayOfTasks)
     {
         return;
     }
     
-    [arrayOfOperations removeObject:operation];
-    [self.serviceInvocationDictionary setObject:arrayOfOperations forKey:@([delegate hash])];
+    [arrayOfTasks removeObject:task];
+    [self.serviceInvocationDictionary setObject:arrayOfTasks forKey:@([delegate hash])];
 }
 
 #pragma mark - Utils
 
-+ (void) printWebServiceRequest:(AFHTTPRequestOperation*)operation
++ (void) printWebServiceRequest:(NSURLSessionDataTask*)task
 {
-    NSURLRequest* request = [operation request];
+    NSURLRequest* request = [task originalRequest];
     NSString* bodyString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
     
     SDLogModuleVerbose(kServiceManagerLogModuleName, @"REQUEST to Web Service at URL: %@;\n HEADERS:\n%@\nBODY:\n%@", [[request URL] absoluteString], request.allHTTPHeaderFields, bodyString);
 }
 
-+ (void) printWebServiceResponse:(AFHTTPRequestOperation*)operation
++ (void) printWebServiceResponse:(NSURLSessionDataTask*)task
 {
-    SDLogModuleVerbose(kServiceManagerLogModuleName, @"RESPONSE:\n%@\nBODY:\n%@", [operation response], [operation responseString]);
+    NSHTTPURLResponse *httpResponse;
+    
+    if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+        
+        httpResponse = (NSHTTPURLResponse *)task.response;
+        
+        SDLogModuleVerbose(kServiceManagerLogModuleName, @"RESPONSE:\n%@\nBODY:\n%@", httpResponse, @""); //TODO: Gestire [httpResponse responseString]
+    }
+    else
+    {
+        //TODO: Gestire
+    }
+  
+}
+
+- (NSHTTPURLResponse *)httpUrlResponseWithTask:(NSURLSessionDataTask *)task
+{
+    NSHTTPURLResponse *httpResponse;
+    
+    if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+        
+        httpResponse = (NSHTTPURLResponse *)task.response;
+        
+        return httpResponse;
+    }
+    else
+    {
+        SDLogError(@"task.response isn't NSHTTPURLResponse");
+    }
+    return httpResponse;
 }
 
 @end

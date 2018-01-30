@@ -11,5 +11,5 @@
 
 @interface SDTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet SDDownloadImageView *downloadImageView;
+//@property (weak, nonatomic) IBOutlet SDDownloadImageView *downloadImageView;
 @end

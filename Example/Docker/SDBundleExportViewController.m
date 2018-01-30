@@ -7,8 +7,8 @@
 //
 
 #import "SDBundleExportViewController.h"
-#import <Docker/SDDownloadManager.h>
-#import <Docker/SDDownloadManagerUtils.h>
+//#import <Docker/SDDownloadManager.h>
+//#import <Docker/SDDownloadManagerUtils.h>
 
 @interface SDBundleExportViewController ()
 
@@ -28,19 +28,19 @@
 
 #pragma mark Actions
 
-- (IBAction)createPlistFileTapped:(UIButton *)sender
-{
-    NSString* path = [SDDownloadManager sharedManager].fileSystemPath;
-    [SDDownloadManagerUtils exportCreationDatesPlistForFilesContentInDirectoryAtPath:path];
-}
-
-- (IBAction)copyFilesTapped:(UIButton *)sender
-{
-    NSString* bundlePath = [[NSBundle mainBundle] pathForResource:@"resources_to_copy" ofType:@""];;
-    NSString* fileSystemPath = [SDDownloadManager sharedManager].fileSystemPath;
-    
-    [SDDownloadManagerUtils copyResourcesFromBundleFolderPath:bundlePath inFileSystemPath:fileSystemPath];
-}
+//- (IBAction)createPlistFileTapped:(UIButton *)sender
+//{
+//    NSString* path = [SDDownloadManager sharedManager].fileSystemPath;
+//    [SDDownloadManagerUtils exportCreationDatesPlistForFilesContentInDirectoryAtPath:path];
+//}
+//
+//- (IBAction)copyFilesTapped:(UIButton *)sender
+//{
+//    NSString* bundlePath = [[NSBundle mainBundle] pathForResource:@"resources_to_copy" ofType:@""];;
+//    NSString* fileSystemPath = [SDDownloadManager sharedManager].fileSystemPath;
+//    
+//    [SDDownloadManagerUtils copyResourcesFromBundleFolderPath:bundlePath inFileSystemPath:fileSystemPath];
+//}
 
 
 

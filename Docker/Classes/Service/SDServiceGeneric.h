@@ -155,7 +155,7 @@ typedef NS_ENUM (NSUInteger, SDHTTPMethod)
  *
  *  @return operation manager to use for the service.
  */
-- (AFHTTPRequestOperationManager* _Nonnull) requestOperationManager;
+- (AFHTTPSessionManager* _Nonnull) sessionManager;
 
 /**
  *  HTTP method to use in the service call. Look at SDHTTPMethod for details. By default return SDHTTPMethodGET.

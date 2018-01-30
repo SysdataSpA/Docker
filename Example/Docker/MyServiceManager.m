@@ -16,10 +16,12 @@
     self = [super init];
     if(self)
     {
-        self.defaultRequestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"https://randomuser.me"]];
-        self.defaultRequestOperationManager.requestSerializer = [AFJSONRequestSerializer serializer];
-        self.defaultRequestOperationManager.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
-        self.defaultRequestOperationManager.responseSerializer = [AFJSONResponseSerializer serializer];
+
+        self.defaultSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:@"https://randomuser.me"]];
+        self.defaultSessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
+        self.defaultSessionManager.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
+        self.defaultSessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
+        
     }
     return self;
 }

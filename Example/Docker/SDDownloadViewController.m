@@ -44,12 +44,12 @@
     __weak typeof (self) weakSelf = self;
     self.currentOperationLabel.text = @"Check size resources to download in progress...";
     
-    [[SDDownloadManager sharedManager] countDownloadSizeForResourceAtUrls:self.imageUrls options:nil progress:^(long long totalSize, long numElementsToDownload) {
-        weakSelf.sizeLabel.text = [NSString stringWithFormat:@"%d item to download. Total size %.2f MB", (int) numElementsToDownload, totalSize / (double)(1024*1024)];
-    } completion:^(long long totalSize, long numElementsToDownload) {
-        weakSelf.currentOperationLabel.text = @"Check size resources completed!!!";
-    }];
-    
+//    [[SDDownloadManager sharedManager] countDownloadSizeForResourceAtUrls:self.imageUrls options:nil progress:^(long long totalSize, long numElementsToDownload) {
+//        weakSelf.sizeLabel.text = [NSString stringWithFormat:@"%d item to download. Total size %.2f MB", (int) numElementsToDownload, totalSize / (double)(1024*1024)];
+//    } completion:^(long long totalSize, long numElementsToDownload) {
+//        weakSelf.currentOperationLabel.text = @"Check size resources completed!!!";
+//    }];
+//    
 }
 
 
@@ -57,22 +57,22 @@
     
     self.currentOperationLabel.text = @"Download resources checked in progress...";
     
-    __weak typeof (self) weakSelf = self;
-    [[SDDownloadManager sharedManager] downloadAllElementsCheckedWithProgress:^(long long totalSizeExpected, long long sizeRemaining, long numElementsToDownloadExpected, long numElementsToDownloadRemaining) {
-        weakSelf.sizeLabel.text = [NSString stringWithFormat:@"%ld / %ld\n%.2f / %.2f MB", numElementsToDownloadRemaining, numElementsToDownloadExpected, sizeRemaining / (double) (1024*1024), totalSizeExpected / (double)(1024*1024)];
-    } completion:^(BOOL downloadCompleted) {
-        weakSelf.currentOperationLabel.text = @"Download resources completed!!!";
-    }];
+//    __weak typeof (self) weakSelf = self;
+//    [[SDDownloadManager sharedManager] downloadAllElementsCheckedWithProgress:^(long long totalSizeExpected, long long sizeRemaining, long numElementsToDownloadExpected, long numElementsToDownloadRemaining) {
+//        weakSelf.sizeLabel.text = [NSString stringWithFormat:@"%ld / %ld\n%.2f / %.2f MB", numElementsToDownloadRemaining, numElementsToDownloadExpected, sizeRemaining / (double) (1024*1024), totalSizeExpected / (double)(1024*1024)];
+//    } completion:^(BOOL downloadCompleted) {
+//        weakSelf.currentOperationLabel.text = @"Download resources completed!!!";
+//    }];
 }
 
 - (IBAction)interruptTapped:(UIButton *)sender
 {
-    [[SDDownloadManager sharedManager] cancelAllDownloadRequests];
+   // [[SDDownloadManager sharedManager] cancelAllDownloadRequests];
 }
 
 - (IBAction)deleteLocalFilesTapped:(UIButton *)sender
 {
-    [[SDDownloadManager sharedManager] purgeLocalFilesOlderThanNumDays:0];
+   // [[SDDownloadManager sharedManager] purgeLocalFilesOlderThanNumDays:0];
 }
 
 @end

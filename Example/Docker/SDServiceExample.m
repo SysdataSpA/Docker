@@ -11,9 +11,9 @@
 
 @implementation SDServiceExample
 
-- (AFHTTPRequestOperationManager *)requestOperationManager
+- (AFHTTPSessionManager *)sessionManager
 {
-    return [MyServiceManager sharedServiceManager].defaultRequestOperationManager;
+    return [MyServiceManager sharedServiceManager].defaultSessionManager;
 }
 
 - (NSString*) pathResource

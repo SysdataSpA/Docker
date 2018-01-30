@@ -36,7 +36,7 @@ TODO: Add long description of the pod here.
 
   s.subspec 'Core' do |co|
     co.source_files = 'Docker/Classes/**/*'
-    co.dependency 'AFNetworking', '~> 2.6.0'
+    co.dependency 'AFNetworking'
     co.dependency 'Mantle'
   end
 

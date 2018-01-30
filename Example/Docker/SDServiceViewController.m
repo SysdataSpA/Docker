@@ -57,7 +57,7 @@
     
     MTLUser* user = [self.users objectAtIndex:indexPath.row];
     cell.label.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
-    [cell.downloadImageView setImageWithURLString:user.imageUrl];
+    //[cell.downloadImageView setImageWithURLString:user.imageUrl];
     return cell;
 }
 

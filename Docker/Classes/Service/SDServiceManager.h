@@ -19,9 +19,9 @@
 
 typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> _Nullable response);
 typedef void (^ ServiceCompletionFailureHandler)(id<SDServiceGenericErrorProtocol> _Nullable error);
-typedef void (^ ServiceDownloadProgressHandler)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
-typedef void (^ ServiceUploadProgressHandler)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
-typedef NSCachedURLResponse* _Nullable (^ ServiceCachingBlock)(NSURLConnection* _Nullable connection, NSCachedURLResponse* _Nullable cachedResponse);
+typedef void (^ ServiceUploadProgressHandler)(NSURLSession *_Nonnull session, NSURLSessionTask *_Nonnull task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
+typedef void (^ ServiceDownloadProgressHandler)(NSURLSession * _Nonnull session, NSURLSessionDownloadTask * _Nonnull downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
+typedef NSCachedURLResponse*_Nullable (^ ServiceCachingBlock)(NSURLSession *_Nonnull session, NSURLSessionDataTask *_Nonnull dataTask, NSCachedURLResponse *_Nullable proposedResponse);
 
 typedef NS_ENUM (NSInteger, SDServiceOperationType)
 {
@@ -114,7 +114,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 /**
  *  Default Request Operation Manager.
  */
-@property(nonatomic, strong) AFHTTPRequestOperationManager* _Nullable defaultRequestOperationManager;
+@property(nonatomic, strong) AFHTTPSessionManager* _Nullable defaultSessionManager;
 
 /**
  *  Waiting time between service failure before retry call. Default is 3 seconds.
@@ -138,7 +138,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 /**
  *  Hashtable for pending services grouped by delegate (caller). Key: hash of delegate, Value: array of SDServiceGeneric.
  */
-@property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber*, NSMutableArray<AFHTTPRequestOperation*>*>* _Nullable serviceInvocationDictionary;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber*, NSMutableArray<NSURLSessionTask*>*>* _Nullable serviceInvocationDictionary;
 
 /**
  *  This method is called every time service ends with success. Dafault implementation is empty.
@@ -201,14 +201,14 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @param service service to cancel.
  */
-- (void) cancelAllOperationsForService:(SDServiceGeneric* _Nullable)service;
+- (void) cancelAllTasksForService:(SDServiceGeneric* _Nullable)service;
 
 /**
  *  Cancels all pending requests with the specific delegate (caller).
  *
  *  @param delegate delegate (caller) with pending services to cancel.
  */
-- (void) cancelAllOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable )delegate;
+- (void) cancelAllTasksForDelegate:(id <SDServiceManagerDelegate> _Nullable )delegate;
 
 /**
  *  Return number of pending operations associated to the delegate (caller).
@@ -217,28 +217,28 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *
  *  @return number of pendsing requests.
  */
-- (NSUInteger) numberOfPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
+- (NSUInteger) numberOfPendingTasksForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
  *  Check if there are some pending request for a given caller (delegate).
  *
  *  @return if has pending requests.
  */
-- (BOOL) hasPendingOperationsForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
+- (BOOL) hasPendingTasksForDelegate:(id <SDServiceManagerDelegate> _Nullable)delegate;
 
 /**
  *  Return number of total pending operations.
  *
  *  @return number of pending requests.
  */
-- (NSUInteger) numberOfPendingOperations;
+- (NSUInteger) numberOfPendingTasks;
 
 /**
  *  Check if there are some pending operations
  *
  *  @return if has somee pending requests.
  */
-- (BOOL) hasPendingOperations;
+- (BOOL) hasPendingTasks;
 
 /**
  *  Enqueu service operation to call with all service info parameters.
@@ -284,6 +284,11 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  *  @param completionSuccess block executed in case of service success (optional).
  *  @param completionFailure block executed in case of service failure (optional).
  */
-- (void) callService:(SDServiceGeneric* _Nonnull)service withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request operationType:(NSInteger)operationType delegate:(id <SDServiceManagerDelegate> _Nullable)delegate completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure;
+- (void) callService:(SDServiceGeneric* _Nonnull)service
+         withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request
+       operationType:(NSInteger)operationType
+            delegate:(id <SDServiceManagerDelegate> _Nullable)delegate
+   completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess
+   completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure;
 
 @end

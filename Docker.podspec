@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Docker'
-  s.version          = '1.3.1'
+  s.version          = '1.3.2'
   s.summary          = 'Docker handle in some easy steps all connections with your remote servers. Offers you some classes to call Web Services defining http method, request, response, .... and some classes to handle resources download.'
 
 # This description is used to generate tags and improve search results.

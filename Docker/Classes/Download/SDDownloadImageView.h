@@ -101,13 +101,16 @@ typedef NS_OPTIONS (NSUInteger, SDDownloadImageTransitionType)
  */
 @property (nonatomic, assign) BOOL reduceImageSize UI_APPEARANCE_SELECTOR;
 
+/**
+ *  Cancels previous pending downloads for new requests (default false)
+ */
+@property (nonatomic, assign) BOOL cancelPreviousDownloadInNewRequest UI_APPEARANCE_SELECTOR;
+
 
 /**
  *  Start retreiving the image (form local or downloading from remote) usign the SDDwonloadManager. Updates and image managements are completely auotnomous and handled by the SDDownloadManager. In case should be usefull get infos about the retreived image use the completion handler.
  *
- *  @param urlString / request         url of the desired resource (use this or specific request)
- or
- request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
+ *  @param urlString / request         url of the desired resource (use this or specific request) or request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
  *  @param completion         block executed when the image is returned
  */
 - (void) setImageWithURLString:(NSString* _Nonnull)urlString completion:(SDDownloadImageViewCompletionHandler _Nullable)completion;
@@ -115,11 +118,44 @@ typedef NS_OPTIONS (NSUInteger, SDDownloadImageTransitionType)
 - (void) setImageWithURLString:(NSString* _Nonnull)urlString;
 
 
+#pragma mark Life Cycle
+
+/**
+ *  Method called during initialization.
+ *  In extensions you should call super.
+ */
 - (void) setup;
 
-- (void) startRetrieveImage;
+/**
+ *  Method called when it starts to retrieve the images.
+ *  Base implementation starts the SDDownloadManager to retrieve the resource.
+ *  In extensions you should call super.
+ *
+ *  @param urlString / request         url of the desired resource (use this or specific request)
+ */
+- (void) startRetrieveImageWithUrlString:(NSString*_Nullable)urlString urlRequest:(NSMutableURLRequest*_Nullable)urlRequest;
 
+/**
+ *  Method called after the image is retrieved with success.
+ *  Base implementation shows the image with the transition set.
+ *  In extensions you should call super.
+ *
+ *  @param image             the retrieved image
+ *  @param urlString         the corresponding url of the retrieved image
+ *  @param localPath         the local path where is stored the image
+ *  @param resultType        the result type of the operation
+ 
+ */
 - (void) retrieveImageSuccess:(UIImage* _Nullable)image forUrlString:(NSString* _Nullable)urlString localPath:(NSString* _Nullable)localPath resultType:(DownloadOperationResultType)resultType;
+
+/**
+ *  Method called after the image couldn't be retrieved.
+ *  Base implementation shows the failure image set.
+ *  In extensions you should call super.
+ *
+ *  @param error             the error occured
+ *  @param urlString         the corresponding url of the image
+ */
 - (void) retrieveImageFailureWithError:(NSError* _Nullable)error forUrlString:(NSString* _Nullable)urlString;
 
 @end

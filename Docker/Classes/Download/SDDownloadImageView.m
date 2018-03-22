@@ -122,7 +122,7 @@
     
     self.image = self.placeHolderImage;
     
-    if (self.showActivityIndicatorWhileLoading)
+    if (self.showActivityIndicatorWhileLoading && (urlString || request))
     {
         [self bringSubviewToFront:aiv];
         [aiv startAnimating];
@@ -132,19 +132,23 @@
         [aiv stopAnimating];
     }
     
-    self.urlString = urlString ? urlString : request.URL.absoluteString;
-    self.urlRequest = request;
-    
-    [self startRetrieveImage];
+    [self startRetrieveImageWithUrlString:urlString urlRequest:_urlRequest];
 }
 
-- (void) startRetrieveImage
+- (void) startRetrieveImageWithUrlString:(NSString*)urlString urlRequest:(NSMutableURLRequest*)urlRequest
 {
-    self.successCompletionBlock = nil;
-    self.failureCompletionBlock = nil;
-    
-    if (self.urlString || self.urlRequest)
+    if (urlString || urlRequest)
     {
+        // remove previous subscriber to avoid previous block's call
+        [[SDDownloadManager sharedManager] removeSubscriberForUrl:self.urlString withCompletionSuccess:self.successCompletionBlock];
+        if(self.cancelPreviousDownloadInNewRequest)
+        {
+            [[SDDownloadManager sharedManager] cancelDownloadRequestForUrlString:self.urlString removingSubscribers:YES];
+        }
+    
+        self.urlString = urlString ? urlString : urlRequest.URL.absoluteString;
+        self.urlRequest = urlRequest;
+        
         __weak typeof (self) weakSelf = self;
         SDDownloadManagerCompletionSuccessHandler successCompletionBlock= ^(id downloadedObject, NSString *urlString, NSString *localPath, DownloadOperationResultType resultType) {
             [weakSelf retrieveImageSuccess:(UIImage*)downloadedObject forUrlString:urlString localPath:localPath resultType:resultType];
@@ -156,6 +160,7 @@
         
         self.successCompletionBlock = successCompletionBlock;
         self.failureCompletionBlock = failureCompletionBlock;
+        
         
         if (self.urlRequest)
         {

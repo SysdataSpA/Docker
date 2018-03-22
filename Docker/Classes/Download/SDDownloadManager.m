@@ -524,6 +524,16 @@
     return [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
+- (BOOL) isStoredLocallyResourceForUrlString:(NSString*)urlString
+{
+    NSString* localPath = [self localResourcePathForUrlString:urlString];
+    if(localPath)
+    {
+        return [[NSFileManager defaultManager] fileExistsAtPath:localPath];
+    }
+    return NO;
+}
+
 - (long) downloadOperationRemainingQueueCount
 {
     return self.downloadElementsOperations.count;
@@ -555,12 +565,30 @@
     return NO;
 }
 
+- (AFHTTPRequestOperation*) downloadOperationEnqueuedForLocalPath:(NSString*)path
+{
+    for (AFHTTPRequestOperation* operation in self.downloadRequestOperationManager.operationQueue.operations)
+    {
+        if ([[operation.userInfo valueForKey:OPERATION_INFO_LOCAL_PATH] isEqualToString:path])
+        {
+            return operation;
+        }
+    }
+    return nil;
+}
+
+
 /**
  *  Add subscriber to keep handler for completion, failure and progress for a specific resource at given url. When something appened for the resource it will be fired the corresponding block
  *
  */
 - (void) addSubscriberForUrl:(NSString*)urlString withCompletionSuccess:(SDDownloadManagerCompletionSuccessHandler)completionSuccess progress:(SDDownloadManagerProgressHandler)progress completionFailure:(SDDownloadManagerCompletionFailureHandler)completionFailure
 {
+    if(!urlString)
+    {
+        return;
+    }
+    
     NSMutableArray* subscribersInfos = self.urlDownloadersDictionary[urlString];
     
     if (!subscribersInfos)
@@ -577,8 +605,29 @@
     [subscribersInfos addObject:info];
 }
 
-- (void) removeSubscribersForUrl:(NSString*)urlString
+- (void) removeSubscriberForUrl:(NSString*)urlString withCompletionSuccess:(SDDownloadManagerCompletionSuccessHandler)completionSuccess
 {
+    if(!completionSuccess || !urlString)
+    {
+        return;
+    }
+    
+    NSMutableArray<SDDownloadObjectInfo*>* subscribersInfos = self.urlDownloadersDictionary[urlString];
+    
+    NSArray<SDDownloadObjectInfo*>* infos = [subscribersInfos filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"successHandler = %@", completionSuccess]];
+    if(infos.count > 0)
+    {
+        [subscribersInfos removeObjectsInArray:infos];
+    }
+}
+
+- (void) removeAllSubscribersForUrl:(NSString*)urlString
+{
+    if(!urlString)
+    {
+        return;
+    }
+    
     [self.urlDownloadersDictionary removeObjectForKey:urlString];
 }
 
@@ -908,7 +957,7 @@
     
     if (resultType != DownloadOperationResultLoadLocallyCheckingValid)
     {
-        [self removeSubscribersForUrl:urlString];
+        [self removeAllSubscribersForUrl:urlString];
     }
 }
 
@@ -961,7 +1010,7 @@
             info.failureHandler(urlString, error);
         }
     }
-    [self removeSubscribersForUrl:urlString];
+    [self removeAllSubscribersForUrl:urlString];
 }
 
 - (void) manageProgressForDownloadOperationWithURL:(NSString*)urlString
@@ -1042,12 +1091,41 @@
 
 - (void) cancelAllDownloadRequests
 {
+    [self cancelAllDownloadRequestsRemovingSubscribers:NO];
+}
+
+- (void) cancelAllDownloadRequestsRemovingSubscribers:(BOOL)removeSubscribers
+{
     for (NSOperation* operation in[self.downloadRequestOperationManager.operationQueue operations])
     {
         if (![operation isKindOfClass:[AFHTTPRequestOperation class]])
         {
             continue;
         }
+        [operation cancel];
+    }
+    
+    if(removeSubscribers)
+    {
+        [self.urlDownloadersDictionary removeAllObjects];
+    }
+}
+
+- (void) cancelDownloadRequestForUrlString:(NSString*)urlString
+{
+    [self cancelDownloadRequestForUrlString:urlString removingSubscribers:NO];
+}
+
+- (void) cancelDownloadRequestForUrlString:(NSString*)urlString removingSubscribers:(BOOL)removeSubscribers
+{
+    NSString* localPath = [self localResourcePathForUrlString:urlString];
+    if(localPath)
+    {
+        if(removeSubscribers)
+        {
+            [self removeAllSubscribersForUrl:urlString];
+        }
+        AFHTTPRequestOperation* operation = [self downloadOperationEnqueuedForLocalPath:localPath];
         [operation cancel];
     }
 }

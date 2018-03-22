@@ -226,6 +226,22 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 - (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
+
+/**
+ *  Every time you want to download a resource for a specific url, the SDDownloadManager add his blocks in a structure, as a publish-subscriber pattern.
+ *  When the SDDownloadManager ends, it notifies and perform all blocks registered as subscriber for it. If you want to avoid this, you can use following methods to remove subscribers for a specific url, giving the block used in getResourceAtUrl:
+ 
+ *  Method to avoid the completion calls in all owners that asked to retrieve a resource for a specific url.
+ *  Base implementation starts the SDDownloadManager to retrieve the resource.
+ *  In extensions you should call super.
+ *
+ *  @param urlString                url of the desired resource
+ *  @param completionSuccess        the complition block that should be invoked when the download finishes and that you want to remove
+ 
+ */
+- (void) removeSubscriberForUrl:(NSString* _Nonnull)urlString withCompletionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nonnull)completionSuccess;
+- (void) removeAllSubscribersForUrl:(NSString* _Nonnull)urlString;
+
 /**
  *  Return the local path where persist the resource at the given url. It will be used to retreive manually the resource or to check if is present locally (ex. [UIImage imageWithContentOFUrl: <this path>])
  
@@ -236,6 +252,15 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *  @return path        local path where persist the resource
  */
 - (NSString* _Nullable) localResourcePathForUrlString:(NSString* _Nonnull)urlString;
+
+/**
+ *  Check if the resource that corresponds to a given url is already stored locally.
+ *
+ *  @param urlString    url of the resource
+ *
+ *  @return if is stored locally
+ */
+- (BOOL) isStoredLocallyResourceForUrlString:(NSString* _Nonnull)urlString;
 
 
 #pragma mark - Count size
@@ -305,7 +330,9 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *
  */
 - (void) cancelAllDownloadRequests;
-
+- (void) cancelAllDownloadRequestsRemovingSubscribers:(BOOL)removeSubscribers;
+- (void) cancelDownloadRequestForUrlString:(NSString* _Nonnull)urlString;
+- (void) cancelDownloadRequestForUrlString:(NSString* _Nonnull)urlString removingSubscribers:(BOOL)removeSubscribers;
 
 /**
  *  reset internal MemoryCache and ExpirationDatePlist

@@ -139,6 +139,10 @@
             {
                 [weakSelf updateImage:(UIImage*)downloadedObject forResultType:resultType];
             }
+            else
+            {
+                NSLog(@"errorrr");
+            }
         };
         
         SDDownloadManagerCompletionFailureHandler failureCompletionBlock = ^(NSString * _Nullable urlString, NSError * _Nullable error) {
@@ -148,6 +152,10 @@
                 {
                     weakSelf.image = weakSelf.downloadFailureImage;
                 }
+            }
+            else
+            {
+                NSLog(@"errorrr");
             }
         };
         

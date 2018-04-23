@@ -145,7 +145,7 @@
         {
             [[SDDownloadManager sharedManager] cancelDownloadRequestForUrlString:self.urlString removingSubscribers:YES];
         }
-    
+        
         self.urlString = urlString ? urlString : urlRequest.URL.absoluteString;
         self.urlRequest = urlRequest;
         
@@ -476,4 +476,5 @@
 
 
 @end
+
 

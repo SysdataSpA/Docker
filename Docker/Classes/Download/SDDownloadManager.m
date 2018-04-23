@@ -89,7 +89,7 @@
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
-@interface SDDownloadStatistic : NSObject 
+@interface SDDownloadStatistic : NSObject
 
 @property (nonatomic, assign, readwrite) long long totalSizeExpected;
 @property (nonatomic, assign, readwrite) long long sizeRemaining;
@@ -589,6 +589,8 @@
         return;
     }
     
+    //    @synchronized(self.lock)
+    //    {
     NSMutableArray* subscribersInfos = self.urlDownloadersDictionary[urlString];
     
     if (!subscribersInfos)
@@ -603,6 +605,7 @@
     info.failureHandler = completionFailure;
     
     [subscribersInfos addObject:info];
+    //    }
 }
 
 - (void) removeSubscriberForUrl:(NSString*)urlString withCompletionSuccess:(SDDownloadManagerCompletionSuccessHandler)completionSuccess
@@ -612,6 +615,8 @@
         return;
     }
     
+    //    @synchronized(self.lock)
+    //    {
     NSMutableArray<SDDownloadObjectInfo*>* subscribersInfos = self.urlDownloadersDictionary[urlString];
     
     NSArray<SDDownloadObjectInfo*>* infos = [subscribersInfos filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"successHandler = %@", completionSuccess]];
@@ -619,6 +624,7 @@
     {
         [subscribersInfos removeObjectsInArray:infos];
     }
+    //    }
 }
 
 - (void) removeAllSubscribersForUrl:(NSString*)urlString
@@ -627,8 +633,10 @@
     {
         return;
     }
-    
+    //    @synchronized(self.lock)
+    //    {
     [self.urlDownloadersDictionary removeObjectForKey:urlString];
+    //    }
 }
 
 #pragma mark - DOWNLOAD
@@ -946,7 +954,9 @@
     }
     
     // notifies all subscribers for the downloaded url
-    NSMutableArray<SDDownloadObjectInfo*>* subscribers = self.urlDownloadersDictionary[urlString];
+    //    @synchronized(self.lock)
+    //    {
+    NSMutableArray<SDDownloadObjectInfo*>* subscribers = [self.urlDownloadersDictionary[urlString] copy];
     for (SDDownloadObjectInfo* info in subscribers)
     {
         if (info.successHandler)
@@ -959,6 +969,7 @@
     {
         [self removeAllSubscribersForUrl:urlString];
     }
+    //    }
 }
 
 - (void) manageFailureForDownloadOperation:(AFHTTPRequestOperation*)operation
@@ -1002,7 +1013,9 @@
     
     
     // notifies all subscribers for the downloaded url
-    NSMutableArray<SDDownloadObjectInfo*>* subscribers = self.urlDownloadersDictionary[urlString];
+    //    @synchronized(self.lock)
+    //    {
+    NSMutableArray<SDDownloadObjectInfo*>* subscribers = [self.urlDownloadersDictionary[urlString] copy];
     for (SDDownloadObjectInfo* info in subscribers)
     {
         if (info.failureHandler)
@@ -1011,6 +1024,7 @@
         }
     }
     [self removeAllSubscribersForUrl:urlString];
+    //    }
 }
 
 - (void) manageProgressForDownloadOperationWithURL:(NSString*)urlString
@@ -1031,7 +1045,9 @@
     }
     
     // call the progress handler for the all subscribers for the specific url
-    NSMutableArray<SDDownloadObjectInfo*>* subscribers = self.urlDownloadersDictionary[urlString];
+    //    @synchronized(self.lock)
+    //    {
+    NSMutableArray<SDDownloadObjectInfo*>* subscribers = [self.urlDownloadersDictionary[urlString] copy];
     for (SDDownloadObjectInfo* info in subscribers)
     {
         if (info.progressHandler)
@@ -1039,6 +1055,7 @@
             info.progressHandler(urlString, bytesRead, totalBytesRead, totalBytesExpectedToRead);
         }
     }
+    //    }
 }
 
 - (void) checkEmptyQueue
@@ -1064,26 +1081,31 @@
     // fire the check size completion
     if (self.checkSizeElementsProcessing)
     {
+        self.checkSizeProgressHandler = nil;
+        self.checkSizeElementsProcessing = NO;
+        
         if (self.checkSizeCompletion)
         {
             self.checkSizeCompletion(self.downloadElementsExpectedTotalSize, self.downloadOperationExpectedQueueCount);
             self.checkSizeCompletion = nil;
         }
-        self.checkSizeProgressHandler = nil;
-        self.checkSizeElementsProcessing = NO;
+        return;
     }
     
     // fire the download completion
     if (self.downloadElementsProcessing)
     {
+        self.downloadElementsProgressHandler = nil;
+        self.downloadElementsProcessing = NO;
+        
         if (self.downloadElementsCompletionHandler)
         {
             BOOL downloadCompleted = self.downloadElementsOperations.count == 0;
             self.downloadElementsCompletionHandler(downloadCompleted);
             self.downloadElementsCompletionHandler = nil;
         }
-        self.downloadElementsProgressHandler = nil;
-        self.downloadElementsProcessing = NO;
+        
+        return;
     }
 }
 
@@ -1105,10 +1127,13 @@
         [operation cancel];
     }
     
+    //    @synchronized(self.lock)
+    //    {
     if(removeSubscribers)
     {
         [self.urlDownloadersDictionary removeAllObjects];
     }
+    //    }
 }
 
 - (void) cancelDownloadRequestForUrlString:(NSString*)urlString
@@ -1296,7 +1321,7 @@
         {
             operation = downloadOperation;
         }
-         [self.downloadRequestOperationManager.operationQueue addOperation:operation];
+        [self.downloadRequestOperationManager.operationQueue addOperation:operation];
     }
 }
 
@@ -1543,3 +1568,4 @@
 }
 
 @end
+

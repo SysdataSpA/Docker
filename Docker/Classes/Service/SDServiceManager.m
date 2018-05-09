@@ -360,6 +360,12 @@
         [operation setCacheResponseBlock:serviceInfo.cachingBlock];
     }
     
+    // set the operation's authentication block if needed
+    if (serviceInfo.authenticationChallengeBlock != nil)
+    {
+        [operation setWillSendRequestForAuthenticationChallengeBlock:serviceInfo.authenticationChallengeBlock];
+    }
+    
     // add operation to the caller
     [self addOperation:operation forDelegate:serviceInfo.delegate];
 }

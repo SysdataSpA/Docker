@@ -260,6 +260,7 @@
                             }
                         }
                     }
+                    [formData throttleBandwidthWithPacketSize:kAFUploadStream3GSuggestedPacketSize delay:kAFUploadStream3GSuggestedDelay];
                 } success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
                     [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
                 } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {

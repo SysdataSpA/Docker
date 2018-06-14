@@ -3,12 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		025345E55CFE613E5D705A4FD9E19AA4 /* DDContextFilterLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		02885181FC38C4EAC5AF525572FB51C0 /* Blabber-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C4D574C3591322701AE58C9B933871DB /* Blabber-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0660324220D2962300F02AC0 /* ServiceGeneric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0660324120D2962300F02AC0 /* ServiceGeneric.swift */; };
+		0660324420D297A200F02AC0 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0660324320D297A200F02AC0 /* ServiceManager.swift */; };
 		10EB23E9ECC4B33E16933BB1EA560B6A /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BA96E5A529CC3E5DC3991767946D39 /* Timeline.swift */; };
 		1417F59DECC97426B72FA98F265FDA6F /* DDLog+LOGV.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D708BC308832F26B41D335BB75364EB /* DDLog+LOGV.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1658F37DD7BD8F784FB298847533AFD3 /* Pods-Docker-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C88E1772B9C4A477BC429CDA81F2D63E /* Pods-Docker-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,6 +103,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0660324120D2962300F02AC0 /* ServiceGeneric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGeneric.swift; sourceTree = "<group>"; };
+		0660324320D297A200F02AC0 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
 		0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Classes/Extensions/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		0B44FB87DE128151EA4CBE2DD82BF251 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDContextFilterLogFormatter.m; path = Classes/Extensions/DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
 		0BC9C8FCAF026813907C74F0AFC62703 /* Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Alamofire.swift; path = Source/Alamofire.swift; sourceTree = "<group>"; };
@@ -122,7 +126,7 @@
 		34442A467810ACD3E622FBE55C70D7A1 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkReachabilityManager.swift; path = Source/NetworkReachabilityManager.swift; sourceTree = "<group>"; };
 		387983736C9E5CF096AC1CB04A43D6EA /* DDMultiFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDMultiFormatter.m; path = Classes/Extensions/DDMultiFormatter.m; sourceTree = "<group>"; };
 		3ED30B01764E1311AE9038121E786437 /* Pods-Docker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Docker.debug.xcconfig"; sourceTree = "<group>"; };
-		409CF9F2D214FFD623688F76625F8EC6 /* Docker.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = Docker.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		409CF9F2D214FFD623688F76625F8EC6 /* Docker.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = Docker.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		44F2F3245EEE3E4D3C6C97349003119B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46BA96E5A529CC3E5DC3991767946D39 /* Timeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Timeline.swift; path = Source/Timeline.swift; sourceTree = "<group>"; };
 		4805DBB1B079CF842777A7F1BCE00D24 /* SDDDFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDDDFormatter.m; path = Blabber/Classes/CocoaLumberjack/SDDDFormatter.m; sourceTree = "<group>"; };
@@ -136,7 +140,7 @@
 		69A61017945A0E51FD5BC97E583E4F2D /* Pods-Docker-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Docker-acknowledgements.markdown"; sourceTree = "<group>"; };
 		6F23B0CAD5B4C05099E465CE9FF498CF /* Pods-Docker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Docker.release.xcconfig"; sourceTree = "<group>"; };
 		6FF11F9D9C5A142F9224CA5B8E56CE45 /* DDASLLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Classes/DDASLLogger.h; sourceTree = "<group>"; };
-		7133B38F424E2D021E30535FB8191E80 /* Pods_Docker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Docker.framework; path = "Pods-Docker.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7133B38F424E2D021E30535FB8191E80 /* Pods_Docker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Docker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7601E7221309FFECA3FC7D2EB51A8BC8 /* Result.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Result.swift; path = Source/Result.swift; sourceTree = "<group>"; };
 		7AF6520FE00DEFD1706E5F2970E3B77D /* DDAssertMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDAssertMacros.h; path = Classes/DDAssertMacros.h; sourceTree = "<group>"; };
 		7B2B13ACE671908B75CD5AF1FECAEE64 /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
@@ -150,15 +154,15 @@
 		914A6021F77C4000E18D21767EEAEFFD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91C432AE6EE3513A7C5335B801C95827 /* DispatchQueue+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+Alamofire.swift"; path = "Source/DispatchQueue+Alamofire.swift"; sourceTree = "<group>"; };
 		91C7C8922FEF4501435CE64F8AF3145C /* SessionDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDelegate.swift; path = Source/SessionDelegate.swift; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		963627E887E36DEDAD1E972406A1848A /* DDASLLogCapture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDASLLogCapture.h; path = Classes/DDASLLogCapture.h; sourceTree = "<group>"; };
-		9F118013334E5AFCA8434C8E77CABA56 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		9F118013334E5AFCA8434C8E77CABA56 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9FC3D02C63CCCBF83E771C0EC44C35B0 /* DDASLLogCapture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDASLLogCapture.m; path = Classes/DDASLLogCapture.m; sourceTree = "<group>"; };
 		A0E1751E50A2190A80DE1CAE757D9E11 /* MultipartFormData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultipartFormData.swift; path = Source/MultipartFormData.swift; sourceTree = "<group>"; };
-		A2409B40F11F2877727FE71B5A187B89 /* Blabber.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Blabber.framework; path = Blabber.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2409B40F11F2877727FE71B5A187B89 /* Blabber.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Blabber.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A59B7946F91CC9383C6B2644EFF0BB13 /* Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Validation.swift; path = Source/Validation.swift; sourceTree = "<group>"; };
-		A66446361BFD8188748C7598BEB929A7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		AA76A9F28499A5DD1B21A5E2CCFB272E /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CocoaLumberjack.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A66446361BFD8188748C7598BEB929A7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		AA76A9F28499A5DD1B21A5E2CCFB272E /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD23FE924E26805ABD1972F3F7979F25 /* Pods-Docker-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Docker-acknowledgements.plist"; sourceTree = "<group>"; };
 		AD28C63149B8D0E8852138E4618F1B76 /* DDLog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Classes/DDLog.h; sourceTree = "<group>"; };
 		AE514B6514D4C0435087C01051716473 /* SysdataCoreDev-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "SysdataCoreDev-Bridging-Header.h"; path = "Blabber/Classes/Base/swift/SysdataCoreDev-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -183,7 +187,7 @@
 		ED495F4CD4D39D461DFF235738493F94 /* DDFileLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Classes/DDFileLogger.h; sourceTree = "<group>"; };
 		EDD3902FCB2413F9BD22B54AB9A2EB78 /* Blabber-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Blabber-dummy.m"; sourceTree = "<group>"; };
 		F57BAAA170A2E56707D8F30ED4D3045A /* Alamofire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-umbrella.h"; sourceTree = "<group>"; };
-		FAB6E9A670A9F3526191E235248A83B3 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alamofire.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAB6E9A670A9F3526191E235248A83B3 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB2C8E963767089EBF742E47E75FF2A5 /* Blabber.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Blabber.xcconfig; sourceTree = "<group>"; };
 		FE6D02D47C1612F61FEB0D8130562DD2 /* Alamofire.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Alamofire.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -248,6 +252,32 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
+		0660323D20D289BA00F02AC0 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				0660323F20D289BA00F02AC0 /* Download */,
+				0660324020D289BA00F02AC0 /* Service */,
+			);
+			name = Classes;
+			path = Docker/Classes;
+			sourceTree = "<group>";
+		};
+		0660323F20D289BA00F02AC0 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
+		0660324020D289BA00F02AC0 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0660324120D2962300F02AC0 /* ServiceGeneric.swift */,
+				0660324320D297A200F02AC0 /* ServiceManager.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		19F2576D3F9BC711A79EA81FA991285A /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,7 +312,6 @@
 				AD5FA3DDF6695BF05850DBB539601FDB /* Core */,
 				B8F25497A6F1729492D77A6FC41F732D /* Support Files */,
 			);
-			name = Blabber;
 			path = Blabber;
 			sourceTree = "<group>";
 		};
@@ -314,6 +343,7 @@
 				409CF9F2D214FFD623688F76625F8EC6 /* Docker.podspec */,
 				A66446361BFD8188748C7598BEB929A7 /* LICENSE */,
 				9F118013334E5AFCA8434C8E77CABA56 /* README.md */,
+				0660323D20D289BA00F02AC0 /* Classes */,
 			);
 			name = Pod;
 			sourceTree = "<group>";
@@ -443,7 +473,6 @@
 				A59B7946F91CC9383C6B2644EFF0BB13 /* Validation.swift */,
 				304522B372EE7FFB35EFEDEDA898463B /* Support Files */,
 			);
-			name = Alamofire;
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
@@ -480,7 +509,6 @@
 				26E05C0E20C26B3BAA026DC1476B52B8 /* Extensions */,
 				19F2576D3F9BC711A79EA81FA991285A /* Support Files */,
 			);
-			name = CocoaLumberjack;
 			path = CocoaLumberjack;
 			sourceTree = "<group>";
 		};
@@ -620,6 +648,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
+				TargetAttributes = {
+					2FB9A8110C7870E313C524E1D369F2AD = {
+						LastSwiftMigration = 0930;
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -689,6 +722,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1453FA47F75DE135A821F888D675F4F /* Pods-Docker-dummy.m in Sources */,
+				0660324220D2962300F02AC0 /* ServiceGeneric.swift in Sources */,
+				0660324420D297A200F02AC0 /* ServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,6 +834,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3ED30B01764E1311AE9038121E786437 /* Pods-Docker.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -824,6 +860,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1080,6 +1117,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F23B0CAD5B4C05099E465CE9FF498CF /* Pods-Docker.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1104,6 +1142,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

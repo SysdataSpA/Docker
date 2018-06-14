@@ -1,13 +1,8 @@
 use_frameworks!
 
-target 'Docker_Example' do
+target 'Docker' do
   pod 'Docker/Blabber', :path => '../'
   
   pod 'Blabber/CocoaLumberjack'
   
-  target 'Docker_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end

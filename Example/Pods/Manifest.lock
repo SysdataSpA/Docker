@@ -1,0 +1,39 @@
+PODS:
+  - Alamofire (4.7.2)
+  - Blabber (1.1.5):
+    - Blabber/Core (= 1.1.5)
+  - Blabber/CocoaLumberjack (1.1.5):
+    - Blabber/Core
+    - CocoaLumberjack (~> 2.0)
+  - Blabber/Core (1.1.5)
+  - CocoaLumberjack (2.4.0):
+    - CocoaLumberjack/Default (= 2.4.0)
+    - CocoaLumberjack/Extensions (= 2.4.0)
+  - CocoaLumberjack/Core (2.4.0)
+  - CocoaLumberjack/Default (2.4.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.4.0):
+    - CocoaLumberjack/Default
+  - Docker/Blabber (2.0.0):
+    - Blabber
+    - Docker/Core
+  - Docker/Core (2.0.0):
+    - Alamofire (~> 4.7)
+
+DEPENDENCIES:
+  - Blabber/CocoaLumberjack
+  - Docker/Blabber (from `../`)
+
+EXTERNAL SOURCES:
+  Docker:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  Blabber: 496257890fefecdb1bfa7d876ad41e2925527ba4
+  CocoaLumberjack: aa9dcab71bdf9eaf2a63bbd9ddc87863efe45457
+  Docker: 90a6c815d03c71ff42a4afc32188fa98b3eae2d5
+
+PODFILE CHECKSUM: 88395772749db70561eff18941588e565ff09219
+
+COCOAPODS: 1.4.0

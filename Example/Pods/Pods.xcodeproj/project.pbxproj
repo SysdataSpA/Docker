@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		025345E55CFE613E5D705A4FD9E19AA4 /* DDContextFilterLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		02885181FC38C4EAC5AF525572FB51C0 /* Blabber-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C4D574C3591322701AE58C9B933871DB /* Blabber-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0660324220D2962300F02AC0 /* ServiceGeneric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0660324120D2962300F02AC0 /* ServiceGeneric.swift */; };
+		0660324220D2962300F02AC0 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0660324120D2962300F02AC0 /* Service.swift */; };
 		0660324420D297A200F02AC0 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0660324320D297A200F02AC0 /* ServiceManager.swift */; };
 		10EB23E9ECC4B33E16933BB1EA560B6A /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BA96E5A529CC3E5DC3991767946D39 /* Timeline.swift */; };
 		1417F59DECC97426B72FA98F265FDA6F /* DDLog+LOGV.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D708BC308832F26B41D335BB75364EB /* DDLog+LOGV.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -103,7 +103,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0660324120D2962300F02AC0 /* ServiceGeneric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGeneric.swift; sourceTree = "<group>"; };
+		0660324120D2962300F02AC0 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		0660324320D297A200F02AC0 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
 		0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Classes/Extensions/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		0B44FB87DE128151EA4CBE2DD82BF251 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDContextFilterLogFormatter.m; path = Classes/Extensions/DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
@@ -272,7 +272,7 @@
 		0660324020D289BA00F02AC0 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				0660324120D2962300F02AC0 /* ServiceGeneric.swift */,
+				0660324120D2962300F02AC0 /* Service.swift */,
 				0660324320D297A200F02AC0 /* ServiceManager.swift */,
 			);
 			path = Service;
@@ -722,7 +722,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1453FA47F75DE135A821F888D675F4F /* Pods-Docker-dummy.m in Sources */,
-				0660324220D2962300F02AC0 /* ServiceGeneric.swift in Sources */,
+				0660324220D2962300F02AC0 /* Service.swift in Sources */,
 				0660324420D297A200F02AC0 /* ServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

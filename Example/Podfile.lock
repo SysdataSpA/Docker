@@ -18,22 +18,28 @@ PODS:
     - Blabber
     - Docker/Core
   - Docker/Core (2.0.0):
-    - Alamofire (~> 4.7)
+    - Alamofire
 
 DEPENDENCIES:
   - Blabber/CocoaLumberjack
   - Docker/Blabber (from `../`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - Blabber
+    - CocoaLumberjack
+
 EXTERNAL SOURCES:
   Docker:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Blabber: 496257890fefecdb1bfa7d876ad41e2925527ba4
   CocoaLumberjack: aa9dcab71bdf9eaf2a63bbd9ddc87863efe45457
-  Docker: 90a6c815d03c71ff42a4afc32188fa98b3eae2d5
+  Docker: 32e90c64ffac1518046f19754c4c177d831951fc
 
-PODFILE CHECKSUM: 88395772749db70561eff18941588e565ff09219
+PODFILE CHECKSUM: daad86ca4a73648d079b9b91423a67cc81abee21
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

@@ -1,9 +1,9 @@
 //
 //  AppDelegate.swift
-//  Docker
+//  Example
 //
-//  Created by Paolo Ardia on 14/06/18.
-//  Copyright © 2018 sysdata. All rights reserved.
+//  Created by Paolo Ardia on 18/06/18.
+//  Copyright © 2018 Paolo Ardia. All rights reserved.
 //
 
 import UIKit

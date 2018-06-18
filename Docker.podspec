@@ -36,7 +36,7 @@ TODO: Add long description of the pod here.
 
   s.subspec 'Core' do |co|
     co.source_files = 'Docker/Classes/**/*'
-    co.dependency 'Alamofire', '~> 4.7'
+    co.dependency 'Alamofire'
   end
 
 

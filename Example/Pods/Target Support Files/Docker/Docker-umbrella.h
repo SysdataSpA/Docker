@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_DockerVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_DockerVersionString[];
+FOUNDATION_EXPORT double DockerVersionNumber;
+FOUNDATION_EXPORT const unsigned char DockerVersionString[];
 

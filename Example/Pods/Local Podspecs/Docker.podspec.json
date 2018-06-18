@@ -25,7 +25,7 @@
       "source_files": "Docker/Classes/**/*",
       "dependencies": {
         "Alamofire": [
-          "~> 4.7"
+
         ]
       }
     },

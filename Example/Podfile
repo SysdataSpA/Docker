@@ -1,8 +1,8 @@
 use_frameworks!
-
+inhibit_all_warnings!
 target 'Example' do
   pod 'Docker/Blabber', :path => '../'
-  
+
   pod 'Blabber/CocoaLumberjack'
   
 end

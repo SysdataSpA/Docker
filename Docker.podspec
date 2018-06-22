@@ -46,7 +46,7 @@ TODO: Add long description of the pod here.
   s.subspec 'Blabber' do |bl|
      bl.dependency 'Docker/Core'
      bl.dependency 'Blabber'
-     bl.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'BLABBER=1' }
+     bl.xcconfig = { 'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited) BLABBER' }
   end
 
   s.default_subspec = 'Core'

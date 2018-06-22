@@ -22,7 +22,9 @@ class ViewController: UIViewController {
 
     
     @IBAction func callService(_ sender: Any) {
-        ExampleServiceManager.shared.callService()
+        ExampleServiceManager.shared.callExampleService { (response) in
+            print((response.result?.value as? Fooas)?.message ?? "")
+        }
         
     }
 }

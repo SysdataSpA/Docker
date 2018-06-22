@@ -40,7 +40,7 @@
         ]
       },
       "xcconfig": {
-        "GCC_PREPROCESSOR_DEFINITIONS": "BLABBER=1"
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) BLABBER"
       }
     }
   ]

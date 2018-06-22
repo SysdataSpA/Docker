@@ -10,6 +10,11 @@ import UIKit
 import Docker
 import Alamofire
 
+struct Fooas: Codable {
+    let message: String
+    let subtitle: String
+}
+
 class ExampleServiceManager: ServiceManager {
     public static let shared = ExampleServiceManager()
     
@@ -21,10 +26,12 @@ class ExampleServiceManager: ServiceManager {
         configuration.httpAdditionalHeaders = httpHeaders
         self.defaultSessionManager = SessionManager(configuration: configuration)
     }
-    func callService() {
-        let service = ExampleService()
-        let request = ExampleServiceRequest(with: service)
-        let call = ServiceCall(with: service, request: request)
-        self.call(with: call)
+    
+    func callExampleService(completion: (ExampleResponse) -> Void) {
+        let request = ExampleServiceRequest()
+        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+            print(response.result as Any)
+        }
+        try? call(with: serviceCall)
     }
 }

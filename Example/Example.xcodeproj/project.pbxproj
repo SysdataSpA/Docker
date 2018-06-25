@@ -14,6 +14,9 @@
 		0613C54620D7B6DD0044DEBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0613C54420D7B6DD0044DEBE /* LaunchScreen.storyboard */; };
 		0613C54E20D7BA690044DEBE /* ExampleServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0613C54D20D7BA690044DEBE /* ExampleServiceManager.swift */; };
 		0613C55020D7C1DC0044DEBE /* ExampleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0613C54F20D7C1DC0044DEBE /* ExampleService.swift */; };
+		0634EB3520E133E70070B689 /* addResource.json in Resources */ = {isa = PBXBuildFile; fileRef = 0634EB3320E133E70070B689 /* addResource.json */; };
+		0634EB3620E133E70070B689 /* getResources.json in Resources */ = {isa = PBXBuildFile; fileRef = 0634EB3420E133E70070B689 /* getResources.json */; };
+		0634EB3820E136420070B689 /* dog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0634EB3720E136420070B689 /* dog.jpg */; };
 		C97FCB4A6FA121EA4604519A /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECBD15A584CEFC91205A08E6 /* Pods_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +30,9 @@
 		0613C54720D7B6DD0044DEBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0613C54D20D7BA690044DEBE /* ExampleServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleServiceManager.swift; sourceTree = "<group>"; };
 		0613C54F20D7C1DC0044DEBE /* ExampleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleService.swift; sourceTree = "<group>"; };
+		0634EB3320E133E70070B689 /* addResource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = addResource.json; sourceTree = "<group>"; };
+		0634EB3420E133E70070B689 /* getResources.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getResources.json; sourceTree = "<group>"; };
+		0634EB3720E136420070B689 /* dog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dog.jpg; sourceTree = "<group>"; };
 		6F9BA1A1A5CE1616F6282853 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		A7557F49BBA71B0B757CDC02 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		ECBD15A584CEFC91205A08E6 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,8 +79,19 @@
 				0613C54220D7B6DD0044DEBE /* Assets.xcassets */,
 				0613C54420D7B6DD0044DEBE /* LaunchScreen.storyboard */,
 				0613C54720D7B6DD0044DEBE /* Info.plist */,
+				0634EB3220E133E70070B689 /* Demo Files */,
 			);
 			path = Example;
+			sourceTree = "<group>";
+		};
+		0634EB3220E133E70070B689 /* Demo Files */ = {
+			isa = PBXGroup;
+			children = (
+				0634EB3320E133E70070B689 /* addResource.json */,
+				0634EB3420E133E70070B689 /* getResources.json */,
+				0634EB3720E136420070B689 /* dog.jpg */,
+			);
+			path = "Demo Files";
 			sourceTree = "<group>";
 		};
 		7F6B802C645C735371F64C31 /* Frameworks */ = {
@@ -154,7 +171,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0634EB3820E136420070B689 /* dog.jpg in Resources */,
 				0613C54620D7B6DD0044DEBE /* LaunchScreen.storyboard in Resources */,
+				0634EB3620E133E70070B689 /* getResources.json in Resources */,
+				0634EB3520E133E70070B689 /* addResource.json in Resources */,
 				0613C54320D7B6DD0044DEBE /* Assets.xcassets in Resources */,
 				0613C54120D7B6DC0044DEBE /* Main.storyboard in Resources */,
 			);

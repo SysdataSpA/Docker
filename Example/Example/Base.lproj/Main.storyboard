@@ -18,16 +18,55 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HL9-xE-Wld">
-                                <rect key="frame" x="164" y="53" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="callService:" destination="BYZ-38-t0r" eventType="touchUpInside" id="c30-Kr-Ttj"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="g9j-Sx-Tal">
+                                <rect key="frame" x="116" y="28" width="142.5" height="121"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPt-He-tsW">
+                                        <rect key="frame" x="0.0" y="0.0" width="142.5" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1LQ-sY-cj4">
+                                                <rect key="frame" x="0.0" y="0.0" width="93.5" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Wmh-6q-Egp">
+                                                <rect key="frame" x="93.5" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="toggleDemoMode:" destination="BYZ-38-t0r" eventType="valueChanged" id="JQp-Oa-GQt"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wLI-PR-PEP">
+                                        <rect key="frame" x="0.0" y="31" width="142.5" height="30"/>
+                                        <state key="normal" title="Get Resources List"/>
+                                        <connections>
+                                            <action selector="getResources:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BBD-mZ-QQ6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OfF-eG-oFg">
+                                        <rect key="frame" x="0.0" y="61" width="142.5" height="30"/>
+                                        <state key="normal" title="Post new resource"/>
+                                        <connections>
+                                            <action selector="postResource:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uKt-4a-PH1"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKn-fg-iCL">
+                                        <rect key="frame" x="0.0" y="91" width="142.5" height="30"/>
+                                        <state key="normal" title="Download image"/>
+                                        <connections>
+                                            <action selector="downloadImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9oR-sN-Gd5"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="g9j-Sx-Tal" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="CKt-7r-mp6"/>
+                            <constraint firstItem="g9j-Sx-Tal" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="owa-Pp-1FL"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>

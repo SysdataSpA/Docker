@@ -11,6 +11,7 @@
 		0125A9389015A6568EA78682A74EF575 /* Docker+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C54A7B9D64307F589DB40C089352B71 /* Docker+Alamofire.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		025345E55CFE613E5D705A4FD9E19AA4 /* DDContextFilterLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		02885181FC38C4EAC5AF525572FB51C0 /* Blabber-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C4D574C3591322701AE58C9B933871DB /* Blabber-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0634EB3120E0EFA20070B689 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0634EB3020E0EFA20070B689 /* Singleton.swift */; };
 		06FC4E3E20DD09230058BEC3 /* Docker+Blabber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FC4E3D20DD09230058BEC3 /* Docker+Blabber.swift */; };
 		079D990738735591330332B5F2551AE4 /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34442A467810ACD3E622FBE55C70D7A1 /* NetworkReachabilityManager.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		09D9D418F804A87A188AC88E1B753A0C /* Blabber.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F66D60C97F0A39C291D2F0EE3F3446 /* Blabber.framework */; };
@@ -136,6 +137,7 @@
 /* Begin PBXFileReference section */
 		02BEE40118B61D9BE60E268630668D65 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		044AA3E23F71470C9B5F50D44720EA0D /* Pods-Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Example-resources.sh"; sourceTree = "<group>"; };
+		0634EB3020E0EFA20070B689 /* Singleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Singleton.swift; path = Docker/Classes/Singleton.swift; sourceTree = "<group>"; };
 		06FC4E3D20DD09230058BEC3 /* Docker+Blabber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Docker+Blabber.swift"; path = "Docker/Classes/Service/Docker+Blabber.swift"; sourceTree = "<group>"; };
 		0B2A1E483E75773D2A8B1EBF1DCE3C43 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Classes/Extensions/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		0B44FB87DE128151EA4CBE2DD82BF251 /* DDContextFilterLogFormatter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDContextFilterLogFormatter.m; path = Classes/Extensions/DDContextFilterLogFormatter.m; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				87B133198BA3B80219B035C01D849C7D /* ServiceManager.swift */,
 				1B610FFC362145BD59ADDF52E0BAE783 /* URLRequest+Encoding.swift */,
 				06FC4E3D20DD09230058BEC3 /* Docker+Blabber.swift */,
+				0634EB3020E0EFA20070B689 /* Singleton.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -809,6 +812,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0125A9389015A6568EA78682A74EF575 /* Docker+Alamofire.swift in Sources */,
+				0634EB3120E0EFA20070B689 /* Singleton.swift in Sources */,
 				8A7E038E04B0FCB96E1B6E6FF260A541 /* Docker-dummy.m in Sources */,
 				D1EC1F53A7C4986B1E32D74A2FA094D1 /* DockerError.swift in Sources */,
 				C54BB7E981340DE556907B38480F6EA8 /* EncodableWrapper.swift in Sources */,

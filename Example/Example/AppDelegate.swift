@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Docker
 import Blabber
 
 @UIApplicationMain

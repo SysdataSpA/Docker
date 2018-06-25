@@ -39,7 +39,7 @@ public enum RequestType {
     case uploadMultipartWithParameters([MultipartFormData], urlParameters: [String: Any])
     
     /// A file download task to a destination.
-    case download(DownloadRequest.DownloadFileDestination)
+    case download(DownloadFileDestination)
     
     /// A file download task to a destination with extra parameters using the given encoding.
     case downloadWithParameters(parameters: [String: Any], destination: DownloadRequest.DownloadFileDestination)
@@ -49,7 +49,6 @@ public protocol Service {
     var sessionManager: SessionManager { get }
     var path: String { get }
     var baseUrl: String { get }
-    func responseClass() -> Response.Type
 }
 
 extension Service {
@@ -58,7 +57,8 @@ extension Service {
     }
 }
 
-public protocol Request {
+public protocol Request:CustomStringConvertible {
+    func responseClass() -> Response.Type
     func parameters() throws -> [String:Any]?
     var headers: [String:String]? { get }
     var parameterEncoding: ParameterEncoding { get }
@@ -67,6 +67,16 @@ public protocol Request {
     var type: RequestType { get }  
     var description: String { get }
     var multipartBodyParts: [MultipartBodyPart]? { get set }
+    
+    //MARK: Demo Mode
+    var useDemoMode: Bool { get }
+    var demoSuccessFileName: String? { get }
+    var demoFailureFileName: String? { get }
+    var demoFilesBundle: Bundle { get }
+    var demoWaitingTimeRange: ClosedRange<TimeInterval> { get }
+    var demoSuccessStatusCode: Int { get }
+    var demoFailureStatusCode: Int { get }
+    var demoFailureChance: Double { get }
 }
 
 extension Request {
@@ -150,18 +160,30 @@ extension Request {
         return url
     }
     
+    //MARK: Demo mode
+    public var useDemoMode: Bool { return false }
+    public var demoSuccessFileName: String? { return nil }
+    public var demoFailureFileName: String? { return nil }
+    public var demoFilesBundle: Bundle { return Bundle.main }
+    public var demoWaitingTimeRange: ClosedRange<TimeInterval> { return 0.0...0.0 }
+    public var demoSuccessStatusCode: Int { return 200 }
+    public var demoFailureStatusCode: Int { return 400 }
+    public var demoFailureChance: Double { return 0.0 }
+}
+//MARK: CustomStringConvertible
+extension Request {
     public var description: String {
         return "REQUEST URL: \(self.service.baseUrl)\(self.service.path)\nMETHOD:\(self.method.rawValue)\nHEADERS:\(self.headers ?? [:])\nPARAMETERS:\(self.parameters)"
     }
 }
 
-open class Response {
+open class Response: CustomStringConvertible {
     public var request: Request
     public var response: HTTPURLResponse?
     public var httpStatusCode: Int
     public var data: Data
-    public var result: Result<Decodable>?
-    public var value: Decodable? {
+    public var result: Result<Any>?
+    public var value: Any? {
         return result?.value
     }
     
@@ -174,8 +196,8 @@ open class Response {
         self.response = response
     }
     
-    open func decode() -> Decodable? {
-        result = Result<Decodable>(value: { () -> Data in
+    open func decode() -> Any? {
+        result = Result<Any>(value: { () -> Data in
             return data
         })
         return result?.value
@@ -206,5 +228,3 @@ public struct MultipartBodyPart {
         self.mimeType = mimeType
     }
 }
-
-

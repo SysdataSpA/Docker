@@ -20,6 +20,15 @@ public enum DockerError: Error {
     
     /// Indicates a response failed due to an underlying `Error`.
     case underlying(Swift.Error, HTTPURLResponse?)
+    
+    /// Indicates that the demo file in case of succeess is nil
+    case nilSuccessDemoFile(ServiceCall)
+    
+    /// Indicates that the demo file in case of failure is nil
+    case nilFailureDemoFile(ServiceCall)
+    
+    /// Indicates that the demo file does not exist
+    case demoFileNotFound(ServiceCall, String)
 }
 
 public extension DockerError {
@@ -29,6 +38,9 @@ public extension DockerError {
         case .encoding: return nil
         case .parameterEncoding: return nil
         case .underlying: return nil
+        case .nilSuccessDemoFile(let serviceCall): return serviceCall.service
+        case .nilFailureDemoFile(let serviceCall): return serviceCall.service
+        case .demoFileNotFound(let serviceCall, _): return serviceCall.service
         }
     }
 }
@@ -40,6 +52,9 @@ extension DockerError: LocalizedError {
         case .encoding: return "Failed to encode Encodable object into data."
         case .parameterEncoding(let error): return "Failed to encode parameters for URLRequest. \(error.localizedDescription)"
         case .underlying(let error, _): return error.localizedDescription
+        case .nilSuccessDemoFile: return "The success demo file is nil"
+        case .nilFailureDemoFile: return "The failure demo file is nil"
+        case .demoFileNotFound(_, let filename): return "The demo file \(filename) does not exist"
         }
     }
 }

@@ -12,20 +12,29 @@ import Alamofire
 import Blabber
 #endif
 
-open class ServiceManager: NSObject {
-    
+open class ServiceManager: Singleton, Initializable {
+
     let responseQueue = DispatchQueue(label: "com.sysdata.docker.serializing", qos: .background, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.inherit, target: nil)
     var servicesQueue = [ServiceCall]()
     open var defaultSessionManager: SessionManager
     
+    public static var _shared: Singleton?
     
-    override public init() {
+    open var useDemoMode:Bool = false
+    
+    
+    required public init() {
         self.defaultSessionManager = SessionManager.default
         self.defaultSessionManager.startRequestsImmediately = true
     }
     
     public func call(with serviceCall: ServiceCall) throws {
         servicesQueue.append(serviceCall)
+        
+        if useDemoMode || serviceCall.request.useDemoMode {
+            try callServiceInDemoMode(with: serviceCall)
+            return
+        }
         
         switch serviceCall.request.type {
         case .simple, .bodyData, .jsonEncodableBody, .parameters, .bodyDataAndParameters, .encodedBodyAndParameters:
@@ -82,13 +91,13 @@ open class ServiceManager: NSObject {
         
         let urlRequest = try serviceCall.request.asUrlRequest()
         
-        serviceCall.service.sessionManager.upload(multipartFormData: multipartFormData, with: urlRequest) { (result) in
+        serviceCall.service.sessionManager.upload(multipartFormData: multipartFormData, with: urlRequest) { [weak self] (result) in
             switch result {
             case .success(let request, _, _):
                 request.validate()
-                self.sendRequest(request: request, serviceCall: serviceCall)
+                self?.sendRequest(request: request, serviceCall: serviceCall)
             case .failure(let error):
-                let responseClass = serviceCall.service.responseClass()
+                let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
                 let error = DockerError.underlying(error, nil)
                 response.error = error
@@ -106,9 +115,9 @@ open class ServiceManager: NSObject {
     
     private func sendRequest<T>(request: T, serviceCall: ServiceCall) where T: Requestable, T: Alamofire.Request {
         
-        let completionHandler: RequestCompletion = { urlResponse, request, data, error in
+        let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Response
-            let responseClass = serviceCall.service.responseClass()
+            let responseClass = serviceCall.request.responseClass()
             switch (urlResponse, data, error) {
             case let (.some(urlResponse), data, .none):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
@@ -125,13 +134,79 @@ open class ServiceManager: NSObject {
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
                 response.error = error
             }
-            _ = response.decode()
-            SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
-            serviceCall.completion(response)
+            self?.completeServiceCall(serviceCall, with: response)
         }
         
         let finalRequest = request.response(callbackQueue: nil, completionHandler: completionHandler)
         finalRequest.resume()
+    }
+    
+    fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
+        _ = response.decode()
+        SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
+        serviceCall.completion(response)
+        if let index = self.servicesQueue.index(of: serviceCall) {
+            self.servicesQueue.remove(at: index)
+        }
+    }
+}
+
+//MARK: Demo mode
+extension ServiceManager {
+    fileprivate func callServiceInDemoMode(with serviceCall:ServiceCall) throws {
+        #if swift(>=4.2)
+        let failureValue: Double.random(in: 0.0...1.0)
+        #else
+        let failureValue: Double = Double(arc4random_uniform(1000))/1000.0
+        #endif
+        let success: Bool = failureValue > serviceCall.request.demoFailureChance
+        let path = try findDemoFilePath(with: serviceCall, forSuccess: success)
+        let data = try loadDemoFile(with: serviceCall, at: path)
+        let statusCode: Int = success ? serviceCall.request.demoSuccessStatusCode : serviceCall.request.demoFailureStatusCode
+        let waitingTime = self.waitingTime(for: serviceCall)
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + waitingTime) { [weak self] in
+            let responseClass = serviceCall.request.responseClass()
+            let response = responseClass.init(statusCode: statusCode, data: data, request: serviceCall.request)
+            self?.completeServiceCall(serviceCall, with: response)
+        }
+    }
+    
+    private func findDemoFilePath(with serviceCall:ServiceCall, forSuccess success:Bool) throws -> String {
+        let filename: String
+        if success {
+            if let file = serviceCall.request.demoSuccessFileName {
+                filename = file
+            } else {
+                throw DockerError.nilSuccessDemoFile(serviceCall)
+            }
+        } else {
+            if let file = serviceCall.request.demoFailureFileName {
+                filename = file
+            } else {
+                throw DockerError.nilFailureDemoFile(serviceCall)
+            }
+        }
+        
+        guard let path = serviceCall.request.demoFilesBundle.path(forResource: filename, ofType: nil) else {
+            throw DockerError.demoFileNotFound(serviceCall, filename)
+        }
+        
+        return path
+    }
+    
+    private func loadDemoFile(with serviceCall:ServiceCall, at path:String) throws -> Data {
+        let url = URL(fileURLWithPath: path)
+        return try Data(contentsOf: url)
+    }
+    
+    private func waitingTime(for serviceCall:ServiceCall) -> TimeInterval {
+        #if swift(>=4.2)
+        let waitingTime: Double.random(in: serviceCall.request)
+        #else
+        let waitingDifference = serviceCall.request.demoWaitingTimeRange.upperBound - serviceCall.request.demoWaitingTimeRange.lowerBound
+        let waitingTime: Double = Double(arc4random_uniform(UInt32(waitingDifference*100.0)))/100.0 + serviceCall.request.demoWaitingTimeRange.lowerBound
+        #endif
+        return waitingTime
     }
 }
 

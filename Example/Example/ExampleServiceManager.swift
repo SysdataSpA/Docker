@@ -10,15 +10,22 @@ import UIKit
 import Docker
 import Alamofire
 
-struct Fooas: Codable {
-    let message: String
-    let subtitle: String
+struct Resource: Codable {
+    let id: String
+    let name: String
+    let boolean: Bool
+    let double: Double
+    let nestedObjects: [NestedObject]?
+}
+
+struct NestedObject: Codable {
+    let id: String
+    let name: String
 }
 
 class ExampleServiceManager: ServiceManager {
-    public static let shared = ExampleServiceManager()
     
-    override init() {
+    required init() {
         super.init()
         let configuration = URLSessionConfiguration.default
         var httpHeaders = SessionManager.defaultHTTPHeaders
@@ -27,11 +34,27 @@ class ExampleServiceManager: ServiceManager {
         self.defaultSessionManager = SessionManager(configuration: configuration)
     }
     
-    func callExampleService(completion: (ExampleResponse) -> Void) {
-        let request = ExampleServiceRequest()
+    func getResources(completion: @escaping (Response) -> Void) {
+        let request = GetResourcesRequest()
         let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
-            print(response.result as Any)
+            completion(response)
         }
-        try? call(with: serviceCall)
+        try! call(with: serviceCall)
+    }
+    
+    func postResource(_ resource:Resource, completion: @escaping (Response) -> Void) {
+        let request = PostResourceRequest(resource: resource)
+        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+            completion(response)
+        }
+        try! call(with: serviceCall)
+    }
+    
+    func downloadImage(completion: @escaping (Response) -> Void) {
+        let request = DownloadRequest()
+        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+            completion(response)
+        }
+        try! call(with: serviceCall)
     }
 }

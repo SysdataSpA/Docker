@@ -21,11 +21,32 @@ class ViewController: UIViewController {
     }
 
     
-    @IBAction func callService(_ sender: Any) {
-        ExampleServiceManager.shared.callExampleService { (response) in
-            print((response.result?.value as? Fooas)?.message ?? "")
-        }
-        
+    @IBAction func toggleDemoMode(_ sender: UISwitch) {
+        ExampleServiceManager.shared().useDemoMode = sender.isOn
     }
+    
+    @IBAction func getResources(_ sender: Any) {
+        ExampleServiceManager.shared().getResources { (response) in
+            for resource in response.result?.value as! [Resource] {
+                print(resource.name)
+            }
+        }
+    }
+    
+    @IBAction func postResource(_ sender: Any) {
+        let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
+        ExampleServiceManager.shared().postResource(resource) { (response) in
+            if let res = response.result?.value as? Resource {
+                print(res.name)
+            }
+        }
+    }
+    
+    @IBAction func downloadImage(_ sender: Any) {
+        ExampleServiceManager.shared().downloadImage { (response) in
+            print(response.value ?? "None")
+        }
+    }
+    
 }
 

@@ -1,0 +1,16 @@
+{
+    "id": "1",
+    "name":"name1",
+    "boolean":true,
+    "double":1.1,
+    "nestedObjects":[
+      {
+        "id":"101",
+        "name":"nested1"
+      },
+      {
+        "id":"102",
+        "name":"nested2"
+      }
+    ]
+  }

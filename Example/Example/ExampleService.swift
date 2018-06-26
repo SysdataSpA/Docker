@@ -25,7 +25,7 @@ class ResourcesService: Service {
 }
 
 class GetResourcesRequest: Request {
-    
+
     func responseClass() -> Response.Type {
         return GetResourcesResponse.self
     }
@@ -54,7 +54,9 @@ class GetResourcesResponse: Response {
 }
 
 class PostResourceRequest: Request {
+
     var resource: Resource
+    
     init(resource: Resource) {
         self.resource = resource
     }
@@ -125,12 +127,16 @@ class DownloadRequest: Request {
 class DownloadResponse: Response {
     override func decode() -> Any? {
         result = Result<Any>(value: { () -> UIImage? in
-            if let data = try? Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg")) {
+            do {
+                let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
                 if let image = UIImage(data: data) {
                     return image
                 }
+                return nil
+            } catch {
+                print(error)
+                return nil
             }
-            return nil
         })
         return result?.value
     }

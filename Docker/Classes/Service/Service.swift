@@ -187,7 +187,9 @@ open class Response: CustomStringConvertible {
         return result?.value
     }
     
-    public var error: Error?
+    public var error: Error? {
+        return result?.error
+    }
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode

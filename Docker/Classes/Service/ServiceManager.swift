@@ -99,8 +99,9 @@ open class ServiceManager: Singleton, Initializable {
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
-                let error = DockerError.underlying(error, nil)
-                response.error = error
+                response.result = Result<Any>(value: { () -> Any in
+                    throw DockerError.underlying(error, nil)
+                })
             }
         }
     }
@@ -123,16 +124,20 @@ open class ServiceManager: Singleton, Initializable {
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
             case let (.some(urlResponse), _, .some(error)):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                let error = DockerError.underlying(error, urlResponse)
-                response.error = error
+                response.result = Result<Any>(value: { () -> Any in
+                    throw DockerError.underlying(error, urlResponse)
+                })
             case let (_, _, .some(error)):
                 response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: urlResponse)
-                let error = DockerError.underlying(error, nil)
-                response.error = error
+                response.result = Result<Any>(value: { () -> Any in
+                    throw DockerError.underlying(error, nil)
+                })
             default:
                 let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil)
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                response.error = error
+                response.result = Result<Any>(value: { () -> Any in
+                    throw error
+                })
             }
             self?.completeServiceCall(serviceCall, with: response)
         }

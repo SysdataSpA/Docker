@@ -182,14 +182,8 @@ open class Response: CustomStringConvertible {
     public var response: HTTPURLResponse?
     public var httpStatusCode: Int
     public var data: Data
-    public var result: Result<Any>?
-    public var value: Any? {
-        return result?.value
-    }
-    
-    public var error: Error? {
-        return result?.error
-    }
+    public var value: Any?
+    public var error: Error?
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode
@@ -198,22 +192,59 @@ open class Response: CustomStringConvertible {
         self.response = response
     }
     
-    open func decode() -> Any? {
-        result = Result<Any>(value: { () -> Data in
-            return data
-        })
-        return result?.value
-    }
+    open func decode() { value = data }
     
     public var description: String {
         var d = ""
-        if let result = result, let response = response {
+        if let value = value, let response = response {
             d.append("RESPONSE RECEIVED - URL= \(response.url)\nBODY= \(response.debugDescription)")
         } else {
-            
             d.append("RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)")
         }
         return d
+    }
+}
+
+// MARK: JSON Decode
+extension Response {
+    open func decodeJSON<T:Decodable>(with type: T.Type) {
+        do {
+            value = try JSONDecoder().decode(type, from: data)
+        } catch let err {
+            self.error = err
+        }
+    }
+}
+
+//MARK: Download response
+open class DownloadResponse: Response {
+    public var localURL: URL?
+    
+    open func decodeImage() {
+        do {
+            if let localURL = localURL {
+                let data = try Data(contentsOf: localURL)
+                value = UIImage(data: data)
+            } else {
+                SDLogModuleWarning("localURL not defined", module: DockerServiceLogModuleName)
+            }
+        } catch let err  {
+            self.error = err
+            SDLogModuleError(err.localizedDescription, module: DockerServiceLogModuleName)
+        }
+    }
+    
+    open func decodeString() {
+        do {
+            if let localURL = localURL {
+                value = try String(contentsOf: localURL, encoding: .utf8)
+            } else {
+                SDLogModuleWarning("localURL not defined", module: DockerServiceLogModuleName)
+            }
+        } catch let err  {
+            self.error = err
+            SDLogModuleError(err.localizedDescription, module: DockerServiceLogModuleName)
+        }
     }
 }
 

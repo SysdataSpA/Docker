@@ -45,11 +45,8 @@ class GetResourcesRequest: Request {
 
 class GetResourcesResponse: Response {
     
-    override func decode() -> Any? {
-        result = Result<Any>(value: { () -> [Resource] in
-            return try JSONDecoder().decode([Resource].self, from: data)
-        })
-        return result?.value
+    override func decode() {
+        decodeJSON(with: [Resource].self)
     }
 }
 
@@ -83,11 +80,9 @@ class PostResourceRequest: Request {
 }
 
 class PostResourceResponse: Response {
-    override func decode() -> Any? {
-        result = Result<Any>(value: { () -> Resource in
-            return try JSONDecoder().decode(Resource.self, from: data)
-        })
-        return result?.value
+    
+    override func decode() {
+        decodeJSON(with: Resource.self)
     }
 }
 
@@ -125,19 +120,13 @@ class DownloadRequest: Request {
 }
 
 class DownloadResponse: Response {
-    override func decode() -> Any? {
-        result = Result<Any>(value: { () -> UIImage? in
-            do {
-                let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
-                if let image = UIImage(data: data) {
-                    return image
-                }
-                return nil
-            } catch {
-                print(error)
-                return nil
-            }
-        })
-        return result?.value
+    override func decode() {
+        do {
+            let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
+            value = UIImage(data: data)
+        } catch let err  {
+            self.error = err
+            print(err)
+        }
     }
 }

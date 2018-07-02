@@ -21,7 +21,7 @@ open class ServiceManager: Singleton, Initializable {
     public static var _shared: Singleton?
     
     open var useDemoMode:Bool = false
-    
+    open var timeBeforeRetry: TimeInterval = 3.0
     
     required public init() {
         self.defaultSessionManager = SessionManager.default
@@ -29,6 +29,7 @@ open class ServiceManager: Singleton, Initializable {
     }
     
     public func call(with serviceCall: ServiceCall) throws {
+        serviceCall.isProcessing = true
         servicesQueue.append(serviceCall)
         
         if useDemoMode || serviceCall.request.useDemoMode {
@@ -42,8 +43,8 @@ open class ServiceManager: Singleton, Initializable {
         case .uploadFile(let file):
             try upload(serviceCall: serviceCall, fileURL: file)
         case .uploadMultipart(let multipartBody), .uploadMultipartWithParameters(let multipartBody, _):
-            guard !multipartBody.isEmpty && serviceCall.request.method.supportsMultipart else {
-                fatalError("\(serviceCall.request.method.rawValue) method does not a multipart upload.")
+            guard !multipartBody.isEmpty && !serviceCall.request.method.supportsMultipart else {
+                throw DockerError.multipartNotSupported(serviceCall.request.method)
             }
             try uploadMultipart(serviceCall: serviceCall)
         case .download(let destination), .downloadWithParameters(_, let destination):
@@ -69,10 +70,10 @@ open class ServiceManager: Singleton, Initializable {
     
     private func uploadMultipart(serviceCall: ServiceCall) throws {
         guard let multipartBodyParts = serviceCall.request.multipartBodyParts else {
-            fatalError("Multipart request must contain body parts")
+            throw DockerError.emptyMultipartBody(serviceCall)
         }
         if multipartBodyParts.count == 0 {
-            fatalError("Multipart request must contain body parts")
+            throw DockerError.emptyMultipartBody(serviceCall)
         }
         
         let multipartFormData: (MultipartFormData) -> Void = { form in
@@ -99,9 +100,7 @@ open class ServiceManager: Singleton, Initializable {
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
-                response.result = Result<Any>(value: { () -> Any in
-                    throw DockerError.underlying(error, nil)
-                })
+                response.error = DockerError.underlying(error, nil)
             }
         }
     }
@@ -124,20 +123,14 @@ open class ServiceManager: Singleton, Initializable {
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
             case let (.some(urlResponse), _, .some(error)):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                response.result = Result<Any>(value: { () -> Any in
-                    throw DockerError.underlying(error, urlResponse)
-                })
+                response.error = DockerError.underlying(error, urlResponse)
             case let (_, _, .some(error)):
                 response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: urlResponse)
-                response.result = Result<Any>(value: { () -> Any in
-                    throw DockerError.underlying(error, nil)
-                })
+                response.error = DockerError.underlying(error, nil)
             default:
                 let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil)
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                response.result = Result<Any>(value: { () -> Any in
-                    throw error
-                })
+                response.error = error
             }
             self?.completeServiceCall(serviceCall, with: response)
         }
@@ -146,11 +139,26 @@ open class ServiceManager: Singleton, Initializable {
         finalRequest.resume()
     }
     
+    private func manageError(_ error: DockerError, with urlResponse: HTTPURLResponse?) {
+        switch error {
+        case .underlying(let nsError as NSError, .none):
+            if nsError.code != NSURLErrorCancelled {
+                
+            }
+        default: break
+        }
+    }
+    
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
-        _ = response.decode()
+        response.decode()
         SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
         serviceCall.completion(response)
+        remove(serviceCall)
+    }
+    
+    private func remove(_ serviceCall: ServiceCall) {
         if let index = self.servicesQueue.index(of: serviceCall) {
+            serviceCall.isProcessing = false
             self.servicesQueue.remove(at: index)
         }
     }
@@ -158,7 +166,7 @@ open class ServiceManager: Singleton, Initializable {
 
 //MARK: Demo mode
 extension ServiceManager {
-    fileprivate func callServiceInDemoMode(with serviceCall:ServiceCall) throws {
+    public func callServiceInDemoMode(with serviceCall:ServiceCall) throws {
         #if swift(>=4.2)
         let failureValue: Double.random(in: 0.0...1.0)
         #else
@@ -215,6 +223,26 @@ extension ServiceManager {
     }
 }
 
+//MARK: Automatic Retry
+extension ServiceManager {
+    private func shouldCatchFailureForMissingResponse(in serviceCall: ServiceCall) -> Bool {
+        if serviceCall.numOfAutomaticRetry > 0 {
+            
+            return true
+        }
+        return false
+    }
+    
+    public func performAutomaticRetry(of serviceCall:ServiceCall) {
+        if !serviceCall.isProcessing {
+            SDLogModuleInfo("Repeat service \(serviceCall)", module: kServiceManagerLogModuleName)
+            remove(serviceCall)
+            serviceCall.numOfAutomaticRetry -= 1
+            try? call(with: serviceCall)
+        }
+    }
+}
+
 public typealias ServiceCompletion = (Response) -> Void
 
 public class ServiceCall : NSObject {
@@ -222,6 +250,8 @@ public class ServiceCall : NSObject {
     var request: Request
     var response: Response?
     let completion: ServiceCompletion
+    var numOfAutomaticRetry: UInt = 0
+    var isProcessing: Bool = false
     
     public init(with service: Service, request: Request, completion: @escaping ServiceCompletion) {
         self.service = service

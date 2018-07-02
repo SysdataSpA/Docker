@@ -29,32 +29,26 @@ public enum DockerError: Error {
     
     /// Indicates that the demo file does not exist
     case demoFileNotFound(ServiceCall, String)
-}
-
-public extension DockerError {
-    var service: Service? {
-        switch self {
-        case .invalidURL(let service): return service
-        case .encoding: return nil
-        case .parameterEncoding: return nil
-        case .underlying: return nil
-        case .nilSuccessDemoFile(let serviceCall): return serviceCall.service
-        case .nilFailureDemoFile(let serviceCall): return serviceCall.service
-        case .demoFileNotFound(let serviceCall, _): return serviceCall.service
-        }
-    }
+    
+    /// Indicates that the request's method does not support multipart
+    case multipartNotSupported(HTTPMethod)
+    
+    /// A multipart request does not contain any body part
+    case emptyMultipartBody(ServiceCall)
 }
 
 extension DockerError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .invalidURL: return "The URL of the service is invalid.\n\tBase URL: \(self.service?.baseUrl ?? "unknown")\n\tPath: \(self.service?.path ?? "unknown")"
+        case .invalidURL(let service): return "The URL of the service is invalid.\n\tBase URL: \(service.baseUrl ?? "unknown")\n\tPath: \(service.path ?? "unknown")"
         case .encoding: return "Failed to encode Encodable object into data."
         case .parameterEncoding(let error): return "Failed to encode parameters for URLRequest. \(error.localizedDescription)"
         case .underlying(let error, _): return error.localizedDescription
         case .nilSuccessDemoFile: return "The success demo file is nil"
         case .nilFailureDemoFile: return "The failure demo file is nil"
         case .demoFileNotFound(_, let filename): return "The demo file \(filename) does not exist"
+        case .multipartNotSupported(let method): return "The \(method.rawValue) does not support multipart"
+        case .emptyMultipartBody: return "The multipart request's body is empty"
         }
     }
 }

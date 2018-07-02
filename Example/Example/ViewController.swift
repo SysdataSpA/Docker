@@ -27,8 +27,10 @@ class ViewController: UIViewController {
     
     @IBAction func getResources(_ sender: Any) {
         ExampleServiceManager.shared().getResources { (response) in
-            for resource in response.result?.value as! [Resource] {
-                print(resource.name)
+            if let value = response.value as? [Resource] {
+                for resource in value {
+                    print(resource.name)
+                }
             }
         }
     }
@@ -36,7 +38,7 @@ class ViewController: UIViewController {
     @IBAction func postResource(_ sender: Any) {
         let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
         ExampleServiceManager.shared().postResource(resource) { (response) in
-            if let res = response.result?.value as? Resource {
+            if let res = response.value as? Resource {
                 print(res.name)
             }
         }

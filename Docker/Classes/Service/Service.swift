@@ -203,10 +203,8 @@ open class Response: CustomStringConvertible {
         }
         return d
     }
-}
-
-// MARK: JSON Decode
-extension Response {
+    
+    // MARK: JSON Decode
     open func decodeJSON<T:Decodable>(with type: T.Type) {
         do {
             value = try JSONDecoder().decode(type, from: data)

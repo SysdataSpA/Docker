@@ -152,7 +152,9 @@ open class ServiceManager: Singleton, Initializable {
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         response.decode()
         SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
-        serviceCall.completion(response)
+        DispatchQueue.main.async { [weak self] in
+            serviceCall.completion(response)
+        }
         remove(serviceCall)
     }
     

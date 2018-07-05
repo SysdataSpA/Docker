@@ -173,7 +173,22 @@ extension Request {
 //MARK: CustomStringConvertible
 extension Request {
     public var description: String {
-        return "REQUEST URL: \(self.service.baseUrl)\(self.service.path)\nMETHOD:\(self.method.rawValue)\nHEADERS:\(self.headers ?? [:])\nPARAMETERS:\(self.parameters)"
+        var body: String? = nil
+        if let httpBody = try? self.asUrlRequest().httpBody {
+            if let httpBody = httpBody {
+                body = String(data: httpBody, encoding: .utf8)
+            }
+        }
+        var string = "REQUEST URL: \(self.service.baseUrl)\(self.service.path)\nMETHOD:\(self.method.rawValue)\nHEADERS:\(self.headers ?? [:]))"
+        if let params = try? self.parameters() {
+            if let params = params {
+                string.append("\nPARAMETERS:\(params)")
+            }
+        }
+        if let body = body {
+            string.append("\nBODY:\n\(body)")
+        }
+        return string
     }
 }
 
@@ -197,7 +212,12 @@ open class Response: CustomStringConvertible {
     public var description: String {
         var d = ""
         if let value = value, let response = response {
-            d.append("RESPONSE RECEIVED - URL= \(response.url)\nBODY= \(response.debugDescription)")
+            d.append("RESPONSE RECEIVED - URL= \(response.url)")
+            if data.count > 0 {
+                if let body = String(data: data, encoding: .utf8) {
+                    d.append("\nBODY=\n\(body)")
+                }
+            }
         } else {
             d.append("RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)")
         }

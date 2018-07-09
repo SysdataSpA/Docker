@@ -27,26 +27,29 @@ class ViewController: UIViewController {
     
     @IBAction func getResources(_ sender: Any) {
         ExampleServiceManager.shared().getResources { (response) in
-            if let value = response.value as? [Resource] {
-                for resource in value {
-                    print(resource.name)
-                }
-            }
         }
     }
     
     @IBAction func postResource(_ sender: Any) {
         let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
         ExampleServiceManager.shared().postResource(resource) { (response) in
-            if let res = response.value as? Resource {
-                print(res.name)
-            }
+
+        }
+    }
+    
+    @IBAction func getResourceById(_ sender: Any) {
+        ExampleServiceManager.shared().getResource(with: 1) { (response) in
+        }
+    }
+    
+    @IBAction func uploadFile(_ sender: Any) {
+        ExampleServiceManager.shared().uploadImage { (response) in
         }
     }
     
     @IBAction func downloadImage(_ sender: Any) {
         ExampleServiceManager.shared().downloadImage { (response) in
-            print(response.value ?? "None")
+            
         }
     }
     

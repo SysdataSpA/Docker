@@ -35,6 +35,9 @@ public enum DockerError: Error {
     
     /// A multipart request does not contain any body part
     case emptyMultipartBody(ServiceCall)
+    
+    /// Indicates that a path parameter was not found in request's parameters
+    case pathParameterNotFound(Request, String)
 }
 
 extension DockerError: LocalizedError {
@@ -49,6 +52,7 @@ extension DockerError: LocalizedError {
         case .demoFileNotFound(_, let filename): return "The demo file \(filename) does not exist"
         case .multipartNotSupported(let method): return "The \(method.rawValue) does not support multipart"
         case .emptyMultipartBody: return "The multipart request's body is empty"
+        case .pathParameterNotFound(let request, let paramName): return "Path parameter \"\(paramName)\" not found in \(String(describing: type(of: request))) parameters"
         }
     }
 }

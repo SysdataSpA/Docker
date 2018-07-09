@@ -42,10 +42,7 @@ open class ServiceManager: Singleton, Initializable {
             try request(serviceCall: serviceCall)
         case .uploadFile(let file):
             try upload(serviceCall: serviceCall, fileURL: file)
-        case .uploadMultipart(let multipartBody), .uploadMultipartWithParameters(let multipartBody, _):
-            guard !multipartBody.isEmpty && !serviceCall.request.method.supportsMultipart else {
-                throw DockerError.multipartNotSupported(serviceCall.request.method)
-            }
+        case .uploadMultipart(), .uploadMultipartWithParameters(_):
             try uploadMultipart(serviceCall: serviceCall)
         case .download(let destination), .downloadWithParameters(_, let destination):
             try download(serviceCall: serviceCall, to: destination)
@@ -69,6 +66,9 @@ open class ServiceManager: Singleton, Initializable {
     }
     
     private func uploadMultipart(serviceCall: ServiceCall) throws {
+        if !serviceCall.request.method.supportsMultipart {
+            throw DockerError.multipartNotSupported(serviceCall.request.method)
+        }
         guard let multipartBodyParts = serviceCall.request.multipartBodyParts else {
             throw DockerError.emptyMultipartBody(serviceCall)
         }
@@ -91,6 +91,7 @@ open class ServiceManager: Singleton, Initializable {
         }
         
         let urlRequest = try serviceCall.request.asUrlRequest()
+        SDLogModuleVerbose(serviceCall.request.description, module: DockerServiceLogModuleName)
         
         serviceCall.service.sessionManager.upload(multipartFormData: multipartFormData, with: urlRequest) { [weak self] (result) in
             switch result {
@@ -169,6 +170,7 @@ open class ServiceManager: Singleton, Initializable {
 //MARK: Demo mode
 extension ServiceManager {
     public func callServiceInDemoMode(with serviceCall:ServiceCall) throws {
+        serviceCall.request.sentInDemoMode = true
         #if swift(>=4.2)
         let failureValue: Double.random(in: 0.0...1.0)
         #else
@@ -216,7 +218,7 @@ extension ServiceManager {
     
     private func waitingTime(for serviceCall:ServiceCall) -> TimeInterval {
         #if swift(>=4.2)
-        let waitingTime: Double.random(in: serviceCall.request)
+        let waitingTime: Double.random(in: serviceCall.request.demoWaitingTimeRange)
         #else
         let waitingDifference = serviceCall.request.demoWaitingTimeRange.upperBound - serviceCall.request.demoWaitingTimeRange.lowerBound
         let waitingTime: Double = Double(arc4random_uniform(UInt32(waitingDifference*100.0)))/100.0 + serviceCall.request.demoWaitingTimeRange.lowerBound

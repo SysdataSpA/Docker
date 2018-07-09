@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="g9j-Sx-Tal">
-                                <rect key="frame" x="116" y="28" width="142.5" height="121"/>
+                                <rect key="frame" x="116" y="28" width="142.5" height="181"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPt-He-tsW">
                                         <rect key="frame" x="0.0" y="0.0" width="142.5" height="31"/>
@@ -52,8 +52,22 @@
                                             <action selector="postResource:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uKt-4a-PH1"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKn-fg-iCL">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bj9-b9-wDh">
                                         <rect key="frame" x="0.0" y="91" width="142.5" height="30"/>
+                                        <state key="normal" title="Get Resource By ID"/>
+                                        <connections>
+                                            <action selector="getResourceById:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yPk-Pg-D9p"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WR9-mU-Z32">
+                                        <rect key="frame" x="0.0" y="121" width="142.5" height="30"/>
+                                        <state key="normal" title="Upload file"/>
+                                        <connections>
+                                            <action selector="uploadFile:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7jd-kM-R0N"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKn-fg-iCL">
+                                        <rect key="frame" x="0.0" y="151" width="142.5" height="30"/>
                                         <state key="normal" title="Download image"/>
                                         <connections>
                                             <action selector="downloadImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9oR-sN-Gd5"/>

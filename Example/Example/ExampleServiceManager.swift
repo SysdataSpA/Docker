@@ -36,7 +36,7 @@ class ExampleServiceManager: ServiceManager {
     
     func getResources(completion: @escaping (Response) -> Void) {
         let request = GetResourcesRequest()
-        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)
@@ -44,7 +44,7 @@ class ExampleServiceManager: ServiceManager {
     
     func postResource(_ resource:Resource, completion: @escaping (Response) -> Void) {
         let request = PostResourceRequest(resource: resource)
-        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)
@@ -52,7 +52,7 @@ class ExampleServiceManager: ServiceManager {
     
     func getResource(with id: Int, completion: @escaping (Response) -> Void) {
         let request = GetResourceByIdRequest(with: id)
-        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
             completion(response)
         }
         do {
@@ -64,7 +64,9 @@ class ExampleServiceManager: ServiceManager {
     
     func uploadImage(completion: @escaping (Response) -> Void) {
         let request = UploadRequest(with: 1)
-        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
+            print("Progress: \(progress)")
+        }) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)
@@ -72,7 +74,9 @@ class ExampleServiceManager: ServiceManager {
     
     func downloadImage(completion: @escaping (Response) -> Void) {
         let request = DownloadRequest()
-        let serviceCall = ServiceCall(with: request.service, request: request) { (response) in
+        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
+            print("Progress: \(progress)")
+        }) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)

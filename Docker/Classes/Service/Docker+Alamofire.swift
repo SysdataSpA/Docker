@@ -14,6 +14,7 @@ public typealias URLEncoding = Alamofire.URLEncoding
 public typealias HTTPMethod = Alamofire.HTTPMethod
 public typealias Result<Value> = Alamofire.Result<Value>
 public typealias RequestCompletion = (HTTPURLResponse?, URLRequest?, Data?, Swift.Error?) -> Void
+public typealias ProgressHandler = Alamofire.Request.ProgressHandler
 public typealias DownloadFileDestination = DownloadRequest.DownloadFileDestination
 public typealias DownloadOptions = DownloadRequest.DownloadOptions
 

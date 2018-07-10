@@ -119,6 +119,28 @@ open class ServiceManager: Singleton, Initializable {
     
     private func sendRequest<T>(request: T, serviceCall: ServiceCall) where T: Requestable, T: Alamofire.Request {
         
+        // Progress callback management
+        var progressRequest = request
+        
+        if let progressBlock = serviceCall.progressBlock {
+            switch progressRequest {
+            case let downloadRequest as DownloadRequest:
+                if let downloadRequest = downloadRequest.downloadProgress(closure: progressBlock) as? T {
+                    progressRequest = downloadRequest
+                }
+            case let uploadRequest as UploadRequest:
+                if let uploadRequest = uploadRequest.uploadProgress(closure: progressBlock) as? T {
+                    progressRequest = uploadRequest
+                }
+            case let dataRequest as DataRequest:
+                if let dataRequest = dataRequest.downloadProgress(closure: progressBlock) as? T {
+                    progressRequest = dataRequest
+                }
+            default: break
+            }
+        }
+        
+        // completion block management
         let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Response
             let responseClass = serviceCall.request.responseClass()
@@ -139,6 +161,7 @@ open class ServiceManager: Singleton, Initializable {
             self?.completeServiceCall(serviceCall, with: response)
         }
         
+        // call the request
         let finalRequest = request.response(callbackQueue: nil, completionHandler: completionHandler)
         finalRequest.resume()
     }
@@ -257,13 +280,23 @@ public class ServiceCall : NSObject {
     var request: Request
     var response: Response?
     let completion: ServiceCompletion
+    let progressBlock: ProgressHandler?
     var numOfAutomaticRetry: UInt = 0
     var isProcessing: Bool = false
     
-    public init(with service: Service, request: Request, completion: @escaping ServiceCompletion) {
+    public init(with service: Service, request: Request, progressBlock: ProgressHandler?, completion: @escaping ServiceCompletion) {
         self.service = service
         self.request = request
         self.completion = completion
+        self.progressBlock = progressBlock
         super.init()
+    }
+    
+    public convenience init(with request: Request, progressBlock: ProgressHandler?, completion: @escaping ServiceCompletion) {
+        self.init(with: request.service, request: request, progressBlock: progressBlock, completion: completion)
+    }
+    
+    public convenience init(with request: Request, completion: @escaping ServiceCompletion) {
+        self.init(with: request.service, request: request, progressBlock: nil, completion: completion)
     }
 }

@@ -10,39 +10,35 @@ import Alamofire
 
 /// Represents an HTTP task.
 public enum RequestType {
-    
-    /// A request with no additional data.
-    case simple
-    
-    /// A requests body set with data.
-    case bodyData(Data)
-    
-    /// A request body set with `Encodable` type
-    case jsonEncodableBody(Encodable, encoder: JSONEncoder?)
-    
-    /// A requests body set with encoded parameters.
-    case parameters(parameters: [String: Any])
-    
-    /// A requests body set with data, combined with url parameters.
-    case bodyDataAndParameters(bodyData: Data, urlParameters: [String: Any])
-    
-    /// A requests body set with encoded parameters combined with url parameters.
-    case encodedBodyAndParameters(bodyParameters: [String: Any], urlParameters: [String: Any])
-    
+   
+    /// A request to send or receive data
+    case data
+
     /// A file upload task.
-    case uploadFile(URL)
-    
-    /// A "multipart/form-data" upload task.
-    case uploadMultipart()
-    
-    /// A "multipart/form-data" upload task  combined with url parameters.
-    case uploadMultipartWithParameters(urlParameters: [String: Any])
-    
+    case upload(RequestType.UploadType)
+
     /// A file download task to a destination.
     case download(DownloadFileDestination)
     
-    /// A file download task to a destination with extra parameters using the given encoding.
-    case downloadWithParameters(parameters: [String: Any], destination: DownloadRequest.DownloadFileDestination)
+    public enum UploadType {
+        /// A file upload task.
+        case file(URL)
+        
+        /// A "multipart/form-data" upload task.
+        case multipart
+    }
+}
+
+public enum BodyEncoding {
+    
+    /// The body will not be encoded, used if the body is a Data
+    case none
+    
+    /// The body will be encoded with the given JSONEncoder
+    case json(JSONEncoder)
+    
+    /// The body will be encoded with the given PropertyListEncoder
+    case propertyList(PropertyListEncoder)
 }
 
 public protocol ServiceProtocol {
@@ -66,7 +62,8 @@ open class Service: ServiceProtocol {
 
 public protocol RequestProtocol {
     var headers: [String:String]? { get set }
-    var parameterEncoding: ParameterEncoding { get set }
+    var urlParameterEncoding: URLEncoding { get set }
+    var bodyEncoding: BodyEncoding { get set }
     var method: HTTPMethod { get set }
     var service: Service { get set }
     var type: RequestType { get set }
@@ -83,7 +80,8 @@ public protocol RequestProtocol {
     var demoFailureChance: Double { get set }
     
     func responseClass() -> Response.Type
-    func parameters() throws -> [String:Any]?
+    func urlParameters() throws -> [String:Any]?
+    func bodyParameters() throws -> Encodable?
     func pathParameters() throws -> [String:Any]?
 }
 
@@ -92,7 +90,8 @@ open class Request: NSObject, RequestProtocol {
     open var multipartBodyParts: [MultipartBodyPart]?
     open var method: HTTPMethod
     open var headers: [String : String]?
-    open var parameterEncoding: ParameterEncoding
+    open var urlParameterEncoding: URLEncoding
+    open var bodyEncoding: BodyEncoding
     open var type: RequestType
     
     //Demo mode
@@ -109,16 +108,9 @@ open class Request: NSObject, RequestProtocol {
     public override init(){
         self.service = Service()
         self.method = .get
-        self.type = .simple
-        
-        switch self.method {
-        case .get,
-             .delete,
-             .head:
-            self.parameterEncoding = URLEncoding.default
-        default:
-            self.parameterEncoding = JSONEncoding(options: .prettyPrinted)
-        }
+        self.type = .data
+        self.urlParameterEncoding = URLEncoding.queryString
+        self.bodyEncoding = .json( JSONEncoder() )
         
         // Demo mode
         self.useDemoMode = false
@@ -133,7 +125,11 @@ open class Request: NSObject, RequestProtocol {
         return Response.self
     }
     
-    open func parameters() throws -> [String : Any]? {
+    open func urlParameters() throws -> [String : Any]? {
+        return nil
+    }
+    
+    open func bodyParameters() throws -> Encodable? {
         return nil
     }
     
@@ -152,37 +148,30 @@ open class Request: NSObject, RequestProtocol {
         }
         request.allHTTPHeaderFields = allHeaders
         
-        switch type {
-        case .simple, .uploadFile, .uploadMultipart, .download:
-            return request
-        case .bodyData(let data):
-            request.httpBody = data
-        case let .jsonEncodableBody(encodable, encoder: encoder):
-            if let encoder = encoder {
-                request = try request.encoded(encodable: encodable, encoder: encoder)
-            } else {
-                request = try request.encoded(encodable: encodable)
+        // body encoding
+        if let body = try self.bodyParameters() {
+            switch bodyEncoding {
+            case .none:
+                if let data = body as? Data {
+                    request.httpBody = data
+                } else {
+                    throw DockerError.encoding(EncodingError.invalidValue(body, EncodingError.Context(codingPath: [], debugDescription: "")))
+                }
+            case .json(let jsonEncoder):
+                request = try request.encoded(encodable: body, encoder: jsonEncoder)
+            case .propertyList(let pListEncoder):
+                request = try request.encoded(encodable: body, encoder: pListEncoder)
             }
-        case let .parameters(parameters):
-            request = try request.encoded(parameters: parameters, parameterEncoding: self.parameterEncoding)
-        case let .uploadMultipartWithParameters(urlParameters):
-            request = try request.encoded(parameters: urlParameters, parameterEncoding: self.parameterEncoding)
-        case let .downloadWithParameters(parameters, destination: _):
-            request = try request.encoded(parameters: parameters, parameterEncoding: self.parameterEncoding)
-        case let .bodyDataAndParameters(bodyData: bodyData, urlParameters: urlParameters):
-            request.httpBody = bodyData
-            if let encoding = self.parameterEncoding as? URLEncoding, encoding.destination == .httpBody {
-                fatalError("With this type of request you cannot use httpBody destination for parameters, use .parameters type instead")
-            }
-            request = try request.encoded(parameters: urlParameters, parameterEncoding: self.parameterEncoding)
-        case let .encodedBodyAndParameters(bodyParameters: bodyParameters, urlParameters: urlParameters):
-            let bodyEncoding = URLEncoding.httpBody
-            let bodyfulRequest = try request.encoded(parameters: bodyParameters, parameterEncoding: bodyEncoding)
-            if let encoding = self.parameterEncoding as? URLEncoding, encoding.destination == .httpBody {
-                fatalError("With this type of request you cannot use httpBody destination for parameters, use .parameters type instead")
-            }
-            request = try bodyfulRequest.encoded(parameters: urlParameters, parameterEncoding: self.parameterEncoding)
         }
+        
+        // url encoding
+        if urlParameterEncoding.destination == .httpBody {
+            fatalError("Cannot use 'httpBody' URLEncoding's destination. To encode body use BodyEncoding instead instead")
+        }
+        if let urlParameters = try self.urlParameters() {
+            request = try request.encoded(parameters: urlParameters, parameterEncoding: urlParameterEncoding)
+        }
+        
         return request
     }
     
@@ -234,7 +223,7 @@ extension Request {
             }
         }
         var string = "REQUEST URL: \(self.service.baseUrl)\(self.service.path)\nMETHOD:\(self.method.rawValue)\nHEADERS:\(self.headers ?? [:]))"
-        if let params = try? self.parameters() {
+        if let params = try? self.urlParameters() {
             if let params = params {
                 string.append("\nPARAMETERS:\(params)")
             }

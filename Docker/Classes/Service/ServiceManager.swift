@@ -38,13 +38,16 @@ open class ServiceManager: Singleton, Initializable {
         }
         
         switch serviceCall.request.type {
-        case .simple, .bodyData, .jsonEncodableBody, .parameters, .bodyDataAndParameters, .encodedBodyAndParameters:
+        case .data:
             try request(serviceCall: serviceCall)
-        case .uploadFile(let file):
-            try upload(serviceCall: serviceCall, fileURL: file)
-        case .uploadMultipart(), .uploadMultipartWithParameters(_):
-            try uploadMultipart(serviceCall: serviceCall)
-        case .download(let destination), .downloadWithParameters(_, let destination):
+        case .upload(let uploadType):
+            switch uploadType {
+            case .file(let fileUrl):
+                try upload(serviceCall: serviceCall, fileURL: fileUrl)
+            case .multipart:
+                try uploadMultipart(serviceCall: serviceCall)
+            }
+        case .download(let destination):
             try download(serviceCall: serviceCall, to: destination)
         }
     }

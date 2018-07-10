@@ -61,13 +61,17 @@ class PostResourceRequest: Request {
         super.init()
         self.service = ResourcesService()
         self.headers = ["Content-Type":"application/json", "Accept":"application/json"]
-        self.type = .jsonEncodableBody(resource, encoder: nil)
+        self.bodyEncoding = .json(JSONEncoder())
         self.method = .post
         self.demoSuccessFileName = "addResource.json"
     }
     
     override func responseClass() -> Response.Type {
         return PostResourceResponse.self
+    }
+    
+    override func bodyParameters() throws -> Encodable? {
+        return self.resource
     }
 }
 
@@ -103,7 +107,6 @@ class GetResourceByIdRequest: Request {
         self.service = ResourceService()
         self.headers = ["Accept":"application/json"]
         self.demoSuccessFileName = "addResource.json"
-        self.parameterEncoding = URLEncoding(destination: .queryString, arrayEncoding: .brackets, boolEncoding: .literal)
     }
     
     override func responseClass() -> Response.Type {
@@ -145,7 +148,7 @@ class UploadRequest: Request {
         self.service = UploadService()
         self.headers = ["Content-Type":"application/x-www-form-urlencoded"]
         self.multipartBodyParts = try! getParts()
-        self.type = .uploadMultipart()
+        self.type = .upload(.multipart)
     }
     
     override func responseClass() -> Response.Type {

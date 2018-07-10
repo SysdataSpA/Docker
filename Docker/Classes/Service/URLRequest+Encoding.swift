@@ -9,7 +9,23 @@ import Foundation
 
 internal extension URLRequest {
     
-    mutating func encoded(encodable: Encodable, encoder: JSONEncoder = JSONEncoder()) throws -> URLRequest {
+    mutating func encoded(encodable: Encodable, encoder: PropertyListEncoder) throws -> URLRequest {
+        do {
+            let encodable = EncodableWrapper(encodable)
+            httpBody = try encoder.encode(encodable)
+            
+            let contentTypeHeaderName = "Content-Type"
+            if value(forHTTPHeaderField: contentTypeHeaderName) == nil {
+                setValue("application/x-plist", forHTTPHeaderField: contentTypeHeaderName)
+            }
+            
+            return self
+        } catch {
+            throw DockerError.encoding(error)
+        }
+    }
+    
+    mutating func encoded(encodable: Encodable, encoder: JSONEncoder) throws -> URLRequest {
         do {
             let encodable = EncodableWrapper(encodable)
             httpBody = try encoder.encode(encodable)

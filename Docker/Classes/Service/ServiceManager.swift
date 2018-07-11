@@ -284,19 +284,16 @@ public class ServiceCall : NSObject {
     var numOfAutomaticRetry: UInt = 0
     var isProcessing: Bool = false
     
-    public init(with service: Service, request: Request, progressBlock: ProgressHandler?, completion: @escaping ServiceCompletion) {
-        self.service = service
+    public init(with request: Request, service: Service? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion) {
+        if let service = service {
+            self.service = service
+        } else {
+            self.service = request.service
+        }
+        
         self.request = request
         self.completion = completion
         self.progressBlock = progressBlock
         super.init()
-    }
-    
-    public convenience init(with request: Request, progressBlock: ProgressHandler?, completion: @escaping ServiceCompletion) {
-        self.init(with: request.service, request: request, progressBlock: progressBlock, completion: completion)
-    }
-    
-    public convenience init(with request: Request, completion: @escaping ServiceCompletion) {
-        self.init(with: request.service, request: request, progressBlock: nil, completion: completion)
     }
 }

@@ -36,7 +36,7 @@ class ExampleServiceManager: ServiceManager {
     
     func getResources(completion: @escaping (Response) -> Void) {
         let request = GetResourcesRequest()
-        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
+        let serviceCall = ServiceCall(with: request) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)
@@ -44,7 +44,7 @@ class ExampleServiceManager: ServiceManager {
     
     func postResource(_ resource:Resource, completion: @escaping (Response) -> Void) {
         let request = PostResourceRequest(resource: resource)
-        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
+        let serviceCall = ServiceCall(with: request) { (response) in
             completion(response)
         }
         try! call(with: serviceCall)
@@ -52,7 +52,7 @@ class ExampleServiceManager: ServiceManager {
     
     func getResource(with id: Int, completion: @escaping (Response) -> Void) {
         let request = GetResourceByIdRequest(with: id)
-        let serviceCall = ServiceCall(with: request.service, request: request, progressBlock: nil) { (response) in
+        let serviceCall = ServiceCall(with: request) { (response) in
             completion(response)
         }
         do {

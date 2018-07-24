@@ -13,7 +13,7 @@ import Blabber
 #endif
 
 open class ServiceManager: Singleton, Initializable {
-
+    
     let responseQueue = DispatchQueue(label: "com.sysdata.docker.serializing", qos: .background, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.inherit, target: nil)
     var servicesQueue = [ServiceCall]()
     open var defaultSessionManager: SessionManager
@@ -104,7 +104,7 @@ open class ServiceManager: Singleton, Initializable {
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
-                response.error = DockerError.underlying(error, nil)
+                response.error = DockerError.underlying(error, nil, response.httpStatusCode)
             }
         }
     }
@@ -149,13 +149,13 @@ open class ServiceManager: Singleton, Initializable {
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
             case let (.some(urlResponse), _, .some(error)):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                response.error = DockerError.underlying(error, urlResponse)
+                response.error = DockerError.underlying(error, urlResponse, response.httpStatusCode)
             case let (_, _, .some(error)):
                 response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: urlResponse)
-                response.error = DockerError.underlying(error, nil)
+                response.error = DockerError.underlying(error, nil, response.httpStatusCode)
             default:
-                let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil)
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
+                let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil, response.httpStatusCode)
                 response.error = error
             }
             self?.completeServiceCall(serviceCall, with: response)
@@ -166,15 +166,6 @@ open class ServiceManager: Singleton, Initializable {
         finalRequest.resume()
     }
     
-    private func manageError(_ error: DockerError, with urlResponse: HTTPURLResponse?) {
-        switch error {
-        case .underlying(let nsError as NSError, .none):
-            if nsError.code != NSURLErrorCancelled {
-                
-            }
-        default: break
-        }
-    }
     
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         response.decode()
@@ -210,6 +201,9 @@ extension ServiceManager {
         DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + waitingTime) { [weak self] in
             let responseClass = serviceCall.request.responseClass()
             let response = responseClass.init(statusCode: statusCode, data: data, request: serviceCall.request)
+            if !success {
+                response.error = DockerError.underlying(AFError.responseValidationFailed(reason: .unacceptableStatusCode(code: statusCode)), nil, statusCode)
+            }
             self?.completeServiceCall(serviceCall, with: response)
         }
     }

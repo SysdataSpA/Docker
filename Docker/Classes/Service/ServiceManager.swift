@@ -14,7 +14,6 @@ import Blabber
 
 open class ServiceManager: Singleton, Initializable {
     
-    let responseQueue = DispatchQueue(label: "com.sysdata.docker.serializing", qos: .background, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.inherit, target: nil)
     var servicesQueue = [ServiceCall]()
     open var defaultSessionManager: SessionManager
     
@@ -170,9 +169,7 @@ open class ServiceManager: Singleton, Initializable {
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         response.decode()
         SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
-        DispatchQueue.main.async { [weak self] in
-            serviceCall.completion(response)
-        }
+        serviceCall.completion(response)
         remove(serviceCall)
     }
     
@@ -204,7 +201,9 @@ extension ServiceManager {
             if !success {
                 response.error = DockerError.underlying(AFError.responseValidationFailed(reason: .unacceptableStatusCode(code: statusCode)), nil, statusCode)
             }
-            self?.completeServiceCall(serviceCall, with: response)
+            DispatchQueue.main.async { [weak self] in
+                self?.completeServiceCall(serviceCall, with: response)
+            }
         }
     }
     

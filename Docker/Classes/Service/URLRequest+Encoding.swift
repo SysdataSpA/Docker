@@ -32,7 +32,7 @@ internal extension URLRequest {
             
             let contentTypeHeaderName = "Content-Type"
             if value(forHTTPHeaderField: contentTypeHeaderName) == nil {
-                setValue("application/json", forHTTPHeaderField: contentTypeHeaderName)
+                setValue("application/json; charset=UTF-8", forHTTPHeaderField: contentTypeHeaderName)
             }
             
             return self

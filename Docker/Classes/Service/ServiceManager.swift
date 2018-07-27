@@ -53,7 +53,8 @@ open class ServiceManager: Singleton, Initializable {
     
     private func request(serviceCall: ServiceCall) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        SDLogModuleVerbose(serviceCall.request.description, module: DockerServiceLogModuleName)
+        serviceCall.request.urlRequest = urlRequest
+        SDLogModuleInfo("Service Manager: start \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         var request = serviceCall.service.sessionManager.request(urlRequest as URLRequestConvertible)
         request = request.validate()
         sendRequest(request: request, serviceCall: serviceCall)
@@ -61,7 +62,8 @@ open class ServiceManager: Singleton, Initializable {
     
     private func upload(serviceCall: ServiceCall, fileURL: URL) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        SDLogModuleVerbose(serviceCall.request.description, module: DockerServiceLogModuleName)
+        serviceCall.request.urlRequest = urlRequest
+        SDLogModuleInfo("Service Manager: start upload \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         var request = serviceCall.service.sessionManager.upload(fileURL, with: urlRequest as URLRequestConvertible)
         request = request.validate()
         sendRequest(request: request, serviceCall: serviceCall)
@@ -93,7 +95,8 @@ open class ServiceManager: Singleton, Initializable {
         }
         
         let urlRequest = try serviceCall.request.asUrlRequest()
-        SDLogModuleVerbose(serviceCall.request.description, module: DockerServiceLogModuleName)
+        serviceCall.request.urlRequest = urlRequest
+        SDLogModuleInfo("Service Manager: start upload multipart \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         
         serviceCall.service.sessionManager.upload(multipartFormData: multipartFormData, with: urlRequest) { [weak self] (result) in
             switch result {
@@ -110,7 +113,8 @@ open class ServiceManager: Singleton, Initializable {
     
     private func download(serviceCall: ServiceCall, to destination: @escaping DownloadRequest.DownloadFileDestination) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        SDLogModuleVerbose(serviceCall.request.description, module: DockerServiceLogModuleName)
+        serviceCall.request.urlRequest = urlRequest
+        SDLogModuleInfo("Service Manager: start download \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         var request = serviceCall.service.sessionManager.download(urlRequest as URLRequestConvertible, to: destination)
         request = request.validate()
         sendRequest(request: request, serviceCall: serviceCall)
@@ -168,7 +172,9 @@ open class ServiceManager: Singleton, Initializable {
     
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         response.decode()
-        SDLogModuleVerbose(response.description, module: DockerServiceLogModuleName)
+        SDLogModuleInfo("\nService Manager: complete service with \(response.shortDescription)", module: DockerServiceLogModuleName)
+        SDLogModuleVerbose("--------------------------------\n\(serviceCall.request.description)", module: DockerServiceLogModuleName)
+        SDLogModuleVerbose("--------------------------------\n\(response.description)", module: DockerServiceLogModuleName)
         serviceCall.completion(response)
         remove(serviceCall)
     }

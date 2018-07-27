@@ -10,13 +10,13 @@ import Alamofire
 
 /// Represents an HTTP task.
 public enum RequestType {
-   
+    
     /// A request to send or receive data
     case data
-
+    
     /// A file upload task.
     case upload(RequestType.UploadType)
-
+    
     /// A file download task to a destination.
     case download(DownloadFileDestination)
     
@@ -68,6 +68,8 @@ public protocol RequestProtocol {
     var service: Service { get set }
     var type: RequestType { get set }
     var multipartBodyParts: [MultipartBodyPart]? { get set }
+    var urlRequest: URLRequest? { get set }
+    
     
     // Demo Mode Variables
     var useDemoMode: Bool { get set }
@@ -93,6 +95,8 @@ open class Request: NSObject, RequestProtocol {
     open var urlParameterEncoding: URLEncoding
     open var bodyEncoding: BodyEncoding
     open var type: RequestType
+    open var urlRequest: URLRequest?
+    
     
     //Demo mode
     open var useDemoMode: Bool
@@ -201,7 +205,7 @@ open class Request: NSObject, RequestProtocol {
         }
         return nil
     }
-
+    
     private func findPathParam(with name:String, in parameters: [String:Any]?) throws -> String {
         guard let parameters = parameters else {
             throw DockerError.pathParameterNotFound(self, name)
@@ -217,7 +221,7 @@ open class Request: NSObject, RequestProtocol {
 extension Request {
     open override var description: String {
         var body: String? = nil
-        if let httpBody = try? self.asUrlRequest().httpBody {
+        if let httpBody = try? self.urlRequest?.httpBody {
             if let httpBody = httpBody {
                 body = String(data: httpBody, encoding: .utf8)
             }
@@ -230,6 +234,17 @@ extension Request {
         }
         if let body = body {
             string.append("\nBODY:\n\(body)")
+        }
+        return string
+    }
+    
+    open var shortDescription: String {
+        var string = "REQUEST \(self.method.rawValue)"
+        if let url = try? self.urlRequest?.url?.absoluteString ?? "" {
+            string.append(" at \(url)")
+        }
+        else{
+            string.append(" at \(self.service.path)")
         }
         return string
     }
@@ -264,6 +279,9 @@ open class Response: CustomStringConvertible {
         if received {
             if let url = try? request.buildURL() {
                 d.append("RESPONSE RECEIVED - URL= \(url)")
+                if let resp = response{
+                    d.append("\nSTATUS CODE: \(resp.statusCode)\nHEADERS: \(resp.allHeaderFields as? [String:String])")
+                }
                 if data.count > 0 {
                     if let body = String(data: data, encoding: .utf8) {
                         d.append("\nBODY=\n\(body)")
@@ -274,6 +292,13 @@ open class Response: CustomStringConvertible {
             d.append("RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)")
         }
         return d
+    }
+    
+    public var shortDescription: String {
+        if let resp = response, let url = resp.url?.absoluteString  {
+            return "RESPONSE RECEIVED - URL= \(url) STATUS CODE:\(resp.statusCode)"
+        }
+        return "RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)"
     }
     
     // MARK: JSON Decode

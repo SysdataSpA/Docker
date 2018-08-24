@@ -321,11 +321,11 @@ open class DownloadResponse: Response {
                 let data = try Data(contentsOf: localURL)
                 value = UIImage(data: data)
             } else {
-                SDLogModuleWarning("localURL not defined", module: DockerServiceLogModuleName)
+                SDLogModuleWarning("🌍⚠️ localURL not defined", module: DockerServiceLogModuleName)
             }
         } catch let err  {
             self.error = err
-            SDLogModuleError(err.localizedDescription, module: DockerServiceLogModuleName)
+            SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
         }
     }
     
@@ -334,11 +334,11 @@ open class DownloadResponse: Response {
             if let localURL = localURL {
                 value = try String(contentsOf: localURL, encoding: .utf8)
             } else {
-                SDLogModuleWarning("localURL not defined", module: DockerServiceLogModuleName)
+                SDLogModuleWarning("🌍⚠️ localURL not defined", module: DockerServiceLogModuleName)
             }
         } catch let err  {
             self.error = err
-            SDLogModuleError(err.localizedDescription, module: DockerServiceLogModuleName)
+            SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
         }
     }
 }

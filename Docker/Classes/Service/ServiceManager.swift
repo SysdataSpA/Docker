@@ -12,12 +12,12 @@ import Alamofire
 import Blabber
 #endif
 
-open class ServiceManager: Singleton, Initializable {
+open class ServiceManager { // : Singleton, Initializable
     
     var servicesQueue = [ServiceCall]()
     open var defaultSessionManager: SessionManager
     
-    public static var _shared: Singleton?
+//    public static var _shared: Singleton?
     
     open var useDemoMode:Bool = false
     open var timeBeforeRetry: TimeInterval = 3.0

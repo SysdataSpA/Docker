@@ -91,7 +91,7 @@ open class Request: NSObject, RequestProtocol {
     open var service: Service
     open var multipartBodyParts: [MultipartBodyPart]?
     open var method: HTTPMethod
-    open var headers: [String : String]?
+    open var headers: [String: String]?
     open var urlParameterEncoding: URLEncoding
     open var bodyEncoding: BodyEncoding
     open var type: RequestType
@@ -129,7 +129,7 @@ open class Request: NSObject, RequestProtocol {
         return Response.self
     }
     
-    open func urlParameters() throws -> [String : Any]? {
+    open func urlParameters() throws -> [String: Any]? {
         return nil
     }
     
@@ -137,7 +137,7 @@ open class Request: NSObject, RequestProtocol {
         return nil
     }
     
-    open func pathParameters() throws -> [String : Any]? {
+    open func pathParameters() throws -> [String: Any]? {
         return nil
     }
     
@@ -169,9 +169,6 @@ open class Request: NSObject, RequestProtocol {
         }
         
         // url encoding
-        if urlParameterEncoding.destination == .httpBody {
-            fatalError("Cannot use 'httpBody' URLEncoding's destination. To encode body use BodyEncoding instead instead")
-        }
         if let urlParameters = try self.urlParameters() {
             request = try request.encoded(parameters: urlParameters, parameterEncoding: urlParameterEncoding)
         }
@@ -270,7 +267,7 @@ open class Response: CustomStringConvertible {
     public var description: String {
         var received = false
         var d = ""
-        if let value = value, let response = response {
+        if let response = response {
             received = true
         } else if request.sentInDemoMode {
             received = true

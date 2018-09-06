@@ -254,8 +254,12 @@ open class Response: CustomStringConvertible {
     public var data: Data
     public var value: Any?
     public var error: Error?
-    public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.secondsSince1970
-    public var dataDecodingStrategy = JSONDecoder.DataDecodingStrategy.base64
+    open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
+        return JSONDecoder.DateDecodingStrategy.secondsSince1970
+    }
+    open var dataDecodingStrategy : JSONDecoder.DataDecodingStrategy {
+        return JSONDecoder.DataDecodingStrategy.base64
+    }
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode

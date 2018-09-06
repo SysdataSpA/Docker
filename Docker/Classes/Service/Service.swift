@@ -254,6 +254,8 @@ open class Response: CustomStringConvertible {
     public var data: Data
     public var value: Any?
     public var error: Error?
+    public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.secondsSince1970
+    public var dataDecodingStrategy = JSONDecoder.DataDecodingStrategy.base64
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode
@@ -301,7 +303,10 @@ open class Response: CustomStringConvertible {
     // MARK: JSON Decode
     open func decodeJSON<T:Decodable>(with type: T.Type) {
         do {
-            value = try JSONDecoder().decode(type, from: data)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = self.dateDecodingStrategy
+            decoder.dataDecodingStrategy = self.dataDecodingStrategy
+            value = try decoder.decode(type, from: data)
         } catch let err {
             self.error = err
         }

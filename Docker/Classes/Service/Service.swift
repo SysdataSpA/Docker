@@ -97,6 +97,12 @@ open class Request: NSObject, RequestProtocol {
     open var type: RequestType
     open var urlRequest: URLRequest?
     
+    open var dateEncodingStrategy : JSONEncoder.DateEncodingStrategy {
+        return JSONEncoder.DateEncodingStrategy.secondsSince1970
+    }
+    open var dataEncodingStrategy : JSONEncoder.DataEncodingStrategy {
+        return JSONEncoder.DataEncodingStrategy.base64
+    }
     
     //Demo mode
     open var useDemoMode: Bool
@@ -114,7 +120,8 @@ open class Request: NSObject, RequestProtocol {
         self.method = .get
         self.type = .data
         self.urlParameterEncoding = URLEncoding.queryString
-        self.bodyEncoding = .json( JSONEncoder() )
+        let jsonEncoder = JSONEncoder()
+        self.bodyEncoding = .json( jsonEncoder )
         
         // Demo mode
         self.useDemoMode = false
@@ -123,6 +130,10 @@ open class Request: NSObject, RequestProtocol {
         self.demoSuccessStatusCode = 200
         self.demoFailureStatusCode = 400
         self.demoFailureChance = 0.0
+        
+        super.init()
+        jsonEncoder.dateEncodingStrategy = self.dateEncodingStrategy
+        jsonEncoder.dataEncodingStrategy = self.dataEncodingStrategy
     }
     
     open func responseClass() -> Response.Type {

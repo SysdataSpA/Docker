@@ -69,7 +69,8 @@ public protocol RequestProtocol {
     var type: RequestType { get set }
     var multipartBodyParts: [MultipartBodyPart]? { get set }
     var urlRequest: URLRequest? { get set }
-    
+    var useDifferentResponseForErrors: Bool { get set }
+    var httpErrorStatusCodeRange: ClosedRange<Int> { get set } 
     
     // Demo Mode Variables
     var useDemoMode: Bool { get set }
@@ -96,6 +97,8 @@ open class Request: NSObject, RequestProtocol {
     open var bodyEncoding: BodyEncoding
     open var type: RequestType
     open var urlRequest: URLRequest?
+    open var useDifferentResponseForErrors: Bool
+    open var httpErrorStatusCodeRange: ClosedRange<Int>
     
     open var dateEncodingStrategy : JSONEncoder.DateEncodingStrategy {
         return JSONEncoder.DateEncodingStrategy.secondsSince1970
@@ -122,6 +125,8 @@ open class Request: NSObject, RequestProtocol {
         self.urlParameterEncoding = URLEncoding.queryString
         let jsonEncoder = JSONEncoder()
         self.bodyEncoding = .json( jsonEncoder )
+        self.useDifferentResponseForErrors = false
+        self.httpErrorStatusCodeRange = 400...499
         
         // Demo mode
         self.useDemoMode = false
@@ -264,6 +269,7 @@ open class Response: CustomStringConvertible {
     public var httpStatusCode: Int
     public var data: Data
     public var value: Any?
+    public var errorValue: Any?
     public var error: Error?
     open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
         return JSONDecoder.DateDecodingStrategy.secondsSince1970
@@ -280,6 +286,8 @@ open class Response: CustomStringConvertible {
     }
     
     open func decode() { value = data }
+    
+    open func decodeError() { errorValue = data }
     
     public var description: String {
         var received = false
@@ -316,15 +324,16 @@ open class Response: CustomStringConvertible {
     }
     
     // MARK: JSON Decode
-    open func decodeJSON<T:Decodable>(with type: T.Type) {
+    open func decodeJSON<T:Decodable>(with type: T.Type) -> Any? {
         do {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = self.dateDecodingStrategy
             decoder.dataDecodingStrategy = self.dataDecodingStrategy
-            value = try decoder.decode(type, from: data)
+            return try decoder.decode(type, from: data)
         } catch let err {
             self.error = err
         }
+        return nil
     }
 }
 

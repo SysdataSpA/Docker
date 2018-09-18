@@ -17,7 +17,7 @@ open class ServiceManager { // : Singleton, Initializable
     var servicesQueue = [ServiceCall]()
     open var defaultSessionManager: SessionManager
     
-//    public static var _shared: Singleton?
+    //    public static var _shared: Singleton?
     
     open var useDemoMode:Bool = false
     open var timeBeforeRetry: TimeInterval = 3.0
@@ -172,12 +172,17 @@ open class ServiceManager { // : Singleton, Initializable
     
     fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         if let error = response.error {
-            SDLogModuleInfo("🌍‼️ Service Manager: complete service with error \(error)", module: DockerServiceLogModuleName)
+            SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
         }
-        response.decode()
-        SDLogModuleInfo("🌍 Service Manager: complete service with \(response.shortDescription)", module: DockerServiceLogModuleName)
-        SDLogModuleVerbose("🌍 \(serviceCall.request.description)", module: DockerServiceLogModuleName)
-        SDLogModuleVerbose("🌍 \(response.description)", module: DockerServiceLogModuleName)
+        if serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode) {
+            // errori da mappare eventualmente
+            SDLogModuleInfo("🌍‼️ Trying to map error response", module: DockerServiceLogModuleName)
+            response.decodeError()
+        } else {
+            response.decode()
+        }
+        SDLogModuleInfo("🌍 Service completed with response \(response.shortDescription)", module: DockerServiceLogModuleName)
+        SDLogModuleVerbose("🌍🌍🌍🌍🌍\n\(serviceCall.request.description)\n\(response.description)\n🌍🌍🌍🌍🌍", module: DockerServiceLogModuleName)
         serviceCall.completion(response)
         remove(serviceCall)
     }

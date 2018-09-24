@@ -170,7 +170,7 @@ open class ServiceManager { // : Singleton, Initializable
     }
     
     
-    fileprivate func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
+    open func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
         if let error = response.error {
             SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
         }

@@ -9,6 +9,8 @@ import Foundation
 import Alamofire
 
 public typealias SessionManager = Alamofire.SessionManager
+public typealias ServerTrustPolicy = Alamofire.ServerTrustPolicy
+public typealias ServerTrustPolicyManager = Alamofire.ServerTrustPolicyManager
 public typealias ParameterEncoding = Alamofire.ParameterEncoding
 public typealias URLEncoding = Alamofire.URLEncoding
 public typealias HTTPMethod = Alamofire.HTTPMethod

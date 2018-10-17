@@ -717,7 +717,7 @@
         NSString* lastUpdated = [dictionary valueForKey:@"Last-Modified"];
         NSString* contentLenght = [dictionary valueForKey:@"Content-Length"];
         
-        if (contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
+        if (contentLenght && contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
         {
             SDLogModuleWarning(kDownloadManagerLogModuleName, @"SDDownloadManager: check update (head request) - resource empty or too small at URL: %@", urlString);
             NSDictionary* userInfo = @{ DOWNLOAD_OPERATION_INFO_RESULT_TYPE:@(DownloadOperationResultDownloadedNewFailed) };
@@ -789,8 +789,7 @@
             {
                 NSDictionary* dictionary = [operation.response allHeaderFields];
                 NSString* contentLenght = [dictionary valueForKey:@"Content-Length"];
-                
-                if (contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
+                if (contentLenght && contentLenght.intValue < CONTENT_LENGTH_EMPTY_IMAGE)
                 {
                     SDLogModuleWarning(kDownloadManagerLogModuleName, @"SDDownloadManager: download new - resource empty or too small at URL: %@", urlString);
                     NSDictionary* userInfo = @{ DOWNLOAD_OPERATION_INFO_RESULT_TYPE:@(DownloadOperationResultDownloadedNewFailed) };
@@ -1330,12 +1329,12 @@
     [self countDownloadSizeForResourceAtUrls:urlStrings options:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(SDDownloadOptions*)options completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(NSArray<SDDownloadOptions*>*)options completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
     [self countDownloadSizeForResourceAtUrls:urlStrings options:options progress:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(SDDownloadOptions*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>*)urlStrings options:(NSArray<SDDownloadOptions*>*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
     self.checkSizeElementsProcessing = YES;
     self.checkSizeCompletion = completion;
@@ -1347,13 +1346,19 @@
     self.downloadElementsRemainingSize = 0;
     self.downloadOperationExpectedQueueCount = 0;
     
-    for (NSString* urlString in urlStrings)
+    for (int i=0; i<urlStrings.count; i++)
     {
+        NSString* urlString = urlStrings[i];
+        SDDownloadOptions* downloadOption;
+        if(i<options.count)
+        {
+            downloadOption = options[i];
+        }
         NSURL* url = [self encodedUrlFromString:urlString];
         NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
         request.timeoutInterval = self.timeoutInterval;
         
-        [self countDownloadSizeForWithRequest:request options:options];
+        [self countDownloadSizeForWithRequest:request options:downloadOption];
     }
 }
 
@@ -1362,18 +1367,13 @@
     [self countDownloadSizeForResourceWithRequests:requests options:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(SDDownloadOptions*)options completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(NSArray<SDDownloadOptions*>*)options completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
     [self countDownloadSizeForResourceWithRequests:requests options:options progress:nil completion:completion];
 }
 
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(SDDownloadOptions*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>*)requests options:(NSArray<SDDownloadOptions*>*)options progress:(SDDownloadManagerCheckSizeCompletion)progress completion:(SDDownloadManagerCheckSizeCompletion)completion
 {
-    if (!options)
-    {
-        options = [SDDownloadOptions new];
-    }
-    
     self.checkSizeElementsProcessing = YES;
     self.checkSizeCompletion = completion;
     self.checkSizeProgressHandler = progress;
@@ -1384,9 +1384,15 @@
     self.downloadElementsRemainingSize = 0;
     self.downloadOperationExpectedQueueCount = 0;
     
-    for (NSMutableURLRequest* request in requests)
+    for (int i=0; i<requests.count; i++)
     {
-        [self countDownloadSizeForWithRequest:request options:options];
+        NSMutableURLRequest* request = requests[i];
+        SDDownloadOptions* downloadOption;
+        if(i<options.count)
+        {
+            downloadOption = options[i];
+        }
+        [self countDownloadSizeForWithRequest:request options:downloadOption];
     }
 }
 
@@ -1568,4 +1574,5 @@
 }
 
 @end
+
 

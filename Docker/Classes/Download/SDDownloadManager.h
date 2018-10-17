@@ -303,13 +303,13 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *  @param urlStrings         urls of resources to download
  *  @param options            options to use
  */
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(NSArray<SDDownloadOptions*>* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(NSArray<SDDownloadOptions*>* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(NSArray<SDDownloadOptions*>* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(NSArray<SDDownloadOptions*>* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 
 /**
@@ -359,4 +359,5 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 - (NSURL* _Nullable) encodedUrlFromString:(NSString* _Nonnull)urlString;
 
 @end
+
 

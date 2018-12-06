@@ -283,9 +283,9 @@ extension ServiceManager {
 public typealias ServiceCompletion = (Response) -> Void
 
 public class ServiceCall : NSObject {
-    let service: Service
-    var request: Request
-    var response: Response?
+    open let service: Service
+    open var request: Request
+    open var response: Response?
     let completion: ServiceCompletion
     let progressBlock: ProgressHandler?
     var numOfAutomaticRetry: UInt = 0

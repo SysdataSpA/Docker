@@ -68,7 +68,7 @@ public protocol RequestProtocol {
     var service: Service { get set }
     var type: RequestType { get set }
     var multipartBodyParts: [MultipartBodyPart]? { get set }
-    var urlRequest: URLRequest? { get set }
+    var urlRequest: URLRequest? { get }
     var useDifferentResponseForErrors: Bool { get set }
     var httpErrorStatusCodeRange: ClosedRange<Int> { get set } 
     
@@ -86,6 +86,10 @@ public protocol RequestProtocol {
     func urlParameters() throws -> [String:Any]?
     func bodyParameters() throws -> Encodable?
     func pathParameters() throws -> [String:Any]?
+    
+    func suspend()
+    func resume()
+    func cancel()
 }
 
 open class Request: NSObject, RequestProtocol {
@@ -96,7 +100,11 @@ open class Request: NSObject, RequestProtocol {
     open var urlParameterEncoding: URLEncoding
     open var bodyEncoding: BodyEncoding
     open var type: RequestType
-    open var urlRequest: URLRequest?
+    internal var internalRequest: Alamofire.Request?
+    open var urlRequest: URLRequest? {
+        return internalRequest?.request
+    }
+    
     open var useDifferentResponseForErrors: Bool
     open var httpErrorStatusCodeRange: ClosedRange<Int>
     
@@ -262,6 +270,21 @@ extension Request {
         return string
     }
 }
+//MARK: Alamofire forwarding
+extension Request {
+    public func suspend() {
+        internalRequest?.suspend()
+    }
+    
+    public func resume() {
+        internalRequest?.resume()
+    }
+    
+    public func cancel() {
+        internalRequest?.cancel()
+    }
+}
+
 
 open class Response: CustomStringConvertible {
     public var request: Request

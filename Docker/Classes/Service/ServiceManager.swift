@@ -51,19 +51,17 @@ open class ServiceManager { // : Singleton, Initializable
     
     private func request(serviceCall: ServiceCall) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        serviceCall.request.urlRequest = urlRequest
         SDLogModuleInfo("🌍▶️ Service Manager: start \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
-        var request = serviceCall.service.sessionManager.request(urlRequest as URLRequestConvertible)
-        request = request.validate()
+        let request = serviceCall.service.sessionManager.request(urlRequest as URLRequestConvertible).validate()
+        serviceCall.request.internalRequest = request
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
     private func upload(serviceCall: ServiceCall, fileURL: URL) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        serviceCall.request.urlRequest = urlRequest
         SDLogModuleInfo("🌍▶️ Service Manager: start upload \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
-        var request = serviceCall.service.sessionManager.upload(fileURL, with: urlRequest as URLRequestConvertible)
-        request = request.validate()
+        var request = serviceCall.service.sessionManager.upload(fileURL, with: urlRequest as URLRequestConvertible).validate()
+        serviceCall.request.internalRequest = request
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
@@ -93,13 +91,13 @@ open class ServiceManager { // : Singleton, Initializable
         }
         
         let urlRequest = try serviceCall.request.asUrlRequest()
-        serviceCall.request.urlRequest = urlRequest
         SDLogModuleInfo("🌍▶️ Service Manager: start upload multipart \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         
         serviceCall.service.sessionManager.upload(multipartFormData: multipartFormData, with: urlRequest) { [weak self] (result) in
             switch result {
             case .success(let request, _, _):
                 request.validate()
+                serviceCall.request.internalRequest = request
                 self?.sendRequest(request: request, serviceCall: serviceCall)
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
@@ -111,10 +109,9 @@ open class ServiceManager { // : Singleton, Initializable
     
     private func download(serviceCall: ServiceCall, to destination: @escaping DownloadRequest.DownloadFileDestination) throws {
         let urlRequest = try serviceCall.request.asUrlRequest()
-        serviceCall.request.urlRequest = urlRequest
         SDLogModuleInfo("🌍▶️ Service Manager: start download \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
-        var request = serviceCall.service.sessionManager.download(urlRequest as URLRequestConvertible, to: destination)
-        request = request.validate()
+        var request = serviceCall.service.sessionManager.download(urlRequest as URLRequestConvertible, to: destination).validate()
+        serviceCall.request.internalRequest = request
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
@@ -222,17 +219,15 @@ extension ServiceManager {
     private func findDemoFilePath(with serviceCall:ServiceCall, forSuccess success:Bool) throws -> String {
         let filename: String
         if success {
-            if let file = serviceCall.request.demoSuccessFileName {
-                filename = file
-            } else {
+            guard let file = serviceCall.request.demoSuccessFileName else {
                 throw DockerError.nilSuccessDemoFile(serviceCall)
             }
+            filename = file
         } else {
-            if let file = serviceCall.request.demoFailureFileName {
-                filename = file
-            } else {
-                throw DockerError.nilFailureDemoFile(serviceCall)
+            guard let file = serviceCall.request.demoFailureFileName else {
+               throw DockerError.nilFailureDemoFile(serviceCall)
             }
+            filename = file
         }
         
         guard let path = serviceCall.request.demoFilesBundle.path(forResource: filename, ofType: nil) else {

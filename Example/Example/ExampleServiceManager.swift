@@ -25,6 +25,8 @@ struct NestedObject: Codable {
 
 class ExampleServiceManager: ServiceManager {
     
+    public static var shared = ServiceManager()
+    
     required init() {
         super.init()
         let configuration = URLSessionConfiguration.default

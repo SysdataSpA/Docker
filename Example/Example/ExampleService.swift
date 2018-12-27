@@ -23,7 +23,7 @@ class ResourcesService: Service {
     }
     
     override var sessionManager: SessionManager {
-        return ExampleServiceManager.shared().defaultSessionManager
+        return ExampleServiceManager.shared.defaultSessionManager
     }
 }
 
@@ -44,7 +44,7 @@ class GetResourcesRequest: Request {
 class GetResourcesResponse: Response {
     
     override func decode() {
-        decodeJSON(with: [Resource].self)
+        value = decodeJSON(with: [Resource].self)
     }
 }
 
@@ -78,7 +78,7 @@ class PostResourceRequest: Request {
 class PostResourceResponse: Response {
 
     override func decode() {
-        decodeJSON(with: Resource.self)
+        value = decodeJSON(with: Resource.self)
     }
 }
 
@@ -92,7 +92,7 @@ class ResourceService: Service {
     }
     
     override var sessionManager: SessionManager {
-        return ExampleServiceManager.shared().defaultSessionManager
+        return ExampleServiceManager.shared.defaultSessionManager
     }
 }
 
@@ -121,7 +121,7 @@ class GetResourceByIdRequest: Request {
 class GetResourceByIdResponse: Response {
     
     override func decode() {
-        decodeJSON(with: Resource.self)
+        value = decodeJSON(with: Resource.self)
     }
 }
 
@@ -134,7 +134,7 @@ class UploadService: Service {
     }
     
     override var sessionManager: SessionManager {
-        return ExampleServiceManager.shared().defaultSessionManager
+        return ExampleServiceManager.shared.defaultSessionManager
     }
 }
 
@@ -182,7 +182,7 @@ class DownloadService: Service {
     }
     
     override var sessionManager: SessionManager {
-        return ExampleServiceManager.shared().defaultSessionManager
+        return ExampleServiceManager.shared.defaultSessionManager
     }
 }
 

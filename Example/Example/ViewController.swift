@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    let serviceManager = ExampleServiceManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -22,33 +24,34 @@ class ViewController: UIViewController {
 
     
     @IBAction func toggleDemoMode(_ sender: UISwitch) {
-        ExampleServiceManager.shared().useDemoMode = sender.isOn
+        serviceManager.useDemoMode = sender.isOn
     }
     
     @IBAction func getResources(_ sender: Any) {
-        ExampleServiceManager.shared().getResources { (response) in
+        serviceManager.getResources { (response) in
+            
         }
     }
     
     @IBAction func postResource(_ sender: Any) {
         let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
-        ExampleServiceManager.shared().postResource(resource) { (response) in
+            serviceManager.postResource(resource) { (response) in
 
         }
     }
     
     @IBAction func getResourceById(_ sender: Any) {
-        ExampleServiceManager.shared().getResource(with: 1) { (response) in
+        serviceManager.getResource(with: 1) { (response) in
         }
     }
     
     @IBAction func uploadFile(_ sender: Any) {
-        ExampleServiceManager.shared().uploadImage { (response) in
+        serviceManager.uploadImage { (response) in
         }
     }
     
     @IBAction func downloadImage(_ sender: Any) {
-        ExampleServiceManager.shared().downloadImage { (response) in
+        serviceManager.downloadImage { (response) in
             
         }
     }

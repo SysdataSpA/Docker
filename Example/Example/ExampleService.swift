@@ -41,11 +41,8 @@ class GetResourcesRequest: Request {
     }
 }
 
-class GetResourcesResponse: Response {
+class GetResourcesResponse: ResponseJSON<[Resource]> {
     
-    override func decode() {
-        value = decodeJSON(with: [Resource].self)
-    }
 }
 
 
@@ -75,11 +72,8 @@ class PostResourceRequest: Request {
     }
 }
 
-class PostResourceResponse: Response {
+class PostResourceResponse: ResponseJSON<Resource> {
 
-    override func decode() {
-        value = decodeJSON(with: Resource.self)
-    }
 }
 
 
@@ -118,11 +112,7 @@ class GetResourceByIdRequest: Request {
     }    
 }
 
-class GetResourceByIdResponse: Response {
-    
-    override func decode() {
-        value = decodeJSON(with: Resource.self)
-    }
+class GetResourceByIdResponse: ResponseJSON<Resource> {
 }
 
 

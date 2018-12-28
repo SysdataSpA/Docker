@@ -32,7 +32,10 @@ open class Response: CustomStringConvertible {
     open func decode() { value = data }
     
     open func decodeError() { errorValue = data }
-    
+}
+
+//MARK: CustomStringConvertible
+extension Response {
     public var description: String {
         var received = false
         var d = ""
@@ -66,9 +69,20 @@ open class Response: CustomStringConvertible {
         }
         return "RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)"
     }
+}
+
+open class ResponseJSON<Val: Decodable>: Response {
+    
+    override open func decode() {
+        value = decodeJSON(with: Val.self)
+    }
+    
+//    open func decodeError() { errorValue = data }
+    
+    
     
     // MARK: JSON Decode
-    open func decodeJSON<T:Decodable>(with type: T.Type) -> Any? {
+    open func decodeJSON<T:Decodable>(with type: T.Type) -> T? {
         do {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = self.dateDecodingStrategy
@@ -80,6 +94,7 @@ open class Response: CustomStringConvertible {
         return nil
     }
 }
+
 
 //MARK: Download response
 open class DownloadResponse: Response {

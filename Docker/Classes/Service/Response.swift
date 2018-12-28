@@ -7,14 +7,17 @@
 
 import Foundation
 
+public enum ResponseResult<Val, ErrVal, E: Error> {
+    case success(Val)
+    case failure(ErrVal?, E)
+}
+
 open class Response: CustomStringConvertible {
     public var request: Request
     public var response: HTTPURLResponse?
     public var httpStatusCode: Int
     public var data: Data
-    public var value: Any?
-    public var errorValue: Any?
-    public var error: Error?
+    public var result: ResponseResult<Any, Any, DockerError>?
     open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
         return JSONDecoder.DateDecodingStrategy.secondsSince1970
     }
@@ -29,9 +32,9 @@ open class Response: CustomStringConvertible {
         self.response = response
     }
     
-    open func decode() { value = data }
+    open func decode() { result = .success(data) }
     
-    open func decodeError() { errorValue = data }
+    open func decodeError(with error: DockerError?) { result = .failure(data, error ?? .generic(nil)) }
 }
 
 //MARK: CustomStringConvertible
@@ -74,24 +77,34 @@ extension Response {
 open class ResponseJSON<Val: Decodable>: Response {
     
     override open func decode() {
-        value = decodeJSON(with: Val.self)
+        do {
+            let value = try decodeJSON(with: Val.self)
+            result = .success(value)
+            
+        } catch let error {
+            result = .failure(nil, .encoding(error))
+        }
     }
     
-//    open func decodeError() { errorValue = data }
-    
-    
-    
     // MARK: JSON Decode
-    open func decodeJSON<T:Decodable>(with type: T.Type) -> T? {
+    open func decodeJSON<T:Decodable>(with type: T.Type) throws -> T {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = self.dateDecodingStrategy
+        decoder.dataDecodingStrategy = self.dataDecodingStrategy
+        return try decoder.decode(type, from: data)
+    }
+}
+
+open class ResponseJSONFull<Val: Decodable, ErrVal: Decodable>: ResponseJSON<Val> {
+    
+    override open func decodeError(with error: DockerError?) {
         do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = self.dateDecodingStrategy
-            decoder.dataDecodingStrategy = self.dataDecodingStrategy
-            return try decoder.decode(type, from: data)
-        } catch let err {
-            self.error = err
+            let value = try decodeJSON(with: ErrVal.self)
+            result = .failure(value, error ?? .generic(nil))
+            
+        } catch let error {
+            result = .failure(nil, .encoding(error))
         }
-        return nil
     }
 }
 
@@ -104,26 +117,28 @@ open class DownloadResponse: Response {
         do {
             if let localURL = localURL {
                 let data = try Data(contentsOf: localURL)
-                value = UIImage(data: data)
+                let value = UIImage(data: data)
+                result = .success(value)
             } else {
                 SDLogModuleWarning("🌍⚠️ localURL not defined", module: DockerServiceLogModuleName)
             }
         } catch let err  {
-            self.error = err
             SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
+            result = .failure(nil, .encoding(err))
         }
     }
     
     open func decodeString() {
         do {
             if let localURL = localURL {
-                value = try String(contentsOf: localURL, encoding: .utf8)
+                let value = try String(contentsOf: localURL, encoding: .utf8)
+                result = .success(value)
             } else {
                 SDLogModuleWarning("🌍⚠️ localURL not defined", module: DockerServiceLogModuleName)
             }
         } catch let err  {
-            self.error = err
             SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
+            result = .failure(nil, .encoding(err))
         }
     }
 }

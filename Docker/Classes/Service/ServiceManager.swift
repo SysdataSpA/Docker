@@ -102,7 +102,7 @@ open class ServiceManager { // : Singleton, Initializable
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
-                response.error = DockerError.underlying(error, nil, response.httpStatusCode)
+                response.result = .failure(nil, DockerError.underlying(error, nil, response.httpStatusCode))
             }
         }
     }
@@ -142,21 +142,25 @@ open class ServiceManager { // : Singleton, Initializable
         let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Response
             let responseClass = serviceCall.request.responseClass()
+            var responseError: DockerError?
             switch (urlResponse, data, error) {
             case let (.some(urlResponse), data, .none):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
+                break
             case let (.some(urlResponse), _, .some(error)):
                 response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                response.error = DockerError.underlying(error, urlResponse, response.httpStatusCode)
+                responseError = DockerError.underlying(error, urlResponse, response.httpStatusCode)
+                break
             case let (_, _, .some(error)):
                 response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: urlResponse)
-                response.error = DockerError.underlying(error, nil, response.httpStatusCode)
+                responseError = DockerError.underlying(error, nil, response.httpStatusCode)
+                break
             default:
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
                 let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil, response.httpStatusCode)
-                response.error = error
+                responseError = error
             }
-            self?.completeServiceCall(serviceCall, with: response)
+            self?.completeServiceCall(serviceCall, with: response, error: responseError)
         }
         
         // call the request
@@ -165,14 +169,14 @@ open class ServiceManager { // : Singleton, Initializable
     }
     
     
-    open func completeServiceCall(_ serviceCall:ServiceCall, with response:Response) {
-        if let error = response.error {
+    open func completeServiceCall(_ serviceCall:ServiceCall, with response:Response, error: DockerError?) {
+        if let error = error {
             SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
         }
         if serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode) {
             // errori da mappare eventualmente
             SDLogModuleInfo("🌍‼️ Trying to map error response", module: DockerServiceLogModuleName)
-            response.decodeError()
+            response.decodeError(with: error)
         } else {
             response.decode()
         }
@@ -207,11 +211,12 @@ extension ServiceManager {
         DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + waitingTime) { [weak self] in
             let responseClass = serviceCall.request.responseClass()
             let response = responseClass.init(statusCode: statusCode, data: data, request: serviceCall.request)
+            var error: DockerError?
             if !success {
-                response.error = DockerError.underlying(AFError.responseValidationFailed(reason: .unacceptableStatusCode(code: statusCode)), nil, statusCode)
+                error = DockerError.underlying(AFError.responseValidationFailed(reason: .unacceptableStatusCode(code: statusCode)), nil, statusCode)
             }
             DispatchQueue.main.async { [weak self] in
-                self?.completeServiceCall(serviceCall, with: response)
+                self?.completeServiceCall(serviceCall, with: response, error: error)
             }
         }
     }

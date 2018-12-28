@@ -9,6 +9,8 @@ import Foundation
 
 public enum DockerError: Error {
     
+    case generic(Swift.Error?)
+    
     /// Indicates an invalid URL
     case invalidURL(Service)
     
@@ -43,6 +45,7 @@ public enum DockerError: Error {
 extension DockerError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .generic: return "An error occured in service"
         case .invalidURL(let service): return "The URL of the service is invalid.\n\tBase URL: \(service.baseUrl ?? "unknown")\n\tPath: \(service.path ?? "unknown")"
         case .encoding: return "Failed to encode Encodable object into data."
         case .parameterEncoding(let error): return "Failed to encode parameters for URLRequest. \(error.localizedDescription)"

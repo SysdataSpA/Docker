@@ -197,10 +197,14 @@ class DownloadResponse: Response {
     override func decode() {
         do {
             let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
-            value = UIImage(data: data)
+            guard let value = UIImage(data: data) else {
+                result = .failure(nil, .generic(nil))
+                return
+            }
+            result = .success(value)
         } catch let err  {
-            self.error = err
             print(err)
+            result = .failure(nil, .generic(err))
         }
     }
 }

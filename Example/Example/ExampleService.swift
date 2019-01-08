@@ -41,7 +41,7 @@ class GetResourcesRequest: Request {
     }
 }
 
-class GetResourcesResponse: ResponseJSON<[Resource]> {
+class GetResourcesResponse: ResponseJSON<[Resource], ErrorResult> {
     
 }
 
@@ -72,7 +72,7 @@ class PostResourceRequest: Request {
     }
 }
 
-class PostResourceResponse: ResponseJSON<Resource> {
+class PostResourceResponse: ResponseJSON<Resource, ErrorResult> {
 
 }
 
@@ -112,7 +112,7 @@ class GetResourceByIdRequest: Request {
     }    
 }
 
-class GetResourceByIdResponse: ResponseJSON<Resource> {
+class GetResourceByIdResponse: ResponseJSON<Resource, ErrorResult> {
 }
 
 
@@ -198,13 +198,13 @@ class DownloadResponse: Response {
         do {
             let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
             guard let value = UIImage(data: data) else {
-                result = .failure(nil, .generic(nil))
+                setResponseResult(.failure(nil, .generic(nil)))
                 return
             }
-            result = .success(value)
+            setResponseResult(.success(value))
         } catch let err  {
             print(err)
-            result = .failure(nil, .generic(err))
+            setResponseResult(.failure(nil, .generic(err)))
         }
     }
 }

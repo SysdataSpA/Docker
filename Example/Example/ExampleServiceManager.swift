@@ -10,6 +10,10 @@ import UIKit
 import Docker
 import Alamofire
 
+struct ErrorResult: Decodable {
+    
+}
+
 struct Resource: Codable {
     let id: String
     let name: String
@@ -36,10 +40,14 @@ class ExampleServiceManager: ServiceManager {
         self.defaultSessionManager = SessionManager(configuration: configuration)
     }
     
-    func getResources(completion: @escaping (Response) -> Void) {
+    func getResources(completion: @escaping ([Resource]) -> Void) {
         let request = GetResourcesRequest()
         let serviceCall = ServiceCall(with: request) { (response) in
-            completion(response)
+            guard let response = response as? GetResourcesResponse, let result = response.result, case let ResponseResult.success(resources) = result  else {
+                completion([])
+                return
+            }
+            completion(resources)
         }
         try! call(with: serviceCall)
     }

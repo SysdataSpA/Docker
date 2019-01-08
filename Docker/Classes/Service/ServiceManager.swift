@@ -102,7 +102,7 @@ open class ServiceManager { // : Singleton, Initializable
             case .failure(let error):
                 let responseClass = serviceCall.request.responseClass()
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
-                response.result = .failure(nil, DockerError.underlying(error, nil, response.httpStatusCode))
+                response.setResponseResult(.failure(nil, DockerError.underlying(error, nil, response.httpStatusCode)))
             }
         }
     }

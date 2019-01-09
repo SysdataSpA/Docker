@@ -40,6 +40,9 @@ public enum DockerError: Error {
     
     /// Indicates that a path parameter was not found in request's parameters
     case pathParameterNotFound(Request, String)
+    
+    /// Indicates that Decodable couldn't be decoded from data
+    case decoding(Swift.Error?)
 }
 
 extension DockerError: LocalizedError {
@@ -56,6 +59,7 @@ extension DockerError: LocalizedError {
         case .multipartNotSupported(let method): return "The \(method.rawValue) does not support multipart"
         case .emptyMultipartBody: return "The multipart request's body is empty"
         case .pathParameterNotFound(let request, let paramName): return "Path parameter \"\(paramName)\" not found in \(String(describing: type(of: request))) parameters"
+        case .decoding: return "Failed to decode object from data."
         }
     }
 }

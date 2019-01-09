@@ -73,7 +73,6 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
     
     public var result: ResponseResult<Val, ErrVal?, DockerError>?
     
-    
     open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
         return JSONDecoder.DateDecodingStrategy.secondsSince1970
     }
@@ -91,7 +90,7 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
             result = .success(value)
             
         } catch let error {
-            result = .failure(nil, .encoding(error))
+            result = .failure(nil, .decoding(error))
         }
     }
     
@@ -109,7 +108,7 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
             result = .failure(value, error ?? .generic(nil))
             
         } catch let error {
-            result = .failure(nil, .encoding(error))
+            result = .failure(nil, .decoding(error))
         }
     }
 }
@@ -131,7 +130,7 @@ open class DownloadResponse: Response {
             }
         } catch let err  {
             SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
-            result = .failure(nil, .encoding(err))
+            result = .failure(nil, .decoding(err))
         }
     }
     
@@ -145,7 +144,7 @@ open class DownloadResponse: Response {
             }
         } catch let err  {
             SDLogModuleError("🌍‼️ " + err.localizedDescription, module: DockerServiceLogModuleName)
-            result = .failure(nil, .encoding(err))
+            result = .failure(nil, .decoding(err))
         }
     }
 }

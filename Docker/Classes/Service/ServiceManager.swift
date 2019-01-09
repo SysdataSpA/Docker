@@ -170,10 +170,8 @@ open class ServiceManager { // : Singleton, Initializable
     
     
     open func completeServiceCall(_ serviceCall:ServiceCall, with response:Response, error: DockerError?) {
-        if let error = error {
+        if error != nil || (serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode)) {
             SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
-        }
-        if serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode) {
             // errori da mappare eventualmente
             SDLogModuleInfo("🌍‼️ Trying to map error response", module: DockerServiceLogModuleName)
             response.decodeError(with: error)
@@ -183,6 +181,8 @@ open class ServiceManager { // : Singleton, Initializable
         SDLogModuleInfo("🌍 Service completed with response \(response.shortDescription)", module: DockerServiceLogModuleName)
         SDLogModuleVerbose("🌍🌍🌍🌍🌍\n\(serviceCall.request.description)\n\(response.description)\n🌍🌍🌍🌍🌍", module: DockerServiceLogModuleName)
         serviceCall.completion(response)
+        
+        // TODO: gestire la logica di rimozione service call e retry o eliminarla completamente
         remove(serviceCall)
     }
     
@@ -199,7 +199,7 @@ extension ServiceManager {
     public func callServiceInDemoMode(with serviceCall:ServiceCall) throws {
         serviceCall.request.sentInDemoMode = true
         #if swift(>=4.2)
-        let failureValue: Double.random(in: 0.0...1.0)
+        let failureValue = Double.random(in: 0.0...1.0)
         #else
         let failureValue: Double = Double(arc4random_uniform(1000))/1000.0
         #endif
@@ -249,7 +249,7 @@ extension ServiceManager {
     
     private func waitingTime(for serviceCall:ServiceCall) -> TimeInterval {
         #if swift(>=4.2)
-        let waitingTime: Double.random(in: serviceCall.request.demoWaitingTimeRange)
+        let waitingTime = Double.random(in: serviceCall.request.demoWaitingTimeRange)
         #else
         let waitingDifference = serviceCall.request.demoWaitingTimeRange.upperBound - serviceCall.request.demoWaitingTimeRange.lowerBound
         let waitingTime: Double = Double(arc4random_uniform(UInt32(waitingDifference*100.0)))/100.0 + serviceCall.request.demoWaitingTimeRange.lowerBound

@@ -27,6 +27,7 @@ class ResourcesService: Service {
     }
 }
 
+
 class GetResourcesRequest: RequestJSON {
     
     override init() {
@@ -35,18 +36,16 @@ class GetResourcesRequest: RequestJSON {
         self.demoSuccessFileName = "getResources.json"
     }
 }
-
 typealias GetResourcesResponse = ResponseJSON<[Resource], ErrorResult>
 typealias GetResourcesServiceCall = ServiceCall<[Resource], ErrorResult, GetResourcesResponse>
 
 
 
-class PostResourceRequest: Request {
+class PostResourceRequest: RequestJSON {
 
     init(resource: Resource) {
         super.init()
         self.service = ResourcesService()
-        self.headers = ["Content-Type":"application/json", "Accept":"application/json"]
         self.method = .post
         self.demoSuccessFileName = "addResource.json"
         
@@ -54,10 +53,8 @@ class PostResourceRequest: Request {
     }
 }
 
-class PostResourceResponse: ResponseJSON<Resource, ErrorResult> {
-
-}
-
+typealias PostResourceResponse = ResponseJSON<Resource, ErrorResult>
+typealias PostResourceServiceCall = ServiceCall<Resource, ErrorResult, PostResourceResponse>
 
 
 class ResourceService: Service {
@@ -73,20 +70,18 @@ class ResourceService: Service {
 }
 
 
-class GetResourceByIdRequest: Request {
+class GetResourceByIdRequest: RequestJSON {
     
     init(with id: Int) {
         super.init()
         self.service = ResourceService()
-        self.headers = ["Accept":"application/json"]
         self.demoSuccessFileName = "addResource.json"
         
         self.pathParameters["id"] = id
     }
 }
-
-class GetResourceByIdResponse: ResponseJSON<Resource, ErrorResult> {
-}
+typealias GetResourceByIdResponse = ResponseJSON<Resource, ErrorResult>
+typealias GetResourceByIdServiceCall = ServiceCall<Resource, ErrorResult, GetResourceByIdResponse>
 
 
 class UploadService: Service {
@@ -126,8 +121,8 @@ class UploadRequest: Request {
     }
 }
 
-class UploadResponse: Response<Any, Any> {
-}
+typealias UploadResponse = Response<Any, Any>
+typealias UploadServiceCall = ServiceCall<Any, Any, UploadResponse>
 
 
 class DownloadService: Service {
@@ -154,10 +149,6 @@ class DownloadRequest: Request {
         self.headers = ["Accept":"image/jpeg"]
         self.demoSuccessFileName = "dog.jpg"
     }
-    
-//    override func responseClass() -> Response.Type {
-//        return DownloadResponse.self
-//    }
 }
 
 class DownloadResponse: Response<Any, Any> {
@@ -175,3 +166,4 @@ class DownloadResponse: Response<Any, Any> {
         }
     }
 }
+typealias DownloadServiceCall = ServiceCall<Any, Any, DownloadResponse>

@@ -119,6 +119,7 @@ open class RequestJSON: Request {
     
     public override init() {
         super.init()
+        headers["Content-Type"] = "application/json"
         headers["Accept"] = "application/json"
     }
     

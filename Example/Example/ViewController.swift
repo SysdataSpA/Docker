@@ -34,26 +34,26 @@ class ViewController: UIViewController {
     }
     
     @IBAction func postResource(_ sender: Any) {
-//        let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
-//            serviceManager.postResource(resource) { (response) in
-//
-//        }
+        let resource = Resource(id: "1", name: "name1", boolean: true, double: 1.1, nestedObjects: [NestedObject(id: "101", name: "nested101")])
+            serviceManager.postResource(resource) { (response) in
+
+        }
     }
     
     @IBAction func getResourceById(_ sender: Any) {
-//        serviceManager.getResource(with: 1) { (response) in
-//        }
+        serviceManager.getResource(with: 1) { (response) in
+        }
     }
     
     @IBAction func uploadFile(_ sender: Any) {
-//        serviceManager.uploadImage { (response) in
-//        }
+        serviceManager.uploadImage { (response) in
+        }
     }
     
     @IBAction func downloadImage(_ sender: Any) {
-//        serviceManager.downloadImage { (response) in
-//            
-//        }
+        serviceManager.downloadImage { (response) in
+            
+        }
     }
     
 }

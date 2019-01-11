@@ -52,7 +52,6 @@ class PostResourceRequest: Request {
         super.init()
         self.service = ResourcesService()
         self.headers = ["Content-Type":"application/json", "Accept":"application/json"]
-        self.bodyEncoding = .json(JSONEncoder())
         self.method = .post
         self.demoSuccessFileName = "addResource.json"
     }

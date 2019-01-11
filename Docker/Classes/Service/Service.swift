@@ -29,18 +29,6 @@ public enum RequestType {
     }
 }
 
-public enum BodyEncoding {
-    
-    /// The body will not be encoded, used if the body is a Data
-    case none
-    
-    /// The body will be encoded with the given JSONEncoder
-    case json(JSONEncoder)
-    
-    /// The body will be encoded with the given PropertyListEncoder
-    case propertyList(PropertyListEncoder)
-}
-
 public protocol ServiceProtocol {
     var sessionManager: SessionManager { get }
     var path: String { get }

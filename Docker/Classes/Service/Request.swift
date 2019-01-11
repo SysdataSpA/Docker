@@ -9,9 +9,8 @@ import Foundation
 import Alamofire
 
 public protocol RequestProtocol {
-    var headers: [String:String]? { get set }
+    var headers: [String:String] { get set }
     var urlParameterEncoding: URLEncoding { get set }
-    var bodyEncoding: BodyEncoding { get set }
     var method: HTTPMethod { get set }
     var service: Service { get set }
     var type: RequestType { get set }
@@ -19,6 +18,8 @@ public protocol RequestProtocol {
     var urlRequest: URLRequest? { get }
     var useDifferentResponseForErrors: Bool { get set }
     var httpErrorStatusCodeRange: ClosedRange<Int> { get set }
+    
+    func encode(request: inout URLRequest) throws
     
     // Demo Mode Variables
     var useDemoMode: Bool { get set }
@@ -43,9 +44,8 @@ open class Request: NSObject, RequestProtocol {
     open var service: Service
     open var multipartBodyParts: [MultipartBodyPart]?
     open var method: HTTPMethod
-    open var headers: [String: String]?
+    open var headers: [String: String] = [:]
     open var urlParameterEncoding: URLEncoding
-    open var bodyEncoding: BodyEncoding
     open var type: RequestType
     internal var internalRequest: Alamofire.Request?
     open var urlRequest: URLRequest? {
@@ -54,13 +54,6 @@ open class Request: NSObject, RequestProtocol {
     
     open var useDifferentResponseForErrors: Bool
     open var httpErrorStatusCodeRange: ClosedRange<Int>
-    
-    open var dateEncodingStrategy : JSONEncoder.DateEncodingStrategy {
-        return JSONEncoder.DateEncodingStrategy.secondsSince1970
-    }
-    open var dataEncodingStrategy : JSONEncoder.DataEncodingStrategy {
-        return JSONEncoder.DataEncodingStrategy.base64
-    }
     
     //Demo mode
     open var useDemoMode: Bool
@@ -78,8 +71,6 @@ open class Request: NSObject, RequestProtocol {
         self.method = .get
         self.type = .data
         self.urlParameterEncoding = URLEncoding.queryString
-        let jsonEncoder = JSONEncoder()
-        self.bodyEncoding = .json( jsonEncoder )
         self.useDifferentResponseForErrors = false
         self.httpErrorStatusCodeRange = 400...499
         
@@ -92,8 +83,6 @@ open class Request: NSObject, RequestProtocol {
         self.demoFailureChance = 0.0
         
         super.init()
-        jsonEncoder.dateEncodingStrategy = self.dateEncodingStrategy
-        jsonEncoder.dataEncodingStrategy = self.dataEncodingStrategy
     }
     
     open func urlParameters() throws -> [String: Any]? {
@@ -114,26 +103,11 @@ open class Request: NSObject, RequestProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         var allHeaders: [String:String] = self.service.sessionManager.session.configuration.httpAdditionalHeaders as! [String:String]
-        if let headers = headers {
-            allHeaders.merge(headers, uniquingKeysWith: { (_, last) -> String in last})
-        }
+        allHeaders.merge(headers, uniquingKeysWith: { (_, last) -> String in last})
         request.allHTTPHeaderFields = allHeaders
         
         // body encoding
-        if let body = try self.bodyParameters() {
-            switch bodyEncoding {
-            case .none:
-                if let data = body as? Data {
-                    request.httpBody = data
-                } else {
-                    throw DockerError.encoding(EncodingError.invalidValue(body, EncodingError.Context(codingPath: [], debugDescription: "")))
-                }
-            case .json(let jsonEncoder):
-                request = try request.encoded(encodable: body, encoder: jsonEncoder)
-            case .propertyList(let pListEncoder):
-                request = try request.encoded(encodable: body, encoder: pListEncoder)
-            }
-        }
+        try encode(request: &request)
         
         // url encoding
         if let urlParameters = try self.urlParameters() {
@@ -141,6 +115,16 @@ open class Request: NSObject, RequestProtocol {
         }
         
         return request
+    }
+    
+    open func encode(request: inout URLRequest) throws {
+        if let body = try self.bodyParameters() {
+            if let data = body as? Data {
+                request.httpBody = data
+            } else {
+                throw DockerError.encoding(EncodingError.invalidValue(body, EncodingError.Context(codingPath: [], debugDescription: "")))
+            }
+        }
     }
     
     internal func buildURL() throws -> URL {
@@ -181,6 +165,42 @@ open class Request: NSObject, RequestProtocol {
         }
     }
 }
+
+open class RequestJSON: Request {
+    
+    public override init() {
+        super.init()
+        headers["Accept"] = "application/json"
+    }
+    
+    open var jsonEncoder: JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = JSONEncoder.DateEncodingStrategy.secondsSince1970
+        encoder.dataEncodingStrategy = JSONEncoder.DataEncodingStrategy.base64
+        return encoder
+    }
+    
+    override open func encode(request: inout URLRequest) throws {
+        if let body = try self.bodyParameters() {
+            request = try request.encoded(encodable: body, encoder: jsonEncoder)
+        }
+    }
+}
+
+open class RequestPList: Request {
+    
+    open var pListEncoder: PropertyListEncoder {
+        let encoder = PropertyListEncoder()
+        return encoder
+    }
+    
+    override open func encode(request: inout URLRequest) throws {
+        if let body = try self.bodyParameters() {
+            request = try request.encoded(encodable: body, encoder: pListEncoder)
+        }
+    }
+}
+
 //MARK: CustomStringConvertible
 extension Request {
     open override var description: String {

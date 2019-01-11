@@ -248,7 +248,7 @@ extension ServiceManager {
 
 public typealias ServiceCompletion<Val, ErrVal> = (Response<Val, ErrVal>) -> Void
 
-public class ServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>> : NSObject {
+public class ServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>> {
     
     open let service: Service
     open var request: Request
@@ -270,6 +270,5 @@ public class ServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>> : NSObject {
         self.request = request
         self.completion = completion
         self.progressBlock = progressBlock
-        super.init()
     }
 }

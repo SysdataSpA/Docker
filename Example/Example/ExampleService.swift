@@ -35,16 +35,10 @@ class GetResourcesRequest: Request {
         self.headers = ["Accept":"application/json"]
         self.demoSuccessFileName = "getResources.json"
     }
-
-    override func responseClass<Val, ErrVal>() -> Response<Val, ErrVal>.Type {
-        return GetResourcesResponse.self
-    }
 }
 
-class GetResourcesResponse: ResponseJSON<[Resource], ErrorResult> {
-    
-}
-
+typealias GetResourcesResponse = ResponseJSON<[Resource], ErrorResult>
+typealias GetResourcesServiceCall = ServiceCall<[Resource], ErrorResult, GetResourcesResponse>
 
 
 
@@ -63,9 +57,9 @@ class PostResourceRequest: Request {
         self.demoSuccessFileName = "addResource.json"
     }
     
-    override func responseClass() -> Response.Type {
-        return PostResourceResponse.self
-    }
+//    override func responseClass() -> Response.Type {
+//        return PostResourceResponse.self
+//    }
     
     override func bodyParameters() throws -> Encodable? {
         return self.resource
@@ -103,9 +97,9 @@ class GetResourceByIdRequest: Request {
         self.demoSuccessFileName = "addResource.json"
     }
     
-    override func responseClass() -> Response.Type {
-        return GetResourceByIdResponse.self
-    }
+//    override func responseClass() -> Response.Type {
+//        return GetResourceByIdResponse.self
+//    }
     
     override func pathParameters() throws -> [String : Any]? {
         return ["id": id]
@@ -141,9 +135,9 @@ class UploadRequest: Request {
         self.type = .upload(.multipart)
     }
     
-    override func responseClass() -> Response.Type {
-        return UploadResponse.self
-    }
+//    override func responseClass() -> Response.Type {
+//        return UploadResponse.self
+//    }
     
     override func pathParameters() throws -> [String : Any]? {
         return ["id": id]
@@ -159,7 +153,7 @@ class UploadRequest: Request {
     }
 }
 
-class UploadResponse: Response {
+class UploadResponse: Response<Any, Any> {
 }
 
 
@@ -188,12 +182,12 @@ class DownloadRequest: Request {
         self.demoSuccessFileName = "dog.jpg"
     }
     
-    override func responseClass() -> Response.Type {
-        return DownloadResponse.self
-    }
+//    override func responseClass() -> Response.Type {
+//        return DownloadResponse.self
+//    }
 }
 
-class DownloadResponse: Response {
+class DownloadResponse: Response<Any, Any> {
     override func decode() {
         do {
             let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))

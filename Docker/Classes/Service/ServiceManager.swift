@@ -98,7 +98,7 @@ open class ServiceManager { // : Singleton, Initializable
                 serviceCall.request.internalRequest = request
                 self?.sendRequest(request: request, serviceCall: serviceCall)
             case .failure(let error):
-                let responseClass: Response<Val, ErrVal>.Type = serviceCall.request.responseClass()
+                let responseClass = serviceCall.responseType
                 let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
                 response.setResponseResult(.failure(nil, DockerError.underlying(error, nil, response.httpStatusCode)))
             }
@@ -139,7 +139,7 @@ open class ServiceManager { // : Singleton, Initializable
         // completion block management
         let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Response<Val, ErrVal>
-            let responseClass: Response<Val, ErrVal>.Type = serviceCall.request.responseClass()
+            let responseClass = serviceCall.responseType
             var responseError: DockerError?
             switch (urlResponse, data, error) {
             case let (.some(urlResponse), data, .none):
@@ -167,7 +167,7 @@ open class ServiceManager { // : Singleton, Initializable
     }
     
     
-    open func completeServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>>(_ serviceCall: ServiceCall<Val, ErrVal, Resp>, with response: Response<Val, ErrVal>, error: DockerError?) {
+    open func completeServiceCall<Val, ErrVal, Resp>(_ serviceCall: ServiceCall<Val, ErrVal, Resp>, with response: Response<Val, ErrVal>, error: DockerError?) {
         if error != nil || (serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode)) {
             SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
             // errori da mappare eventualmente
@@ -197,7 +197,7 @@ extension ServiceManager {
         let statusCode: Int = success ? serviceCall.request.demoSuccessStatusCode : serviceCall.request.demoFailureStatusCode
         let waitingTime = self.waitingTime(for: serviceCall)
         DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + waitingTime) { [weak self] in
-            let responseClass: Response<Val, ErrVal>.Type = serviceCall.request.responseClass()
+            let responseClass = serviceCall.responseType
             let response = responseClass.init(statusCode: statusCode, data: data, request: serviceCall.request)
             var error: DockerError?
             if !success {
@@ -249,13 +249,16 @@ extension ServiceManager {
 public typealias ServiceCompletion<Val, ErrVal> = (Response<Val, ErrVal>) -> Void
 
 public class ServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>> : NSObject {
+    
     open let service: Service
     open var request: Request
     open var response: Resp?
+    
     let completion: ServiceCompletion<Val, ErrVal>
     let progressBlock: ProgressHandler?
     var numOfAutomaticRetry: UInt = 0
     var isProcessing: Bool = false
+    var responseType = Resp.self
     
     public init(with request: Request, service: Service? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion<Val, ErrVal>) {
         if let service = service {

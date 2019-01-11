@@ -42,8 +42,8 @@ class ExampleServiceManager: ServiceManager {
     
     func getResources(completion: @escaping ([Resource]) -> Void) {
         let request = GetResourcesRequest()
-        let serviceCall: ServiceCall<[Resource], ErrorResult, GetResourcesResponse> = ServiceCall(with: request) { (response) in
-            guard let response = response as? GetResourcesResponse, let result = response.result, case let ResponseResult.success(resources) = result  else {
+        let serviceCall: GetResourcesServiceCall = ServiceCall(with: request) { (response) in
+            guard let result = response.result, case let ResponseResult.success(resources) = result  else {
                 completion([])
                 return
             }
@@ -52,43 +52,43 @@ class ExampleServiceManager: ServiceManager {
         try! call(with: serviceCall)
     }
     
-    func postResource(_ resource:Resource, completion: @escaping (Response) -> Void) {
-        let request = PostResourceRequest(resource: resource)
-        let serviceCall = ServiceCall(with: request) { (response) in
-            completion(response)
-        }
-        try! call(with: serviceCall)
-    }
-    
-    func getResource(with id: Int, completion: @escaping (Response) -> Void) {
-        let request = GetResourceByIdRequest(with: id)
-        let serviceCall = ServiceCall(with: request) { (response) in
-            completion(response)
-        }
-        do {
-            try call(with: serviceCall)
-        } catch let e {
-            print(e.localizedDescription)
-        }
-    }
-    
-    func uploadImage(completion: @escaping (Response) -> Void) {
-        let request = UploadRequest(with: 1)
-        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
-            print("Progress: \(progress)")
-        }) { (response) in
-            completion(response)
-        }
-        try! call(with: serviceCall)
-    }
-    
-    func downloadImage(completion: @escaping (Response) -> Void) {
-        let request = DownloadRequest()
-        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
-            print("Progress: \(progress)")
-        }) { (response) in
-            completion(response)
-        }
-        try! call(with: serviceCall)
-    }
+//    func postResource(_ resource:Resource, completion: @escaping (Response) -> Void) {
+//        let request = PostResourceRequest(resource: resource)
+//        let serviceCall = ServiceCall(with: request) { (response) in
+//            completion(response)
+//        }
+//        try! call(with: serviceCall)
+//    }
+//    
+//    func getResource(with id: Int, completion: @escaping (Response) -> Void) {
+//        let request = GetResourceByIdRequest(with: id)
+//        let serviceCall = ServiceCall(with: request) { (response) in
+//            completion(response)
+//        }
+//        do {
+//            try call(with: serviceCall)
+//        } catch let e {
+//            print(e.localizedDescription)
+//        }
+//    }
+//    
+//    func uploadImage(completion: @escaping (Response) -> Void) {
+//        let request = UploadRequest(with: 1)
+//        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
+//            print("Progress: \(progress)")
+//        }) { (response) in
+//            completion(response)
+//        }
+//        try! call(with: serviceCall)
+//    }
+//    
+//    func downloadImage(completion: @escaping (Response) -> Void) {
+//        let request = DownloadRequest()
+//        let serviceCall = ServiceCall(with: request, progressBlock: { (progress) in
+//            print("Progress: \(progress)")
+//        }) { (response) in
+//            completion(response)
+//        }
+//        try! call(with: serviceCall)
+//    }
 }

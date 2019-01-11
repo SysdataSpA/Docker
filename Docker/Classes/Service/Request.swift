@@ -30,7 +30,7 @@ public protocol RequestProtocol {
     var demoFailureStatusCode: Int { get set }
     var demoFailureChance: Double { get set }
     
-    func responseClass() -> Response.Type
+    func responseClass<Val, ErrVal>() -> Response<Val, ErrVal>.Type
     func urlParameters() throws -> [String:Any]?
     func bodyParameters() throws -> Encodable?
     func pathParameters() throws -> [String:Any]?
@@ -97,7 +97,7 @@ open class Request: NSObject, RequestProtocol {
         jsonEncoder.dataEncodingStrategy = self.dataEncodingStrategy
     }
     
-    open func responseClass() -> Response.Type {
+    open func responseClass<Val, ErrVal>() -> Response.Type {
         return Response.self
     }
     

@@ -12,11 +12,13 @@ public enum ResponseResult<Val, ErrVal, E: Error> {
     case failure(ErrVal?, E)
 }
 
-open class Response: CustomStringConvertible {
+open class Response<Val, ErrVal>: CustomStringConvertible {
     public var request: Request
     public var response: HTTPURLResponse?
     public var httpStatusCode: Int
     public var data: Data
+    
+    public var result: ResponseResult<Val, ErrVal?, DockerError>?
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode
@@ -25,7 +27,7 @@ open class Response: CustomStringConvertible {
         self.response = response
     }
     
-    open func setResponseResult(_ result: ResponseResult<Any, Any?, DockerError>) {}
+    open func setResponseResult(_ result: ResponseResult<Val, ErrVal?, DockerError>) {}
     
     open func decode() {}
     
@@ -69,9 +71,7 @@ extension Response {
     }
 }
 
-open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
-    
-    public var result: ResponseResult<Val, ErrVal?, DockerError>?
+open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal> {
     
     open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
         return JSONDecoder.DateDecodingStrategy.secondsSince1970
@@ -80,7 +80,7 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
         return JSONDecoder.DataDecodingStrategy.base64
     }
     
-    open func setResponseResult(_ result: ResponseResult<Val, ErrVal?, DockerError>) {
+    override open func setResponseResult(_ result: ResponseResult<Val, ErrVal?, DockerError>) {
         self.result = result
     }
     
@@ -115,9 +115,8 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response {
 
 
 //MARK: Download response
-open class DownloadResponse: Response {
+open class DownloadResponse: Response<Any, Any> {
     public var localURL: URL?
-    public var result: ResponseResult<Any, Any?, DockerError>?
     
     open func decodeImage() {
         do {

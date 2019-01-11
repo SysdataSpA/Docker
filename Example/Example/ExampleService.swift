@@ -36,7 +36,7 @@ class GetResourcesRequest: Request {
         self.demoSuccessFileName = "getResources.json"
     }
 
-    override func responseClass() -> Response.Type {
+    override func responseClass<Val, ErrVal>() -> Response<Val, ErrVal>.Type {
         return GetResourcesResponse.self
     }
 }

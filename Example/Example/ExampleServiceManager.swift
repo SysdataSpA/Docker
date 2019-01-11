@@ -42,7 +42,7 @@ class ExampleServiceManager: ServiceManager {
     
     func getResources(completion: @escaping ([Resource]) -> Void) {
         let request = GetResourcesRequest()
-        let serviceCall = ServiceCall(with: request) { (response) in
+        let serviceCall: ServiceCall<[Resource], ErrorResult, GetResourcesResponse> = ServiceCall(with: request) { (response) in
             guard let response = response as? GetResourcesResponse, let result = response.result, case let ResponseResult.success(resources) = result  else {
                 completion([])
                 return

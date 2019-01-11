@@ -24,19 +24,19 @@ public enum DockerError: Error {
     case underlying(Swift.Error, HTTPURLResponse?, Int)
     
     /// Indicates that the demo file in case of succeess is nil
-    case nilSuccessDemoFile(ServiceCall)
+    case nilSuccessDemoFile()
     
     /// Indicates that the demo file in case of failure is nil
-    case nilFailureDemoFile(ServiceCall)
+    case nilFailureDemoFile()
     
     /// Indicates that the demo file does not exist
-    case demoFileNotFound(ServiceCall, String)
+    case demoFileNotFound(String)
     
     /// Indicates that the request's method does not support multipart
     case multipartNotSupported(HTTPMethod)
     
     /// A multipart request does not contain any body part
-    case emptyMultipartBody(ServiceCall)
+    case emptyMultipartBody()
     
     /// Indicates that a path parameter was not found in request's parameters
     case pathParameterNotFound(Request, String)
@@ -55,7 +55,7 @@ extension DockerError: LocalizedError {
         case .underlying(let error, _, _): return error.localizedDescription
         case .nilSuccessDemoFile: return "The success demo file is nil"
         case .nilFailureDemoFile: return "The failure demo file is nil"
-        case .demoFileNotFound(_, let filename): return "The demo file \(filename) does not exist"
+        case .demoFileNotFound(let filename): return "The demo file \(filename) does not exist"
         case .multipartNotSupported(let method): return "The \(method.rawValue) does not support multipart"
         case .emptyMultipartBody: return "The multipart request's body is empty"
         case .pathParameterNotFound(let request, let paramName): return "Path parameter \"\(paramName)\" not found in \(String(describing: type(of: request))) parameters"

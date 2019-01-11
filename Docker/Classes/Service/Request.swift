@@ -8,136 +8,88 @@
 import Foundation
 import Alamofire
 
-public protocol RequestProtocol {
-    var headers: [String:String] { get set }
-    var urlParameterEncoding: URLEncoding { get set }
-    var method: HTTPMethod { get set }
-    var service: Service { get set }
-    var type: RequestType { get set }
-    var multipartBodyParts: [MultipartBodyPart]? { get set }
-    var urlRequest: URLRequest? { get }
-    var useDifferentResponseForErrors: Bool { get set }
-    var httpErrorStatusCodeRange: ClosedRange<Int> { get set }
+open class Request: NSObject {
     
-    func encode(request: inout URLRequest) throws
+    public var service: Service = Service()
     
-    // Demo Mode Variables
-    var useDemoMode: Bool { get set }
-    var demoSuccessFileName: String? { get set }
-    var demoFailureFileName: String? { get set }
-    var demoFilesBundle: Bundle { get set }
-    var demoWaitingTimeRange: ClosedRange<TimeInterval> { get set }
-    var demoSuccessStatusCode: Int { get set }
-    var demoFailureStatusCode: Int { get set }
-    var demoFailureChance: Double { get set }
+    public var method: HTTPMethod = .get
+    public var type: RequestType = .data
     
-    func urlParameters() throws -> [String:Any]?
-    func bodyParameters() throws -> Encodable?
-    func pathParameters() throws -> [String:Any]?
+    public var headers: [String: String] = [:]
+    public var urlParameterEncoding: URLEncoding = URLEncoding.queryString
     
-    func suspend()
-    func resume()
-    func cancel()
-}
-
-open class Request: NSObject, RequestProtocol {
-    open var service: Service
-    open var multipartBodyParts: [MultipartBodyPart]?
-    open var method: HTTPMethod
-    open var headers: [String: String] = [:]
-    open var urlParameterEncoding: URLEncoding
-    open var type: RequestType
+    // HTTP Request
     internal var internalRequest: Alamofire.Request?
-    open var urlRequest: URLRequest? {
+    public var urlRequest: URLRequest? {
         return internalRequest?.request
     }
     
-    open var useDifferentResponseForErrors: Bool
-    open var httpErrorStatusCodeRange: ClosedRange<Int>
+    public var multipartBodyParts: [MultipartBodyPart]?
+    
+    // Error & Status Codes
+    public var useDifferentResponseForErrors: Bool = false
+    public var httpErrorStatusCodeRange: ClosedRange<Int> = 400...499
     
     //Demo mode
-    open var useDemoMode: Bool
-    open var demoSuccessFileName: String?
-    open var demoFailureFileName: String?
-    open var demoFilesBundle: Bundle
-    open var demoWaitingTimeRange: ClosedRange<TimeInterval>
-    open var demoSuccessStatusCode: Int
-    open var demoFailureStatusCode: Int
-    open var demoFailureChance: Double
+    public var useDemoMode: Bool = false
+    public var demoSuccessFileName: String?
+    public var demoFailureFileName: String?
+    public var demoFilesBundle: Bundle = Bundle.main
+    public var demoWaitingTimeRange: ClosedRange<TimeInterval> = 0.0...0.0
+    public var demoSuccessStatusCode: Int = 200
+    public var demoFailureStatusCode: Int = 400
+    public var demoFailureChance: Double = 0.0
     internal var sentInDemoMode: Bool = false
     
-    public override init(){
-        self.service = Service()
-        self.method = .get
-        self.type = .data
-        self.urlParameterEncoding = URLEncoding.queryString
-        self.useDifferentResponseForErrors = false
-        self.httpErrorStatusCodeRange = 400...499
-        
-        // Demo mode
-        self.useDemoMode = false
-        self.demoFilesBundle = Bundle.main
-        self.demoWaitingTimeRange = 0.0...0.0
-        self.demoSuccessStatusCode = 200
-        self.demoFailureStatusCode = 400
-        self.demoFailureChance = 0.0
-        
-        super.init()
-    }
+    // Parameters
+    public var pathParameters: [String: Any] = [:]
+    public var urlParameters: [String: Any] = [:]
+    public var bodyParameters: Encodable?
     
-    open func urlParameters() throws -> [String: Any]? {
-        return nil
-    }
-    
-    open func bodyParameters() throws -> Encodable? {
-        return nil
-    }
-    
-    open func pathParameters() throws -> [String: Any]? {
-        return nil
-    }
-    
-    internal func asUrlRequest() throws -> URLRequest {
+    // Build Request
+    internal func buildUrlRequest() throws -> URLRequest {
         let url = try buildURL()
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        var allHeaders: [String:String] = self.service.sessionManager.session.configuration.httpAdditionalHeaders as! [String:String]
+        var allHeaders: [String:String] = service.sessionManager.session.configuration.httpAdditionalHeaders as! [String:String]
         allHeaders.merge(headers, uniquingKeysWith: { (_, last) -> String in last})
         request.allHTTPHeaderFields = allHeaders
         
         // body encoding
-        try encode(request: &request)
+        if let bodyParams = bodyParameters {
+            try encodeBody(request: &request, parameters: bodyParams)
+        }
         
         // url encoding
-        if let urlParameters = try self.urlParameters() {
-            request = try request.encoded(parameters: urlParameters, parameterEncoding: urlParameterEncoding)
-        }
+        request = try request.encoded(parameters: urlParameters, parameterEncoding: urlParameterEncoding)
         
         return request
     }
     
-    open func encode(request: inout URLRequest) throws {
-        if let body = try self.bodyParameters() {
-            if let data = body as? Data {
-                request.httpBody = data
-            } else {
-                throw DockerError.encoding(EncodingError.invalidValue(body, EncodingError.Context(codingPath: [], debugDescription: "")))
-            }
+    open func encodeBody(request: inout URLRequest, parameters: Encodable) throws {
+        if let data = parameters as? Data {
+            request.httpBody = data
+        } else {
+            throw DockerError.encoding(EncodingError.invalidValue(parameters, EncodingError.Context(codingPath: [], debugDescription: "")))
         }
     }
+}
+
+// MARK: Utils
+extension Request {
     
     internal func buildURL() throws -> URL {
         var composedUrl = service.path.isEmpty ? service.baseUrl : service.baseUrl.appending(service.path)
-        let params = try self.pathParameters()
+        
         // search for "/:" to find the start of a path parameter
         while let paramRange = findNextPathParamPlaceholderRange(in: composedUrl) {
             let paramName = composedUrl.substring(with: composedUrl.index(after: paramRange.lowerBound)..<paramRange.upperBound)
-            let param = try findPathParam(with: paramName, in: params)
+            let param = try findPathParam(with: paramName, in: pathParameters)
             composedUrl.replaceSubrange(paramRange, with: param)
         }
         guard let url = URL(string: composedUrl)
-            else { throw DockerError.invalidURL(self.service) }
+            else { throw DockerError.invalidURL(service) }
         return url
     }
     
@@ -154,10 +106,7 @@ open class Request: NSObject, RequestProtocol {
         return nil
     }
     
-    private func findPathParam(with name:String, in parameters: [String:Any]?) throws -> String {
-        guard let parameters = parameters else {
-            throw DockerError.pathParameterNotFound(self, name)
-        }
+    private func findPathParam(with name:String, in parameters: [String:Any]) throws -> String {
         if let param = parameters[name] {
             return "\(param)"
         } else {
@@ -180,10 +129,8 @@ open class RequestJSON: Request {
         return encoder
     }
     
-    override open func encode(request: inout URLRequest) throws {
-        if let body = try self.bodyParameters() {
-            request = try request.encoded(encodable: body, encoder: jsonEncoder)
-        }
+    open override func encodeBody(request: inout URLRequest, parameters: Encodable) throws {
+        request = try request.encoded(encodable: parameters, encoder: jsonEncoder)
     }
 }
 
@@ -194,43 +141,35 @@ open class RequestPList: Request {
         return encoder
     }
     
-    override open func encode(request: inout URLRequest) throws {
-        if let body = try self.bodyParameters() {
-            request = try request.encoded(encodable: body, encoder: pListEncoder)
-        }
+    open override func encodeBody(request: inout URLRequest, parameters: Encodable) throws {
+        request = try request.encoded(encodable: parameters, encoder: pListEncoder)
     }
 }
 
 //MARK: CustomStringConvertible
 extension Request {
+    
     open override var description: String {
-        var body: String? = nil
-        if let httpBody = try? self.urlRequest?.httpBody {
-            if let httpBody = httpBody {
-                body = String(data: httpBody, encoding: .utf8)
-            }
+        var string = "REQUEST URL: \(service.baseUrl)\(service.path)\nMETHOD:\(method.rawValue)\nHEADERS:\(headers ?? [:]))"
+        if !urlParameters.isEmpty {
+            string.append("\nPARAMETERS:\(urlParameters)")
         }
-        var string = "REQUEST URL: \(self.service.baseUrl)\(self.service.path)\nMETHOD:\(self.method.rawValue)\nHEADERS:\(self.headers ?? [:]))"
-        if let params = try? self.urlParameters() {
-            if let params = params {
-                string.append("\nPARAMETERS:\(params)")
-            }
-        }
-        if let body = body {
+        if let httpBody = urlRequest?.httpBody, let body = String(data: httpBody, encoding: .utf8) {
             string.append("\nBODY:\n\(body)")
         }
         return string
     }
     
     open var shortDescription: String {
-        var string = "REQUEST \(self.method.rawValue)"
-        if let url = try? self.urlRequest?.url?.absoluteString ?? "" {
-            string.append(" at \(url)")
-        }
-        else{
-            string.append(" at \(self.service.path)")
-        }
+        var string = "REQUEST \(method.rawValue) at \(urlStringDescription)"
         return string
+    }
+    
+    open var urlStringDescription: String {
+        if let url = urlRequest?.url?.absoluteString {
+            return url
+        }
+        return service.path
     }
 }
 //MARK: Alamofire forwarding

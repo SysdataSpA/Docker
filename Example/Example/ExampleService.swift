@@ -27,12 +27,11 @@ class ResourcesService: Service {
     }
 }
 
-class GetResourcesRequest: Request {
+class GetResourcesRequest: RequestJSON {
     
     override init() {
         super.init()
         self.service = ResourcesService()
-        self.headers = ["Accept":"application/json"]
         self.demoSuccessFileName = "getResources.json"
     }
 }
@@ -44,24 +43,14 @@ typealias GetResourcesServiceCall = ServiceCall<[Resource], ErrorResult, GetReso
 
 class PostResourceRequest: Request {
 
-    var resource: Resource
-    
     init(resource: Resource) {
-        self.resource = resource
-        
         super.init()
         self.service = ResourcesService()
         self.headers = ["Content-Type":"application/json", "Accept":"application/json"]
         self.method = .post
         self.demoSuccessFileName = "addResource.json"
-    }
-    
-//    override func responseClass() -> Response.Type {
-//        return PostResourceResponse.self
-//    }
-    
-    override func bodyParameters() throws -> Encodable? {
-        return self.resource
+        
+        self.bodyParameters = resource
     }
 }
 
@@ -86,23 +75,14 @@ class ResourceService: Service {
 
 class GetResourceByIdRequest: Request {
     
-    var id: Int
-    
     init(with id: Int) {
-        self.id = id
         super.init()
         self.service = ResourceService()
         self.headers = ["Accept":"application/json"]
         self.demoSuccessFileName = "addResource.json"
+        
+        self.pathParameters["id"] = id
     }
-    
-//    override func responseClass() -> Response.Type {
-//        return GetResourceByIdResponse.self
-//    }
-    
-    override func pathParameters() throws -> [String : Any]? {
-        return ["id": id]
-    }    
 }
 
 class GetResourceByIdResponse: ResponseJSON<Resource, ErrorResult> {
@@ -132,14 +112,8 @@ class UploadRequest: Request {
         self.headers = ["Content-Type":"application/x-www-form-urlencoded"]
         self.multipartBodyParts = try! getParts()
         self.type = .upload(.multipart)
-    }
-    
-//    override func responseClass() -> Response.Type {
-//        return UploadResponse.self
-//    }
-    
-    override func pathParameters() throws -> [String : Any]? {
-        return ["id": id]
+        
+        self.pathParameters["id"] = id
     }
     
     func getParts() throws -> [MultipartBodyPart]? {
@@ -191,13 +165,13 @@ class DownloadResponse: Response<Any, Any> {
         do {
             let data = try Data(contentsOf: getDocumentsDirectory().appendingPathComponent("image.jpg"))
             guard let value = UIImage(data: data) else {
-                setResponseResult(.failure(nil, .generic(nil)))
+                result = .failure(nil, .generic(nil))
                 return
             }
-            setResponseResult(.success(value))
+            result = .success(value)
         } catch let err  {
             print(err)
-            setResponseResult(.failure(nil, .generic(err)))
+            result = .failure(nil, .generic(err))
         }
     }
 }

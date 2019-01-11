@@ -59,7 +59,7 @@ class ExampleServiceManager: ServiceManager {
 //        }
 //        try! call(with: serviceCall)
 //    }
-//    
+//
 //    func getResource(with id: Int, completion: @escaping (Response) -> Void) {
 //        let request = GetResourceByIdRequest(with: id)
 //        let serviceCall = ServiceCall(with: request) { (response) in

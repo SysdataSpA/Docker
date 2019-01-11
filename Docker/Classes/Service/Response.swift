@@ -13,6 +13,7 @@ public enum ResponseResult<Val, ErrVal, E: Error> {
 }
 
 open class Response<Val, ErrVal>: CustomStringConvertible {
+    
     public var request: Request
     public var response: HTTPURLResponse?
     public var httpStatusCode: Int
@@ -27,8 +28,6 @@ open class Response<Val, ErrVal>: CustomStringConvertible {
         self.response = response
     }
     
-    open func setResponseResult(_ result: ResponseResult<Val, ErrVal?, DockerError>) {}
-    
     open func decode() {}
     
     open func decodeError(with error: DockerError?) {}
@@ -37,28 +36,19 @@ open class Response<Val, ErrVal>: CustomStringConvertible {
 //MARK: CustomStringConvertible
 extension Response {
     public var description: String {
-        var received = false
+        var received = response != nil || request.sentInDemoMode
         var d = ""
-        if let response = response {
-            received = true
-        } else if request.sentInDemoMode {
-            received = true
-        }
-        
         if received {
-            if let url = try? request.buildURL() {
-                d.append("RESPONSE RECEIVED - URL= \(url)")
-                if let resp = response{
-                    d.append("\nSTATUS CODE: \(resp.statusCode)\nHEADERS: \(resp.allHeaderFields as? [String:String])")
-                }
-                if data.count > 0 {
-                    if let body = String(data: data, encoding: .utf8) {
-                        d.append("\nBODY=\n\(body)")
-                    }
-                }
+            d.append("RESPONSE RECEIVED - URL= \(request.urlStringDescription)")
+            if let resp = response{
+                d.append("\nSTATUS CODE: \(resp.statusCode)\nHEADERS: \(resp.allHeaderFields as? [String:String])")
+            }
+            if !data.isEmpty, let body = String(data: data, encoding: .utf8) {
+                d.append("\nBODY=\n\(body)")
             }
         } else {
-            d.append("RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)")
+            var urlString: String = ""
+            d.append("RESPONSE NOT RECEIVED - URL= \(request.urlStringDescription)")
         }
         return d
     }
@@ -67,28 +57,23 @@ extension Response {
         if let resp = response, let url = resp.url?.absoluteString  {
             return "RESPONSE RECEIVED - URL= \(url) STATUS CODE:\(resp.statusCode)"
         }
-        return "RESPONSE NOT RECEIVED - URL= \(try? request.buildURL().absoluteString)"
+        return "RESPONSE NOT RECEIVED - URL= \(request.urlStringDescription)"
     }
 }
 
 open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal> {
     
-    open var dateDecodingStrategy : JSONDecoder.DateDecodingStrategy {
-        return JSONDecoder.DateDecodingStrategy.secondsSince1970
-    }
-    open var dataDecodingStrategy : JSONDecoder.DataDecodingStrategy {
-        return JSONDecoder.DataDecodingStrategy.base64
-    }
-    
-    override open func setResponseResult(_ result: ResponseResult<Val, ErrVal?, DockerError>) {
-        self.result = result
+    open var jsonDecoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.secondsSince1970
+        decoder.dataDecodingStrategy = JSONDecoder.DataDecodingStrategy.base64
+        return decoder
     }
     
     override open func decode() {
         do {
             let value = try decodeJSON(with: Val.self)
             result = .success(value)
-            
         } catch let error {
             result = .failure(nil, .decoding(error))
         }
@@ -96,10 +81,7 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal
     
     // MARK: JSON Decode
     open func decodeJSON<T:Decodable>(with type: T.Type) throws -> T {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = self.dateDecodingStrategy
-        decoder.dataDecodingStrategy = self.dataDecodingStrategy
-        return try decoder.decode(type, from: data)
+        return try jsonDecoder.decode(type, from: data)
     }
     
     override open func decodeError(with error: DockerError?) {
@@ -113,9 +95,9 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal
     }
 }
 
-
 //MARK: Download response
 open class DownloadResponse: Response<Any, Any> {
+    
     public var localURL: URL?
     
     open func decodeImage() {

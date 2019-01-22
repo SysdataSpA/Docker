@@ -37,7 +37,7 @@ class GetResourcesRequest: RequestJSON {
     }
 }
 typealias GetResourcesResponse = ResponseJSON<[Resource], ErrorResult>
-typealias GetResourcesServiceCall = ServiceCall<[Resource], ErrorResult, GetResourcesResponse>
+typealias GetResourcesServiceCall = ServiceCall<GetResourcesResponse>
 
 
 
@@ -54,7 +54,7 @@ class PostResourceRequest: RequestJSON {
 }
 
 typealias PostResourceResponse = ResponseJSON<Resource, ErrorResult>
-typealias PostResourceServiceCall = ServiceCall<Resource, ErrorResult, PostResourceResponse>
+typealias PostResourceServiceCall = ServiceCall<PostResourceResponse>
 
 
 class ResourceService: Service {
@@ -81,7 +81,7 @@ class GetResourceByIdRequest: RequestJSON {
     }
 }
 typealias GetResourceByIdResponse = ResponseJSON<Resource, ErrorResult>
-typealias GetResourceByIdServiceCall = ServiceCall<Resource, ErrorResult, GetResourceByIdResponse>
+typealias GetResourceByIdServiceCall = ServiceCall<GetResourceByIdResponse>
 
 
 class UploadService: Service {
@@ -122,7 +122,7 @@ class UploadRequest: Request {
 }
 
 typealias UploadResponse = Response<Any, Any>
-typealias UploadServiceCall = ServiceCall<Any, Any, UploadResponse>
+typealias UploadServiceCall = ServiceCall<UploadResponse>
 
 
 class DownloadService: Service {
@@ -166,4 +166,4 @@ class DownloadResponse: Response<Any, Any> {
         }
     }
 }
-typealias DownloadServiceCall = ServiceCall<Any, Any, DownloadResponse>
+typealias DownloadServiceCall = ServiceCall<DownloadResponse>

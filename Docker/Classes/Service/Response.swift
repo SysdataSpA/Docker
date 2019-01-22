@@ -7,12 +7,38 @@
 
 import Foundation
 
+/*
+ /////////////////// RESPONSE PROTOCOL ///////////////////
+ */
+public protocol Responsable: CustomStringConvertible {
+    associatedtype Val
+    associatedtype ErrVal
+    
+    var request: Request { get }
+    var response: HTTPURLResponse? { get }
+    var httpStatusCode: Int { get }
+    var data: Data { get }
+    var result: ResponseResult<Val, ErrVal?, DockerError>? { get set }
+    
+    var shortDescription: String { get }
+    
+    init(statusCode: Int, data: Data, request: Request)
+    init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse?)
+    
+    func decode()
+    func decodeError(with error: DockerError?)
+}
+
+/*
+ /////////////////// RESPONSE CLASS ///////////////////
+ */
+
 public enum ResponseResult<Val, ErrVal, E: Error> {
     case success(Val)
     case failure(ErrVal?, E)
 }
 
-open class Response<Val, ErrVal>: CustomStringConvertible {
+open class Response<Val, ErrVal>: Responsable {
     
     public var request: Request
     public var response: HTTPURLResponse?
@@ -20,6 +46,10 @@ open class Response<Val, ErrVal>: CustomStringConvertible {
     public var data: Data
     
     public var result: ResponseResult<Val, ErrVal?, DockerError>?
+    
+    public required convenience init(statusCode: Int, data: Data, request: Request) {
+        self.init(statusCode: statusCode, data: data, request: request, response: nil)
+    }
     
     public required init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse? = nil) {
         self.httpStatusCode = statusCode

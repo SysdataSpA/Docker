@@ -24,7 +24,7 @@ open class ServiceManager { // : Singleton, Initializable
         defaultSessionManager.startRequestsImmediately = true
     }
     
-    public func call<Val, ErrVal, Resp: Response<Val, ErrVal>>(with serviceCall: ServiceCall<Val, ErrVal, Resp>) throws {
+    public func call<Resp: Responsable>(with serviceCall: ServiceCall<Resp>) throws {
         serviceCall.isProcessing = true
         
         if useDemoMode || serviceCall.request.useDemoMode {
@@ -47,7 +47,7 @@ open class ServiceManager { // : Singleton, Initializable
         }
     }
     
-    private func request<Val, ErrVal, Resp: Response<Val, ErrVal>>(serviceCall: ServiceCall<Val, ErrVal, Resp>) throws {
+    private func request<Resp: Responsable>(serviceCall: ServiceCall<Resp>) throws {
         let urlRequest = try serviceCall.request.buildUrlRequest()
         SDLogModuleInfo("🌍▶️ Service Manager: start \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         let request = serviceCall.service.sessionManager.request(urlRequest as URLRequestConvertible).validate()
@@ -55,7 +55,7 @@ open class ServiceManager { // : Singleton, Initializable
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
-    private func upload<Val, ErrVal, Resp: Response<Val, ErrVal>>(serviceCall: ServiceCall<Val, ErrVal, Resp>, fileURL: URL) throws {
+    private func upload<Resp: Responsable>(serviceCall: ServiceCall<Resp>, fileURL: URL) throws {
         let urlRequest = try serviceCall.request.buildUrlRequest()
         SDLogModuleInfo("🌍▶️ Service Manager: start upload \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         var request = serviceCall.service.sessionManager.upload(fileURL, with: urlRequest as URLRequestConvertible).validate()
@@ -63,7 +63,7 @@ open class ServiceManager { // : Singleton, Initializable
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
-    private func uploadMultipart<Val, ErrVal, Resp: Response<Val, ErrVal>>(serviceCall: ServiceCall<Val, ErrVal, Resp>) throws {
+    private func uploadMultipart<Resp: Responsable>(serviceCall: ServiceCall<Resp>) throws {
         if !serviceCall.request.method.supportsMultipart {
             throw DockerError.multipartNotSupported(serviceCall.request.method)
         }
@@ -99,13 +99,13 @@ open class ServiceManager { // : Singleton, Initializable
                 self?.sendRequest(request: request, serviceCall: serviceCall)
             case .failure(let error):
                 let responseClass = Resp.self
-                let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
+                var response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
                 response.result = .failure(nil, DockerError.underlying(error, nil, response.httpStatusCode))
             }
         }
     }
     
-    private func download<Val, ErrVal, Resp: Response<Val, ErrVal>>(serviceCall: ServiceCall<Val, ErrVal, Resp>, to destination: @escaping DownloadRequest.DownloadFileDestination) throws {
+    private func download<Resp: Responsable>(serviceCall: ServiceCall<Resp>, to destination: @escaping DownloadRequest.DownloadFileDestination) throws {
         let urlRequest = try serviceCall.request.buildUrlRequest()
         SDLogModuleInfo("🌍▶️ Service Manager: start download \(serviceCall.request.shortDescription)", module: DockerServiceLogModuleName)
         var request = serviceCall.service.sessionManager.download(urlRequest as URLRequestConvertible, to: destination).validate()
@@ -113,7 +113,7 @@ open class ServiceManager { // : Singleton, Initializable
         sendRequest(request: request, serviceCall: serviceCall)
     }
     
-    private func sendRequest<T, Val, ErrVal, Resp: Response<Val, ErrVal>>(request: T, serviceCall: ServiceCall<Val, ErrVal, Resp>) where T: Requestable, T: Alamofire.Request {
+    private func sendRequest<T, Resp: Responsable>(request: T, serviceCall: ServiceCall<Resp>) where T: Requestable, T: Alamofire.Request {
         
         // Progress callback management
         var progressRequest = request
@@ -167,7 +167,7 @@ open class ServiceManager { // : Singleton, Initializable
     }
     
     
-    open func completeServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>>(_ serviceCall: ServiceCall<Val, ErrVal, Resp>, with response: Resp, error: DockerError?) {
+    open func completeServiceCall<Resp: Responsable>(_ serviceCall: ServiceCall<Resp>, with response: Resp, error: DockerError?) {
         if error != nil || (serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode)) {
             SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
             // errori da mappare eventualmente
@@ -184,7 +184,7 @@ open class ServiceManager { // : Singleton, Initializable
 
 //MARK: Demo mode
 extension ServiceManager {
-    public func callServiceInDemoMode<Val, ErrVal, Resp: Response<Val, ErrVal>>(with serviceCall:ServiceCall<Val, ErrVal, Resp>) throws {
+    public func callServiceInDemoMode<Resp: Responsable>(with serviceCall:ServiceCall<Resp>) throws {
         serviceCall.request.sentInDemoMode = true
         #if swift(>=4.2)
         let failureValue = Double.random(in: 0.0...1.0)
@@ -209,7 +209,7 @@ extension ServiceManager {
         }
     }
     
-    private func findDemoFilePath<Val, ErrVal, Resp: Response<Val, ErrVal>>(with serviceCall:ServiceCall<Val, ErrVal, Resp>, forSuccess success:Bool) throws -> String {
+    private func findDemoFilePath<Resp: Responsable>(with serviceCall:ServiceCall<Resp>, forSuccess success:Bool) throws -> String {
         let filename: String
         if success {
             guard let file = serviceCall.request.demoSuccessFileName else {
@@ -230,12 +230,12 @@ extension ServiceManager {
         return path
     }
     
-    private func loadDemoFile<Val, ErrVal, Resp: Response<Val, ErrVal>>(with serviceCall:ServiceCall<Val, ErrVal, Resp>, at path:String) throws -> Data {
+    private func loadDemoFile<Resp: Responsable>(with serviceCall:ServiceCall<Resp>, at path:String) throws -> Data {
         let url = URL(fileURLWithPath: path)
         return try Data(contentsOf: url)
     }
     
-    private func waitingTime<Val, ErrVal, Resp: Response<Val, ErrVal>>(for serviceCall:ServiceCall<Val, ErrVal, Resp>) -> TimeInterval {
+    private func waitingTime<Resp: Responsable>(for serviceCall:ServiceCall<Resp>) -> TimeInterval {
         #if swift(>=4.2)
         let waitingTime = Double.random(in: serviceCall.request.demoWaitingTimeRange)
         #else
@@ -248,19 +248,21 @@ extension ServiceManager {
 
 // MARK: Service Call
 
-public typealias ServiceCompletion<Val, ErrVal, Resp: Response<Val, ErrVal>> = (Resp) -> Void
 
-public class ServiceCall<Val, ErrVal, Resp: Response<Val, ErrVal>> {
+
+public typealias ServiceCompletion<Resp: Responsable> = (Resp) -> Void
+
+public class ServiceCall<Resp: Responsable> {
     
     public let service: Service
     public var request: Request
     public var response: Resp?
     
-    let completion: ServiceCompletion<Val, ErrVal, Resp>
+    let completion: ServiceCompletion<Resp>
     let progressBlock: ProgressHandler?
     public var isProcessing: Bool = false
     
-    public init(with request: Request, service: Service? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion<Val, ErrVal, Resp>) {
+    public init(with request: Request, service: Service? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion<Resp>) {
         if let service = service {
             self.service = service
         } else {

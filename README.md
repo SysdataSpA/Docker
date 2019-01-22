@@ -243,7 +243,7 @@ property. Ex, using Mantle
 For more details visit - **SDServiceGenericProtocol** to define all details of
 service (ex. also the local json to test it in demo mode) -
 **SDServiceGenericRequestProtocol** to define details about the request -
-**SDServiceGenericResponseProtocol** to define details about the response -
+**SDServiceGenericResponsable** to define details about the response -
 **SDServiceGenericErrorProtocol** to define details about response in case of
 failure
 

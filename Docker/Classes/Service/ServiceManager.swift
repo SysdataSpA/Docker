@@ -24,26 +24,32 @@ open class ServiceManager { // : Singleton, Initializable
         defaultSessionManager.startRequestsImmediately = true
     }
     
-    public func call<Resp: Responsable>(with serviceCall: ServiceCall<Resp>) throws {
+    public func call<Resp: Responsable>(with serviceCall: ServiceCall<Resp>) {
         serviceCall.isProcessing = true
         
-        if useDemoMode || serviceCall.request.useDemoMode {
-            try callServiceInDemoMode(with: serviceCall)
-            return
-        }
-        
-        switch serviceCall.request.type {
-        case .data:
-            try request(serviceCall: serviceCall)
-        case .upload(let uploadType):
-            switch uploadType {
-            case .file(let fileUrl):
-                try upload(serviceCall: serviceCall, fileURL: fileUrl)
-            case .multipart:
-                try uploadMultipart(serviceCall: serviceCall)
+        do {
+            if useDemoMode || serviceCall.request.useDemoMode {
+                try callServiceInDemoMode(with: serviceCall)
+                return
             }
-        case .download(let destination):
-            try download(serviceCall: serviceCall, to: destination)
+            
+            switch serviceCall.request.type {
+            case .data:
+                try request(serviceCall: serviceCall)
+            case .upload(let uploadType):
+                switch uploadType {
+                case .file(let fileUrl):
+                    try upload(serviceCall: serviceCall, fileURL: fileUrl)
+                case .multipart:
+                    try uploadMultipart(serviceCall: serviceCall)
+                }
+            case .download(let destination):
+                try download(serviceCall: serviceCall, to: destination)
+            }
+        } catch {
+            let responseClass = Resp.self
+            let response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: nil)
+            completeServiceCall(serviceCall, with: response, error: error as? DockerError ?? .generic(error))
         }
     }
     
@@ -254,7 +260,6 @@ public protocol ServiceCallable {
     
     var service: Service { get }
     var request: Request { get }
-    var response: Resp? { get }
     
     var completion: ServiceCompletion<Resp> { get }
     var progressBlock: ProgressHandler? { get }
@@ -271,7 +276,6 @@ open class ServiceCall<Resp: Responsable>: ServiceCallable {
     
     open var service: Service
     open var request: Request
-    open var response: Resp?
     
     open var completion: ServiceCompletion<Resp>
     open var progressBlock: ProgressHandler?
@@ -298,6 +302,6 @@ open class ServiceCall<Resp: Responsable>: ServiceCallable {
     }
     
     public func call() {
-        try? delegate?.call(with: self)
+        delegate?.call(with: self)
     }
 }

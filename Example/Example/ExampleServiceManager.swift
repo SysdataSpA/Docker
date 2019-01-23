@@ -49,7 +49,7 @@ class ExampleServiceManager: ServiceManager {
             }
             completion(resources)
         }
-        try! call(with: serviceCall)
+        call(with: serviceCall)
     }
     
     func postResource(_ resource:Resource, completion: @escaping (PostResourceResponse) -> Void) {
@@ -57,7 +57,7 @@ class ExampleServiceManager: ServiceManager {
         let serviceCall: PostResourceServiceCall = ServiceCall(with: request) { (response) in
             completion(response)
         }
-        try! call(with: serviceCall)
+        call(with: serviceCall)
     }
 
     func getResource(with id: Int, completion: @escaping (GetResourceByIdResponse) -> Void) {
@@ -65,11 +65,7 @@ class ExampleServiceManager: ServiceManager {
         let serviceCall = GetResourceByIdServiceCall(with: request) { (response) in
             completion(response)
         }
-        do {
-            try call(with: serviceCall)
-        } catch let e {
-            print(e.localizedDescription)
-        }
+        call(with: serviceCall)
     }
     
     func uploadImage(completion: @escaping (UploadResponse) -> Void) {
@@ -79,7 +75,7 @@ class ExampleServiceManager: ServiceManager {
         }) { (response) in
             completion(response)
         }
-        try! call(with: serviceCall)
+        call(with: serviceCall)
     }
     
     func downloadImage(completion: @escaping (DownloadResponse) -> Void) {
@@ -89,6 +85,6 @@ class ExampleServiceManager: ServiceManager {
         }) { (response) in
             completion(response)
         }
-        try! call(with: serviceCall)
+        call(with: serviceCall)
     }
 }

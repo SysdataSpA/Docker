@@ -10,13 +10,13 @@ import Alamofire
 
 open class Request: NSObject {
     
-    public var service: Service = Service()
+    open var service: Service = Service()
     
-    public var method: HTTPMethod = .get
-    public var type: RequestType = .data
+    open var method: HTTPMethod = .get
+    open var type: RequestType = .data
     
-    public var headers: [String: String] = [:]
-    public var urlParameterEncoding: URLEncoding = URLEncoding.queryString
+    open var headers: [String: String] = [:]
+    open var urlParameterEncoding: URLEncoding = URLEncoding.queryString
     
     // HTTP Request
     internal var internalRequest: Alamofire.Request?
@@ -24,27 +24,27 @@ open class Request: NSObject {
         return internalRequest?.request
     }
     
-    public var multipartBodyParts: [MultipartBodyPart]?
+    open var multipartBodyParts: [MultipartBodyPart]?
     
     // Error & Status Codes
-    public var useDifferentResponseForErrors: Bool = false
-    public var httpErrorStatusCodeRange: ClosedRange<Int> = 400...499
+    open var useDifferentResponseForErrors: Bool = false
+    open var httpErrorStatusCodeRange: ClosedRange<Int> = 400...499
     
     //Demo mode
-    public var useDemoMode: Bool = false
-    public var demoSuccessFileName: String?
-    public var demoFailureFileName: String?
-    public var demoFilesBundle: Bundle = Bundle.main
-    public var demoWaitingTimeRange: ClosedRange<TimeInterval> = 0.0...0.0
-    public var demoSuccessStatusCode: Int = 200
-    public var demoFailureStatusCode: Int = 400
-    public var demoFailureChance: Double = 0.0
+    open var useDemoMode: Bool = false
+    open var demoSuccessFileName: String?
+    open var demoFailureFileName: String?
+    open var demoFilesBundle: Bundle = Bundle.main
+    open var demoWaitingTimeRange: ClosedRange<TimeInterval> = 0.0...0.0
+    open var demoSuccessStatusCode: Int = 200
+    open var demoFailureStatusCode: Int = 400
+    open var demoFailureChance: Double = 0.0
     internal var sentInDemoMode: Bool = false
     
     // Parameters
-    public var pathParameters: [String: Any] = [:]
-    public var urlParameters: [String: Any] = [:]
-    public var bodyParameters: Encodable?
+    open var pathParameters: [String: Any] = [:]
+    open var urlParameters: [String: Any] = [:]
+    open var bodyParameters: Encodable?
     
     // Build Request
     internal func buildUrlRequest() throws -> URLRequest {

@@ -33,7 +33,7 @@ class GetResourcesRequest: RequestJSON {
     override init() {
         super.init()
         self.service = ResourcesService()
-        self.demoSuccessFileName = "getResources.json"
+        self.demoSuccessFileName = "getResources2.json"
     }
 }
 typealias GetResourcesResponse = ResponseJSON<[Resource], ErrorResult>

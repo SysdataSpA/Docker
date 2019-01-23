@@ -59,7 +59,6 @@ open class Response<Val, ErrVal>: Responsable {
     }
     
     open func decode() {}
-    
     open func decodeError(with error: DockerError) {}
 }
 
@@ -117,10 +116,7 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal
     override open func decodeError(with error: DockerError) {
         
         switch error {
-        case .missingResponse(_):
-            result = .failure(nil, error)
-            break
-        default:
+        case .underlying(_, _, _):
             do {
                 let value = try decodeJSON(with: ErrVal.self)
                 result = .failure(value, error)
@@ -128,6 +124,11 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal
             } catch let error {
                 result = .failure(nil, .decoding(error))
             }
+            
+            break
+        default:
+            result = .failure(nil, error)
+            break
         }
     }
 }

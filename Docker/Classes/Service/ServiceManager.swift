@@ -139,7 +139,7 @@ open class ServiceManager { // : Singleton, Initializable
         // completion block management
         let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Resp
-            let retrievedData = (data != nil && data!.isEmpty == false) ? data : nil
+            let retrievedData = !(data?.isEmpty ?? true) ? data : nil
             let responseClass = Resp.self
             var responseError: DockerError?
             switch (urlResponse, retrievedData, error) {
@@ -247,20 +247,40 @@ extension ServiceManager {
 }
 
 // MARK: Service Call
-
 public typealias ServiceCompletion<Resp: Responsable> = (Resp) -> Void
 
-open class ServiceCall<Resp: Responsable> {
+public protocol ServiceCallable {
+    associatedtype Resp: Responsable
     
-    public let service: Service
-    public var request: Request
-    public var response: Resp?
+    var service: Service { get }
+    var request: Request { get }
+    var response: Resp? { get }
     
-    let completion: ServiceCompletion<Resp>
-    let progressBlock: ProgressHandler?
+    var completion: ServiceCompletion<Resp> { get }
+    var progressBlock: ProgressHandler? { get }
+    
+    weak var delegate: ServiceManager? { get }
+    
+    var isProcessing: Bool { get }
+    
+    func cancel()
+    func call()
+}
+
+open class ServiceCall<Resp: Responsable>: ServiceCallable {
+    
+    open var service: Service
+    open var request: Request
+    open var response: Resp?
+    
+    open var completion: ServiceCompletion<Resp>
+    open var progressBlock: ProgressHandler?
+    
+    open weak var delegate: ServiceManager?
+    
     public var isProcessing: Bool = false
     
-    public init(with request: Request, service: Service? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion<Resp>) {
+    public init(with request: Request, service: Service? = nil, delegate: ServiceManager? = nil, progressBlock: ProgressHandler? = nil, completion: @escaping ServiceCompletion<Resp>) {
         if let service = service {
             self.service = service
         } else {
@@ -268,11 +288,16 @@ open class ServiceCall<Resp: Responsable> {
         }
         
         self.request = request
+        self.delegate = delegate
         self.completion = completion
         self.progressBlock = progressBlock
     }
     
     public func cancel() {
         request.cancel()
+    }
+    
+    public func call() {
+        try? delegate?.call(with: self)
     }
 }

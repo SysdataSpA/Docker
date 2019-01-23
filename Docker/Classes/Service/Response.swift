@@ -35,7 +35,7 @@ public protocol Responsable: CustomStringConvertible {
 
 public enum ResponseResult<Val, ErrVal, E: Error> {
     case success(Val)
-    case failure(ErrVal?, E)
+    case failure(ErrVal, E)
 }
 
 open class Response<Val, ErrVal>: Responsable {

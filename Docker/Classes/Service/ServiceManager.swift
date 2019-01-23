@@ -139,24 +139,24 @@ open class ServiceManager { // : Singleton, Initializable
         // completion block management
         let completionHandler: RequestCompletion = { [weak self] urlResponse, request, data, error in
             let response: Resp
+            let retrievedData = (data != nil && data!.isEmpty == false) ? data : nil
             let responseClass = Resp.self
             var responseError: DockerError?
-            switch (urlResponse, data, error) {
-            case let (.some(urlResponse), data, .none):
-                response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
+            switch (urlResponse, retrievedData, error) {
+            case let (.some(urlResponse), .some(retrievedData), .none):
+                response = responseClass.init(statusCode: urlResponse.statusCode, data: retrievedData, request: serviceCall.request, response: urlResponse)
                 break
-            case let (.some(urlResponse), _, .some(error)):
-                response = responseClass.init(statusCode: urlResponse.statusCode, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
+            case let (.some(urlResponse), .some(retrievedData), .some(error)):
+                response = responseClass.init(statusCode: urlResponse.statusCode, data: retrievedData, request: serviceCall.request, response: urlResponse)
                 responseError = DockerError.underlying(error, urlResponse, response.httpStatusCode)
-                break
-            case let (_, _, .some(error)):
-                response = responseClass.init(statusCode: 0, data: Data(), request: serviceCall.request, response: urlResponse)
-                responseError = DockerError.underlying(error, nil, response.httpStatusCode)
                 break
             default:
                 response = responseClass.init(statusCode: 0, data: data ?? Data(), request: serviceCall.request, response: urlResponse)
-                let error = DockerError.underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), nil, response.httpStatusCode)
-                responseError = error
+                var httpErrorCode = NSURLErrorUnknown
+                if let err = error as? NSError {
+                    httpErrorCode = err.code
+                }
+                responseError = DockerError.missingResponse(error ?? NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil), httpErrorCode)
             }
             self?.completeServiceCall(serviceCall, with: response, error: responseError)
         }
@@ -166,13 +166,13 @@ open class ServiceManager { // : Singleton, Initializable
         finalRequest.resume()
     }
     
-    
     open func completeServiceCall<Resp: Responsable>(_ serviceCall: ServiceCall<Resp>, with response: Resp, error: DockerError?) {
         if error != nil || (serviceCall.request.useDifferentResponseForErrors && serviceCall.request.httpErrorStatusCodeRange.contains(response.httpStatusCode)) {
-            SDLogModuleInfo("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
+            SDLogModuleError("🌍‼️ Service completed service with error \(error)", module: DockerServiceLogModuleName)
+            
             // errori da mappare eventualmente
-            SDLogModuleInfo("🌍‼️ Trying to map error response", module: DockerServiceLogModuleName)
-            response.decodeError(with: error)
+            SDLogModuleVerbose("🌍‼️ Trying to map error response", module: DockerServiceLogModuleName)
+            response.decodeError(with: error ?? .generic(nil))
         } else {
             response.decode()
         }
@@ -248,11 +248,9 @@ extension ServiceManager {
 
 // MARK: Service Call
 
-
-
 public typealias ServiceCompletion<Resp: Responsable> = (Resp) -> Void
 
-public class ServiceCall<Resp: Responsable> {
+open class ServiceCall<Resp: Responsable> {
     
     public let service: Service
     public var request: Request
@@ -272,5 +270,9 @@ public class ServiceCall<Resp: Responsable> {
         self.request = request
         self.completion = completion
         self.progressBlock = progressBlock
+    }
+    
+    public func cancel() {
+        request.cancel()
     }
 }

@@ -26,7 +26,7 @@ public protocol Responsable: CustomStringConvertible {
     init(statusCode: Int, data: Data, request: Request, response: HTTPURLResponse?)
     
     func decode()
-    func decodeError(with error: DockerError?)
+    func decodeError(with error: DockerError)
 }
 
 /*
@@ -60,7 +60,7 @@ open class Response<Val, ErrVal>: Responsable {
     
     open func decode() {}
     
-    open func decodeError(with error: DockerError?) {}
+    open func decodeError(with error: DockerError) {}
 }
 
 //MARK: CustomStringConvertible
@@ -114,13 +114,20 @@ open class ResponseJSON<Val: Decodable, ErrVal: Decodable>: Response<Val, ErrVal
         return try jsonDecoder.decode(type, from: data)
     }
     
-    override open func decodeError(with error: DockerError?) {
-        do {
-            let value = try decodeJSON(with: ErrVal.self)
-            result = .failure(value, error ?? .generic(nil))
-            
-        } catch let error {
-            result = .failure(nil, .decoding(error))
+    override open func decodeError(with error: DockerError) {
+        
+        switch error {
+        case .missingResponse(_):
+            result = .failure(nil, error)
+            break
+        default:
+            do {
+                let value = try decodeJSON(with: ErrVal.self)
+                result = .failure(value, error)
+                
+            } catch let error {
+                result = .failure(nil, .decoding(error))
+            }
         }
     }
 }

@@ -289,7 +289,7 @@ open class Response: CustomStringConvertible {
     
     open func decodeError() { errorValue = data }
     
-    public var description: String {
+    open var description: String {
         var received = false
         var d = ""
         if let response = response {
@@ -316,7 +316,7 @@ open class Response: CustomStringConvertible {
         return d
     }
     
-    public var shortDescription: String {
+    open var shortDescription: String {
         if let resp = response, let url = resp.url?.absoluteString  {
             return "RESPONSE RECEIVED - URL= \(url) STATUS CODE:\(resp.statusCode)"
         }

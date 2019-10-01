@@ -168,7 +168,7 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
  *
  *  @param level    log level.
  *  @param module   associated module if exists, 'nil' for generic logs.
- *  @param file     file name that requires log. Use `__FILE__´ to retreive it.
+ *  @param file     file name that requires log. Use `__FILE__´ or `__FILE_NAME__´ to retreive it.
  *  @param function function mane that requires log. Use `__PRETTY_FUNCTION__´ to retreive it.
  *  @param line     number of line that requires log. Use `__LINE__´ to retreive it.
  *  @param format   format of message.
@@ -203,11 +203,11 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
  
  *  @param lvl  log level.
  *  @param mdl  associated module if exists, 'nil' for generic logs.
- *  @param fnct file name that requires log. Use `__FILE__´ to retreive it.
+ *  @param fnct file name (without path) that requires log. Use `__FILE_NAME__´ to retreive it.
  *  @param frmt format of message.
  *  @param ...  parameters of format.
  */
-#define SD_LOG_MACRO(lvl, mdl, fnct, frmt, ...) [[SDLogger sharedLogger] logWithLevel: lvl module: mdl file:[NSString stringWithUTF8String:__FILE__] function:[NSString stringWithUTF8String:fnct] line:__LINE__ format:(frmt), ## __VA_ARGS__]
+#define SD_LOG_MACRO(lvl, mdl, fnct, frmt, ...) [[SDLogger sharedLogger] logWithLevel: lvl module: mdl file:[NSString stringWithUTF8String:__FILE_NAME__] function:[NSString stringWithUTF8String:fnct] line:__LINE__ format:(frmt), ## __VA_ARGS__]
 
 
 /**

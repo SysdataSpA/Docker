@@ -19,10 +19,10 @@ PODS:
   - CocoaLumberjack (3.5.3):
     - CocoaLumberjack/Core (= 3.5.3)
   - CocoaLumberjack/Core (3.5.3)
-  - Docker/Blabber (1.3.5):
+  - Docker/Blabber (1.3.6):
     - Blabber
     - Docker/Core
-  - Docker/Core (1.3.5):
+  - Docker/Core (1.3.6):
     - AFNetworking/NSURLConnection (~> 2.6.0)
     - AFNetworking/NSURLSession (~> 2.6.0)
     - AFNetworking/Reachability (~> 2.6.0)
@@ -52,7 +52,7 @@ SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   Blabber: 53050b2f212bb9dbf62cb339bcd22e76a6d51233
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
-  Docker: 90a7ed8800732c3b16ed851636ef488dadb0b2ab
+  Docker: 733ffdfc3098a837dd5c177f8f768e09017f3a62
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
 
 PODFILE CHECKSUM: 4e16a6dd5e0e21da7b6c98ab292aca51679d8313

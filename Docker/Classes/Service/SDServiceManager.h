@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SDServiceGeneric.h"
-#import <AFNetworking/AFNetworking.h>
+@import AFNetworking;
 #import "SDDockerLogger.h"
 
 typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> _Nullable response);

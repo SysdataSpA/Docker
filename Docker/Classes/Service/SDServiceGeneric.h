@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import <AFNetworking/AFNetworking.h>
+@import AFNetworking;
 
 /**
  *  HTTP methots supported by SDServiceManager.

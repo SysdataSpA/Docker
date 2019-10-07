@@ -35,7 +35,7 @@ TODO: Add long description of the pod here.
   # }
 
   s.subspec 'Core' do |co|
-    co.source_files = 'Docker/Classes/**/*'
+co.source_files = 'Docker/Classes/**/*'
     co.dependency 'AFNetworking/Reachability', '~> 2.6.0'
     co.dependency 'AFNetworking/Serialization', '~> 2.6.0'
     co.dependency 'AFNetworking/Security', '~> 2.6.0'

@@ -28,3 +28,7 @@ public func SDLogVerbose(_ message: @autoclosure () -> String, file: StaticStrin
 {
     SDLogger.shared().log(with: .verbose, module: nil,  file: String(describing: file), function: String(describing: function), line: line, message: message())
 }
+public func SDLogDebug(_ message: @autoclosure () -> String, file: StaticString = #file , function: StaticString = #function, line: UInt = #line)
+{
+    SDLogger.shared().log(with: .debug, module: nil,  file: String(describing: file), function: String(describing: function), line: line, message: message())
+}

@@ -30,29 +30,28 @@
 - (NSString*) formatLogMessage:(DDLogMessage*)logMessage
 {
 	NSString* logLevel;
-
 	switch (logMessage->_flag)
 	{
-		case DDLogFlagError :
-			logLevel = @"Error:";
-			break;
-
-		case DDLogFlagWarning :
-			logLevel = @"Warning:";
-			break;
-
-		case DDLogFlagInfo :
-			logLevel = @"Info:";
-			break;
-
+        case DDLogFlagError :
+            logLevel = @"⛔️⛔️ ERROR:";
+            break;
+            
+        case DDLogFlagWarning :
+            logLevel = @"⚠️⚠️ WARNING:";
+            break;
+            
+        case DDLogFlagInfo :
+            logLevel = @"ℹ️ℹ️ INFO:";
+            break;
+            
         case DDLogFlagDebug :
-			logLevel = @"Debug:";
-			break;
-
-		default :
-			logLevel = @"Verbose:";
-			break;
-	}
+            logLevel = @"🧐🧐 DEBUG:";
+            break;
+            
+        default :
+            logLevel = @"💬💬 VERBOSE:";
+            break;
+    }
 
 	NSString* dateAndTime = [dateFormatter stringFromDate:(logMessage->_timestamp)];
 	NSString* logMsg = logMessage->_message;

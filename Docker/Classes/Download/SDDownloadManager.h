@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <AFNetworking/AFNetworking.h>
+@import AFNetworking;
 #import "SDDockerLogger.h"
 
 /**
- *  Type of resource you want retreive. If not specified it will be return a generic NSData object. 
-    If specified DownloadOperationTypeImage it will returned an UIImage instance
+ *  Type of resource you want retreive. If not specified it will be return a generic NSData object.
+ If specified DownloadOperationTypeImage it will returned an UIImage instance
  */
 typedef NS_ENUM (NSUInteger, DownloadOperationType)
 {
@@ -117,15 +117,15 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 /**
  *  Enable use of internal ExpirationDatePlist.plist that preserve expiration date for each resource <url : expirationDate>. This date depends by the expirationInterval set for the resource and represent the available time while any HEAD request are fired to check resources validity.
  *  If enable, if the DOwnloadManager retreive the resource locally, checks if his expiration date is passed. If still valid, the resource is returned without other check (HEAD request), otherwise it will fire a HEAD request to compare his modified date.
-    This plist file is persisted every time the app goes to background.
+ This plist file is persisted every time the app goes to background.
  
-    Default: YES
+ Default: YES
  */
 @property(nonatomic, assign) BOOL useExpirationDatePlist;
 
 /**
  *  Default expiration interval for the resource. It will be overrideen for specific resources using SDDownloadOptions
- *  
+ *
  *  Default: 7200 seconds (2 hours)
  */
 @property(nonatomic, assign) NSTimeInterval defaultExpirationInterval;
@@ -141,7 +141,7 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 /**
  *  Set up to save resource after download into file system folder (<fileSystemPath>)
- * 
+ *
  *  Default: YES
  */
 @property(nonatomic, assign) BOOL useFileSystem;
@@ -203,15 +203,15 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 /**
  *  Looks for a resource locally and if not available or not still valid it will download it.
- *  Before all it looks in Memory Cache or File System (depending your settings) using MD5 of his url as key. If there is a resource locally, it checks the validity using the ExpirationDatePlist (depending useExpirationDatePlist settings) and checks its expiration date. 
-    If resource is still valid is returned immediately, otherwise it fires a HEAD request (depending of useHeadRequestToCheckUpdates setting) to compare the Modified-Date.
-    If Modified-Date is the same, local resource is valid and returned, otherwise it starts to download the update.
-    Once the resource is download it will update the expiration date inside the ExpirationDatePlist (if used), saved inside NSCache (if set) and into File System (if set)
+ *  Before all it looks in Memory Cache or File System (depending your settings) using MD5 of his url as key. If there is a resource locally, it checks the validity using the ExpirationDatePlist (depending useExpirationDatePlist settings) and checks its expiration date.
+ If resource is still valid is returned immediately, otherwise it fires a HEAD request (depending of useHeadRequestToCheckUpdates setting) to compare the Modified-Date.
+ If Modified-Date is the same, local resource is valid and returned, otherwise it starts to download the update.
+ Once the resource is download it will update the expiration date inside the ExpirationDatePlist (if used), saved inside NSCache (if set) and into File System (if set)
  *
  *
  *  @param urlString  / request        url of resource (use this for "normal" request)
-                                       or
-                                       use request if you want to set specific parameters or custom headers to reach your resources (use this if resource is behind a custom service)
+ or
+ use request if you want to set specific parameters or custom headers to reach your resources (use this if resource is behind a custom service)
  *  @param type               type of resource to retreive a casted object
  *  @param options            options object to override global settings for the specific request
  *  @param completionSuccess  block called when resorce is retreived
@@ -226,16 +226,41 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 
 - (void) getResourceWithRequest:(NSMutableURLRequest* _Nonnull)request completionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nullable)completionSuccess progress:(SDDownloadManagerProgressHandler _Nullable)progress completionFailure:(SDDownloadManagerCompletionFailureHandler _Nullable)completionFailure;
 
+
+/**
+ *  Every time you want to download a resource for a specific url, the SDDownloadManager add his blocks in a structure, as a publish-subscriber pattern.
+ *  When the SDDownloadManager ends, it notifies and perform all blocks registered as subscriber for it. If you want to avoid this, you can use following methods to remove subscribers for a specific url, giving the block used in getResourceAtUrl:
+ 
+ *  Method to avoid the completion calls in all owners that asked to retrieve a resource for a specific url.
+ *  Base implementation starts the SDDownloadManager to retrieve the resource.
+ *  In extensions you should call super.
+ *
+ *  @param urlString                url of the desired resource
+ *  @param completionSuccess        the complition block that should be invoked when the download finishes and that you want to remove
+ 
+ */
+- (void) removeSubscriberForUrl:(NSString* _Nonnull)urlString withCompletionSuccess:(SDDownloadManagerCompletionSuccessHandler _Nonnull)completionSuccess;
+- (void) removeAllSubscribersForUrl:(NSString* _Nonnull)urlString;
+
 /**
  *  Return the local path where persist the resource at the given url. It will be used to retreive manually the resource or to check if is present locally (ex. [UIImage imageWithContentOFUrl: <this path>])
  
-    Default: local path set in <fileSystemPath>/<MD5 of url>
+ Default: local path set in <fileSystemPath>/<MD5 of url>
  *
  *  @param urlString    url of the resource
  *
  *  @return path        local path where persist the resource
  */
 - (NSString* _Nullable) localResourcePathForUrlString:(NSString* _Nonnull)urlString;
+
+/**
+ *  Check if the resource that corresponds to a given url is already stored locally.
+ *
+ *  @param urlString    url of the resource
+ *
+ *  @return if is stored locally
+ */
+- (BOOL) isStoredLocallyResourceForUrlString:(NSString* _Nonnull)urlString;
 
 
 #pragma mark - Count size
@@ -257,8 +282,8 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 @property (nonatomic, readonly) long downloadOperationExpectedQueueCount;
 
 /**
-*  Number of files of remaining resources in download
-*/
+ *  Number of files of remaining resources in download
+ */
 @property (nonatomic, readonly) long downloadOperationRemainingQueueCount;
 
 /**
@@ -278,13 +303,13 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *  @param urlStrings         urls of resources to download
  *  @param options            options to use
  */
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(NSArray<SDDownloadOptions*>* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 - (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceAtUrls:(NSArray<NSString*>* _Nonnull)urlStrings options:(NSArray<SDDownloadOptions*>* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 - (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
-- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(SDDownloadOptions* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(NSArray<SDDownloadOptions*>* _Nullable)options completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
+- (void) countDownloadSizeForResourceWithRequests:(NSArray<NSMutableURLRequest*>* _Nonnull)requests options:(NSArray<SDDownloadOptions*>* _Nullable)options progress:(SDDownloadManagerCheckSizeCompletion _Nullable)progress completion:(SDDownloadManagerCheckSizeCompletion _Nullable)completion;
 
 
 /**
@@ -305,7 +330,9 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
  *
  */
 - (void) cancelAllDownloadRequests;
-
+- (void) cancelAllDownloadRequestsRemovingSubscribers:(BOOL)removeSubscribers;
+- (void) cancelDownloadRequestForUrlString:(NSString* _Nonnull)urlString;
+- (void) cancelDownloadRequestForUrlString:(NSString* _Nonnull)urlString removingSubscribers:(BOOL)removeSubscribers;
 
 /**
  *  reset internal MemoryCache and ExpirationDatePlist
@@ -332,3 +359,5 @@ typedef void (^ SDDownloadManagerBatchOperationCompletion)(BOOL downloadComplete
 - (NSURL* _Nullable) encodedUrlFromString:(NSString* _Nonnull)urlString;
 
 @end
+
+

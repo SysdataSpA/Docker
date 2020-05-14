@@ -450,7 +450,11 @@
     if (!(self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode])))
     {
         [SDServiceManager printWebServiceRequest:operation];
-        [SDServiceManager printWebServiceResponse:operation];
+        if ([serviceInfo.service respondsToSelector:@selector(printServiceResponse)]) {
+            [serviceInfo.service printServiceResponse] ? [SDServiceManager printWebServiceResponse:operation] : SDLogModuleInfo(kServiceManagerLogModuleName, @"%@ don't print service response with selector: printServiceResponse", [serviceInfo.service class]);
+        } else {
+            [SDServiceManager printWebServiceResponse:operation];
+        }
     }
     else
     {

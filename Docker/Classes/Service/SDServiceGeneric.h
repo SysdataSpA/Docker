@@ -255,6 +255,12 @@ typedef NS_ENUM (NSUInteger, SDHTTPMethod)
  */
 - (double) demoModeFailureChanceEvent;
 
+/**
+*  Flag to prevent to print service response in console
+*
+*  @return YES to print the service response in console, NO otherwise. Default is YES.
+*/
+- (BOOL)printServiceResponse;
 
 @end
 

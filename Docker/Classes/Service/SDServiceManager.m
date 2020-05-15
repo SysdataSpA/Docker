@@ -541,7 +541,8 @@
     __weak typeof (self) weakself = self;
     dispatch_async(mappingQueue, ^{
         __block id<SDServiceGenericErrorProtocol> errorObject = nil;
-        if (operation.response)
+        int statusCode;
+        if (operation && operation.response)
         {
             // if there is a service response, get the error code
             NSError* mappingError = nil;
@@ -559,9 +560,10 @@
             {
                 SDLogModuleError(kServiceManagerLogModuleName, @"Can't retreive error from response: %@", mappingError);
             }
+            statusCode = (int)operation.response.statusCode;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself manageError:error forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:(int)operation.response.statusCode];
+            [weakself manageError:error forServiceInfo:serviceInfo withErrorObject:errorObject statusCode:statusCode];
         });
     });
 }

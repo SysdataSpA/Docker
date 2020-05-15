@@ -29,8 +29,11 @@
 }
 
 @property (nonatomic, strong, readwrite) NSString* urlString;
+@property (nonatomic, strong, readwrite) NSMutableURLRequest* urlRequest;
 @property (nonatomic, strong) SDDownloadImageViewCompletionHandler completionHandler;
 
+@property (nonatomic, weak) SDDownloadManagerCompletionSuccessHandler successCompletionBlock;
+@property (nonatomic, weak) SDDownloadManagerCompletionFailureHandler failureCompletionBlock;
 @end
 
 @implementation SDDownloadImageView
@@ -59,10 +62,11 @@
 {
     transitionDuration = DIV_BASE_ANIMATION_DURATION;
     
-    self.showActivityIndicatorWhileLoading = NO;
-    self.transitionType = SDDownloadImageTransitionCrossDissolve;
-    self.showLocalImageBeforeCheckingValidity = YES;
-    self.performCompletionOnlyAtImageChanges = YES;
+    _showActivityIndicatorWhileLoading = NO;
+    _transitionType = SDDownloadImageTransitionCrossDissolve;
+    _showLocalImageBeforeCheckingValidity = YES;
+    _performCompletionOnlyAtImageChanges = YES;
+    _reduceImageSize = NO;
 }
 
 - (void) setShowActivityIndicatorWhileLoading:(BOOL)showActivityIndicatorWhileLoading
@@ -118,7 +122,7 @@
     
     self.image = self.placeHolderImage;
     
-    if (self.showActivityIndicatorWhileLoading)
+    if (self.showActivityIndicatorWhileLoading && (urlString || request))
     {
         [self bringSubviewToFront:aiv];
         [aiv startAnimating];
@@ -128,32 +132,39 @@
         [aiv stopAnimating];
     }
     
-    
-    if (urlString || request)
+    [self startRetrieveImageWithUrlString:urlString urlRequest:_urlRequest];
+}
+
+- (void) startRetrieveImageWithUrlString:(NSString*)urlString urlRequest:(NSMutableURLRequest*)urlRequest
+{
+    if (urlString || urlRequest)
     {
-        self.urlString = urlString ? urlString : request.URL.absoluteString;
+        // remove previous subscriber to avoid previous block's call
+        [[SDDownloadManager sharedManager] removeSubscriberForUrl:self.urlString withCompletionSuccess:self.successCompletionBlock];
+        if(self.cancelPreviousDownloadInNewRequest)
+        {
+            [[SDDownloadManager sharedManager] cancelDownloadRequestForUrlString:self.urlString removingSubscribers:YES];
+        }
+        
+        self.urlString = urlString ? urlString : urlRequest.URL.absoluteString;
+        self.urlRequest = urlRequest;
         
         __weak typeof (self) weakSelf = self;
-        SDDownloadManagerCompletionSuccessHandler successCompletionBlock = ^(id downloadedObject, NSString *urlString, NSString *localPath, DownloadOperationResultType resultType) {
-            if([weakSelf.urlString isEqualToString:urlString])
-            {
-                [weakSelf updateImage:(UIImage*)downloadedObject forResultType:resultType];
-            }
+        SDDownloadManagerCompletionSuccessHandler successCompletionBlock= ^(id downloadedObject, NSString *urlString, NSString *localPath, DownloadOperationResultType resultType) {
+            [weakSelf retrieveImageSuccess:(UIImage*)downloadedObject forUrlString:urlString localPath:localPath resultType:resultType];
         };
         
         SDDownloadManagerCompletionFailureHandler failureCompletionBlock = ^(NSString * _Nullable urlString, NSError * _Nullable error) {
-            if([weakSelf.urlString isEqualToString:urlString])
-            {
-                if(weakSelf.downloadFailureImage)
-                {
-                    weakSelf.image = weakSelf.downloadFailureImage;
-                }
-            }
+            [weakSelf retrieveImageFailureWithError:error forUrlString:urlString];
         };
         
-        if (request)
+        self.successCompletionBlock = successCompletionBlock;
+        self.failureCompletionBlock = failureCompletionBlock;
+        
+        
+        if (self.urlRequest)
         {
-            [[SDDownloadManager sharedManager] getResourceWithRequest:request type:DownloadOperationTypeImage options:self.downloadOptions completionSuccess:successCompletionBlock progress:nil completionFailure:failureCompletionBlock];
+            [[SDDownloadManager sharedManager] getResourceWithRequest:self.urlRequest type:DownloadOperationTypeImage options:self.downloadOptions completionSuccess:successCompletionBlock progress:nil completionFailure:failureCompletionBlock];
         }
         else
         {
@@ -162,9 +173,21 @@
     }
 }
 
-- (void) updateImage:(UIImage*)image forResultType:(DownloadOperationResultType)resultType
+
+- (void) retrieveImageSuccess:(UIImage*)image forUrlString:(NSString*)urlString localPath:(NSString*)localPath resultType:(DownloadOperationResultType)resultType
 {
+    if(![self.urlString isEqualToString:urlString])
+    {
+        return;
+    }
+    
     BOOL performCompletion = YES;
+    
+    if(self.reduceImageSize)
+    {
+        image = [self reducedImage:image];
+    }
+    
     
     if (image)
     {
@@ -215,6 +238,23 @@
     }
 }
 
+- (void) retrieveImageFailureWithError:(NSError*)error forUrlString:(NSString*)urlString
+{
+    if(![self.urlString isEqualToString:urlString])
+    {
+        return;
+    }
+    
+    if (self.showActivityIndicatorWhileLoading)
+    {
+        [aiv stopAnimating];
+    }
+    
+    if(self.downloadFailureImage)
+    {
+        self.image = self.downloadFailureImage;
+    }
+}
 
 
 #pragma mark Transitions Effect
@@ -392,4 +432,49 @@
     }
 }
 
+
+#pragma mark Utils
+
+- (UIImage*) reducedImage:(UIImage*)image
+{
+    CGSize frameSize = self.frame.size;
+    if(frameSize.height > image.size.height || frameSize.width > image.size.width)
+    {
+        return image;
+    }
+    
+    float imageRatio = image.size.width / image.size.height;
+    float frameRatio = frameSize.width / frameSize.height;
+    
+    float w, h;
+    BOOL resizeByWidth;
+    float ratio = imageRatio;
+    if(frameRatio >= imageRatio)
+    {
+        resizeByWidth = YES; // corretto anche se sono <1
+    }
+    
+    if(resizeByWidth)
+    {
+        w = frameSize.width;
+        h = frameSize.width / ratio;
+    }
+    else
+    {
+        w = frameSize.height * ratio;
+        h = frameSize.height;
+    }
+    CGSize newSize = CGSizeMake(w, h);
+    
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+
 @end
+
+

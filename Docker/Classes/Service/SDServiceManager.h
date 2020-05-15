@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SDServiceGeneric.h"
-#import <AFNetworking/AFNetworking.h>
+@import AFNetworking;
 #import "SDDockerLogger.h"
 
 typedef void (^ ServiceCompletionSuccessHandler)(id<SDServiceGenericResponseProtocol> _Nullable response);
@@ -22,6 +22,7 @@ typedef void (^ ServiceCompletionFailureHandler)(id<SDServiceGenericErrorProtoco
 typedef void (^ ServiceDownloadProgressHandler)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
 typedef void (^ ServiceUploadProgressHandler)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef NSCachedURLResponse* _Nullable (^ ServiceCachingBlock)(NSURLConnection* _Nullable connection, NSCachedURLResponse* _Nullable cachedResponse);
+typedef void (^ ServiceAuthenticationChallenge)(NSURLConnection * _Nonnull connection, NSURLAuthenticationChallenge * _Nonnull challenge);
 
 typedef NS_ENUM (NSInteger, SDServiceOperationType)
 {
@@ -50,6 +51,7 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
 @property (nonatomic, strong) ServiceDownloadProgressHandler _Nullable downloadProgressHandler;
 @property (nonatomic, strong) ServiceUploadProgressHandler _Nullable uploadProgressHandler;
 @property (nonatomic, strong) ServiceCachingBlock _Nullable cachingBlock;
+@property (nonatomic, strong) ServiceAuthenticationChallenge _Nullable authenticationChallengeBlock;
 
 @end
 

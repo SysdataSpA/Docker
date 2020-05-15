@@ -13,8 +13,7 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
-#if __has_include("CocoaLumberjack.h") || __has_include("CocoaLumberjack/CocoaLumberjack.h")
-#define COCOALUMBERJACK_AVAILABLE 1
+#ifdef COCOALUMBERJACK
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #endif
 
@@ -23,7 +22,8 @@
  */
 typedef NS_ENUM (NSUInteger, SDLogLevel)
 {
-    SDLogLevelVerbose = 1,
+    SDLogLevelDebug = 1,
+    SDLogLevelVerbose,
     SDLogLevelInfo,
     SDLogLevelWarning,
     SDLogLevelError
@@ -33,7 +33,7 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
 @protocol SDLoggerDelegate <NSObject>
 
 @optional
-- (void) logger:(SDLogger* _Nonnull)logger didReceiveLogWithLevel:(SDLogLevel)level syncMode:(BOOL)syncMode module:(NSString *_Nullable)module file:(NSString *_Nullable)file function:(NSString* _Nullable)function line:(NSUInteger)line format:(NSString * _Nullable)format arguments:(va_list)arguments;
+- (void) logger:(SDLogger* _Nonnull)logger didReceiveLogWithLevel:(SDLogLevel)level syncMode:(BOOL)syncMode module:(NSString *_Nullable)module file:(NSString *_Nullable)file function:(NSString* _Nullable)function line:(NSUInteger)line message:(NSString * _Nullable)message;
 
 @end
 
@@ -133,6 +133,10 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
  */
 - (void) setupWithLoggers:(NSArray* _Nullable)loggers;
 
+#if COCOALUMBERJACK
+- (void) setupWithFormatter:(id<DDLogFormatter> _Nullable)formatter;
+#endif
+
 /**
  * set log level for a specific module.
  *
@@ -168,7 +172,7 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
  *
  *  @param level    log level.
  *  @param module   associated module if exists, 'nil' for generic logs.
- *  @param file     file name that requires log. Use `__FILE__´ to retreive it.
+ *  @param file     file name that requires log. Use `__FILE__´ or `__FILE_NAME__´ to retreive it.
  *  @param function function mane that requires log. Use `__PRETTY_FUNCTION__´ to retreive it.
  *  @param line     number of line that requires log. Use `__LINE__´ to retreive it.
  *  @param format   format of message.
@@ -203,11 +207,11 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
  
  *  @param lvl  log level.
  *  @param mdl  associated module if exists, 'nil' for generic logs.
- *  @param fnct file name that requires log. Use `__FILE__´ to retreive it.
+ *  @param fnct file name that requires log. Use `__FILE_NAME__´ to retreive it.
  *  @param frmt format of message.
  *  @param ...  parameters of format.
  */
-#define SD_LOG_MACRO(lvl, mdl, fnct, frmt, ...) [[SDLogger sharedLogger] logWithLevel: lvl module: mdl file:[NSString stringWithUTF8String:__FILE__] function:[NSString stringWithUTF8String:fnct] line:__LINE__ format:(frmt), ## __VA_ARGS__]
+#define SD_LOG_MACRO(lvl, mdl, fnct, frmt, ...) [[SDLogger sharedLogger] logWithLevel: lvl module: mdl file:[NSString stringWithUTF8String:__FILE_NAME__] function:[NSString stringWithUTF8String:fnct] line:__LINE__ format:(frmt), ## __VA_ARGS__]
 
 
 /**
@@ -222,6 +226,7 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
 #define SDLogModuleWarning(mdl, frmt, ...)   SD_LOG_MACRO(SDLogLevelWarning, mdl, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 #define SDLogModuleInfo(mdl, frmt, ...)   SD_LOG_MACRO(SDLogLevelInfo, mdl, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 #define SDLogModuleVerbose(mdl, frmt, ...)   SD_LOG_MACRO(SDLogLevelVerbose, mdl, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
+#define SDLogModuleDebug(mdl, frmt, ...)   SD_LOG_MACRO(SDLogLevelDebug, mdl, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 
 /**
  *  function to log a generic message (not associated to specific module).
@@ -234,5 +239,6 @@ typedef NS_ENUM (NSUInteger, SDLogLevel)
 #define SDLogWarning(frmt, ...)   SD_LOG_MACRO(SDLogLevelWarning, nil, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 #define SDLogInfo(frmt, ...)   SD_LOG_MACRO(SDLogLevelInfo, nil, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 #define SDLogVerbose(frmt, ...)   SD_LOG_MACRO(SDLogLevelVerbose, nil, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
+#define SDLogDebug(frmt, ...)   SD_LOG_MACRO(SDLogLevelDebug, nil, __PRETTY_FUNCTION__, frmt, ## __VA_ARGS__)
 
 

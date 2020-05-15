@@ -260,6 +260,7 @@
                             }
                         }
                     }
+                    [formData throttleBandwidthWithPacketSize:kAFUploadStream3GSuggestedPacketSize delay:kAFUploadStream3GSuggestedDelay];
                 } success:^(AFHTTPRequestOperation* _Nonnull operation, id _Nonnull responseObject) {
                     [weakself manageResponse:responseObject inOperation:operation forServiceInfo:serviceInfo];
                 } failure:^(AFHTTPRequestOperation* _Nullable operation, NSError* _Nonnull error) {
@@ -358,6 +359,12 @@
     if (serviceInfo.cachingBlock != nil)
     {
         [operation setCacheResponseBlock:serviceInfo.cachingBlock];
+    }
+    
+    // set the operation's authentication block if needed
+    if (serviceInfo.authenticationChallengeBlock != nil)
+    {
+        [operation setWillSendRequestForAuthenticationChallengeBlock:serviceInfo.authenticationChallengeBlock];
     }
     
     // add operation to the caller

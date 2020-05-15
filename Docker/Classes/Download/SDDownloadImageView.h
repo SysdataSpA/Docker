@@ -56,56 +56,108 @@ typedef NS_OPTIONS (NSUInteger, SDDownloadImageTransitionType)
  
  *  Default = SDDownloadImageTransitionCrossDissolve
  */
-@property (nonatomic, assign) SDDownloadImageTransitionType transitionType;
+@property (nonatomic, assign) SDDownloadImageTransitionType transitionType UI_APPEARANCE_SELECTOR;
 
 /**
  *  shows an activity indicator while image is loading
  *  Default = NO
  */
-@property (nonatomic, assign) BOOL showActivityIndicatorWhileLoading;
+@property (nonatomic, assign) BOOL showActivityIndicatorWhileLoading UI_APPEARANCE_SELECTOR;
 
 /**
  *  Shows the local image also before checking updates with head request. If enabled the image will be updated next. If disabled the image shown will always be the final one.
  
  *  Default = YES;
  */
-@property (nonatomic, assign) BOOL showLocalImageBeforeCheckingValidity;
+@property (nonatomic, assign) BOOL showLocalImageBeforeCheckingValidity UI_APPEARANCE_SELECTOR;
 
 /**
  *  performs the complition block only when the image changes
  *  Default = YES
  */
-@property (nonatomic, assign) BOOL performCompletionOnlyAtImageChanges;
+@property (nonatomic, assign) BOOL performCompletionOnlyAtImageChanges UI_APPEARANCE_SELECTOR;
 
 
 @property (nonatomic, strong, readonly) NSString* _Nullable urlString;
+@property (nonatomic, strong, readonly) NSMutableURLRequest* _Nullable urlRequest;
 
 /**
  *  The placeholder image to shown while loading the desired one from ulr
  */
-@property (nonatomic, strong) UIImage* _Nullable placeHolderImage;
+@property (nonatomic, strong) UIImage* _Nullable placeHolderImage UI_APPEARANCE_SELECTOR;
 
 /**
  *  The image to show if there is a failure while retreiving the desired
  */
-@property (nonatomic, strong) UIImage* _Nullable downloadFailureImage;
+@property (nonatomic, strong) UIImage* _Nullable downloadFailureImage UI_APPEARANCE_SELECTOR;
 
 /**
  *  Options to set while retreiving the image
  */
-@property (nonatomic, strong) SDDownloadOptions* _Nullable downloadOptions;
+@property (nonatomic, strong) SDDownloadOptions* _Nullable downloadOptions UI_APPEARANCE_SELECTOR;
+
+/**
+ *  Options to enable the dimensions resize of image. Default is false. If enabled, image will be resized as the imageview frame or as the value set in meximumImageDimension property.
+ */
+@property (nonatomic, assign) BOOL reduceImageSize UI_APPEARANCE_SELECTOR;
+
+/**
+ *  Cancels previous pending downloads for new requests (default false)
+ */
+@property (nonatomic, assign) BOOL cancelPreviousDownloadInNewRequest UI_APPEARANCE_SELECTOR;
 
 
 /**
  *  Start retreiving the image (form local or downloading from remote) usign the SDDwonloadManager. Updates and image managements are completely auotnomous and handled by the SDDownloadManager. In case should be usefull get infos about the retreived image use the completion handler.
  *
- *  @param urlString / request         url of the desired resource (use this or specific request)
-                                       or
-                                       request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
-  *  @param completion         block executed when the image is returned
+ *  @param urlString / request         url of the desired resource (use this or specific request) or request to download the resource (use this only for specific case that needs custom HTTP request with headers, methods, parameters, ...)
+ *  @param completion         block executed when the image is returned
  */
 - (void) setImageWithURLString:(NSString* _Nonnull)urlString completion:(SDDownloadImageViewCompletionHandler _Nullable)completion;
 - (void) setImageWithURLWithRequest:(NSMutableURLRequest* _Nonnull)request completion:(SDDownloadImageViewCompletionHandler _Nullable)completion;
 - (void) setImageWithURLString:(NSString* _Nonnull)urlString;
 
+
+#pragma mark Life Cycle
+
+/**
+ *  Method called during initialization.
+ *  In extensions you should call super.
+ */
+- (void) setup;
+
+/**
+ *  Method called when it starts to retrieve the images.
+ *  Base implementation starts the SDDownloadManager to retrieve the resource.
+ *  In extensions you should call super.
+ *
+ *  @param urlString / request         url of the desired resource (use this or specific request)
+ */
+- (void) startRetrieveImageWithUrlString:(NSString*_Nullable)urlString urlRequest:(NSMutableURLRequest*_Nullable)urlRequest;
+
+/**
+ *  Method called after the image is retrieved with success.
+ *  Base implementation shows the image with the transition set.
+ *  In extensions you should call super.
+ *
+ *  @param image             the retrieved image
+ *  @param urlString         the corresponding url of the retrieved image
+ *  @param localPath         the local path where is stored the image
+ *  @param resultType        the result type of the operation
+ 
+ */
+- (void) retrieveImageSuccess:(UIImage* _Nullable)image forUrlString:(NSString* _Nullable)urlString localPath:(NSString* _Nullable)localPath resultType:(DownloadOperationResultType)resultType;
+
+/**
+ *  Method called after the image couldn't be retrieved.
+ *  Base implementation shows the failure image set.
+ *  In extensions you should call super.
+ *
+ *  @param error             the error occured
+ *  @param urlString         the corresponding url of the image
+ */
+- (void) retrieveImageFailureWithError:(NSError* _Nullable)error forUrlString:(NSString* _Nullable)urlString;
+
 @end
+
+

@@ -175,7 +175,7 @@
         [[SDLogger sharedLogger] setLogLevel:logLevel forModuleWithName:self.loggerModuleName];
 #endif
         // fake url
-        self.downloadRequestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://www.sysdata.it"]];
+        self.downloadRequestOperationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@""]];
         self.downloadRequestOperationManager.operationQueue.maxConcurrentOperationCount = OPERATION_QUEUE_COUNT;                                                                                                                               // NSOperationQueueDefaultMaxConcurrentOperationCount; NB non usarlo perché non gestito bene e va in timeout
         self.downloadRequestOperationManager.securityPolicy.allowInvalidCertificates = NO;
         self.downloadRequestOperationManager.responseSerializer.acceptableContentTypes = nil;

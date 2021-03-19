@@ -30,17 +30,23 @@
     self.tableView.dataSource = self;
     
     __weak typeof (self) weakSelf = self;
-    [[MyServiceManager sharedServiceManager] callServiceForNumUsers:@25 withCompletion:^(SDServiceExampleResponse* response) {
-        weakSelf.users = response.users;
-        [weakSelf.tableView reloadData];
+    [[MyServiceManager sharedServiceManager] callServiceForNumUsers:@25 withCompletion:^(id<SDServiceGenericResponseProtocol>  _Nullable response) {
+        SDServiceExampleResponse* resp = (SDServiceExampleResponse*)response;
         
-    } failure:^(SDServiceExampleError* error) {
-        NSString* message = [NSString stringWithFormat:@"ErrorMessage = %@\nTechnicalMessage = %@\nHTTP status code = %d\nTechnical error code = %d", error.errorMessage, error.technicalErrorMessage, error.httpStatusCode, error.technicalErrorCode];
+        weakSelf.users = resp.users;
+        [weakSelf.tableView reloadData];
+    } failure:^(id<SDServiceGenericErrorProtocol>  _Nullable error) {
+        SDServiceExampleError* err = (SDServiceExampleError*)error;
+        
+        NSString* message = [NSString stringWithFormat:@"ErrorMessage = %@\nTechnicalMessage = %@\nHTTP status code = %d\nTechnical error code = %d",
+                             err.errorMessage,
+                             err.technicalErrorMessage,
+                             err.httpStatusCode,
+                             err.technicalErrorCode];
         
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:nil]];
         [weakSelf presentViewController:alert animated:YES completion:nil];
-            
     }];
 }
 

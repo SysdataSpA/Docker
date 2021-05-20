@@ -545,7 +545,7 @@
     __weak typeof (self) weakself = self;
     dispatch_async(mappingQueue, ^{
         __block id<SDServiceGenericErrorProtocol> errorObject = nil;
-        int statusCode;
+        int statusCode = 0;
         if (operation && operation.response)
         {
             // if there is a service response, get the error code
@@ -789,7 +789,7 @@
 
 - (void)printWebServiceErrorMessage:(NSString*)message
 {
-    SDLogModuleError(kServiceManagerLogModuleName, message);
+    SDLogModuleError(kServiceManagerLogModuleName,@"%@",message);
 }
 
 @end

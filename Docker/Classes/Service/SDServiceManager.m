@@ -449,11 +449,11 @@
     
     if (!(self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode])))
     {
-        [SDServiceManager printWebServiceRequest:operation];
+        [self printWebServiceRequest:operation];
         if ([serviceInfo.service respondsToSelector:@selector(printServiceResponse)]) {
-            [serviceInfo.service printServiceResponse] ? [SDServiceManager printWebServiceResponse:operation] : SDLogModuleInfo(kServiceManagerLogModuleName, @"%@ don't print service response with selector: printServiceResponse", [serviceInfo.service class]);
+            [serviceInfo.service printServiceResponse] ? [self printWebServiceResponse:operation] : SDLogModuleInfo(kServiceManagerLogModuleName, @"%@ don't print service response with selector: printServiceResponse", [serviceInfo.service class]);
         } else {
-            [SDServiceManager printWebServiceResponse:operation];
+            [self printWebServiceResponse:operation];
         }
     }
     else
@@ -509,15 +509,15 @@
 {
     if (!(self.useDemoMode || ([serviceInfo.service respondsToSelector:@selector(useDemoMode)] && [serviceInfo.service useDemoMode])))
     {
-        [SDServiceManager printWebServiceRequest:operation];
-        [SDServiceManager printWebServiceResponse:operation];
+        [self printWebServiceRequest:operation];
+        [self printWebServiceResponse:operation];
     }
     
     serviceInfo.isProcessing = NO;
     
     [self removeExecutedOperation:operation forDelegate:serviceInfo.delegate];
     
-    SDLogModuleError(kServiceManagerLogModuleName, @"SERVICE FAILURE: %@ with code: %d", NSStringFromClass([serviceInfo.service class]), (int)error.code);
+    [self printWebServiceError:error service:serviceInfo];
     
     if (!operation.response)
     {
@@ -557,12 +557,12 @@
                 errorObject = [serviceInfo.service errorForObject:errorResponse error:&mappingError];
                 if (mappingError)
                 {
-                    SDLogModuleError(kServiceManagerLogModuleName, @"Error object unmanaged: %@\nError: %@", errorResponse, mappingError);
+                    [weakself printWebServiceErrorMessage:[NSString stringWithFormat:@"Error object unmanaged: %@\nError: %@", errorResponse, mappingError]];
                 }
             }
             else
             {
-                SDLogModuleError(kServiceManagerLogModuleName, @"Can't retreive error from response: %@", mappingError);
+                [weakself printWebServiceErrorMessage:[NSString stringWithFormat:@"Can't retreive error from response: %@", mappingError]];
             }
             statusCode = (int)operation.response.statusCode;
         }
@@ -769,7 +769,7 @@
 
 #pragma mark - Utils
 
-+ (void) printWebServiceRequest:(AFHTTPRequestOperation*)operation
+- (void) printWebServiceRequest:(AFHTTPRequestOperation*)operation
 {
     NSURLRequest* request = [operation request];
     NSString* bodyString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
@@ -777,9 +777,19 @@
     SDLogModuleVerbose(kServiceManagerLogModuleName, @"REQUEST to Web Service at URL: %@;\n HEADERS:\n%@\nBODY:\n%@", [[request URL] absoluteString], request.allHTTPHeaderFields, bodyString);
 }
 
-+ (void) printWebServiceResponse:(AFHTTPRequestOperation*)operation
+- (void) printWebServiceResponse:(AFHTTPRequestOperation*)operation
 {
     SDLogModuleVerbose(kServiceManagerLogModuleName, @"RESPONSE:\n%@\nBODY:\n%@", [operation response], [operation responseString]);
+}
+
+- (void)printWebServiceError:(NSError *)error service:(SDServiceCallInfo*)serviceInfo
+{
+    SDLogModuleError(kServiceManagerLogModuleName, @"SERVICE FAILURE: %@ with code: %d", NSStringFromClass([serviceInfo.service class]), (int)error.code);
+}
+
+- (void)printWebServiceErrorMessage:(NSString*)message
+{
+    SDLogModuleError(kServiceManagerLogModuleName, message);
 }
 
 @end

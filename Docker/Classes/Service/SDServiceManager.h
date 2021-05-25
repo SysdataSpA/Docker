@@ -288,4 +288,30 @@ typedef NS_ENUM (NSInteger, SDServiceOperationType)
  */
 - (void) callService:(SDServiceGeneric* _Nonnull)service withRequest:(id<SDServiceGenericRequestProtocol> _Nonnull)request operationType:(NSInteger)operationType delegate:(id <SDServiceManagerDelegate> _Nullable)delegate completionSuccess:(ServiceCompletionSuccessHandler _Nullable)completionSuccess completionFailure:(ServiceCompletionFailureHandler _Nullable)completionFailure;
 
+/**
+ * Print Service Request
+ * Override this method if you want to customize your logs.
+ *  @param operation         operation object
+ */
+- (void) printWebServiceRequest:(AFHTTPRequestOperation* _Nullable)operation;
+/**
+ * Print Service Response
+ * Override this method if you want to customize your logs.
+ *  @param operation         operation object
+ */
+- (void) printWebServiceResponse:(AFHTTPRequestOperation* _Nullable)operation;
+/**
+ * Print Service Error for Eervice
+ * Override this method if you want to customize your logs.
+ *  @param error         error object
+ *  @param serviceInfo   service object
+ */
+- (void) printWebServiceError:(NSError * _Nullable)error service:(SDServiceCallInfo* _Nullable)serviceInfo;
+/**
+ * Print Service Error Message
+ * Override this method if you want to customize your logs.
+ *  @param message       error message
+ */
+- (void) printWebServiceErrorMessage:(NSString* _Nullable)message;
+
 @end

@@ -132,7 +132,7 @@
         [aiv stopAnimating];
     }
     
-    [self startRetrieveImageWithUrlString:urlString urlRequest:_urlRequest];
+    [self startRetrieveImageWithUrlString:urlString urlRequest:urlRequest];
 }
 
 - (void) startRetrieveImageWithUrlString:(NSString*)urlString urlRequest:(NSMutableURLRequest*)urlRequest
